@@ -1,16 +1,15 @@
+import '../../../sites/data/models/sites_model.dart';
 import '../../domain/entities/report_entity.dart';
 
 class ReportModel extends ReportEntity {
   static const String idKey = 'id';
-  static const String codeKey = 'code';
-  static const String nameKey = 'name';
+  static const String siteKey = 'site';
   static const String typeKey = 'type';
   static const String dateKey = 'date';
 
   const ReportModel({
     required super.id,
-    required super.code,
-    required super.name,
+    required super.site,
     required super.visitType,
     required super.visitDate,
   });
@@ -19,8 +18,7 @@ class ReportModel extends ReportEntity {
   factory ReportModel.fromJson(Map<String, dynamic> json) {
     return ReportModel(
       id: json[idKey] as int,
-      code: json[codeKey] as String,
-      name: json[nameKey] as String,
+      site: SitesModel.fromJson(json[siteKey] as Map<String, dynamic>),
       visitType: _parseReportType(json[typeKey] as String),
       visitDate: DateTime.parse(json[dateKey] as String),
     );
@@ -30,8 +28,7 @@ class ReportModel extends ReportEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      codeKey: code,
-      nameKey: name,
+      siteKey: site,
       typeKey: visitType.toString().split('.').last,
       dateKey: visitDate.toIso8601String(),
     };

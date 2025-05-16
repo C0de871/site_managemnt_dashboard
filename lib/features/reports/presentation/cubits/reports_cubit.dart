@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
+import '../../../sites/data/models/sites_model.dart';
 import '../../domain/entities/report_entity.dart';
 
 part 'reports_state.dart';
@@ -31,8 +32,11 @@ class ReportsCubit extends Cubit<ReportsState> {
     150,
     (index) => ReportEntity(
       id: index,
-      code: 'SITE${100 + index}',
-      name: 'Site Name ${index + 1}',
+      site: SitesModel(
+        id: index,
+        name: 'Site Name ${index + 1}',
+        code: 'SITE${100 + index}',
+      ),
       visitType:
           index % 3 == 0
               ? VisitType.routine
@@ -72,8 +76,8 @@ class ReportsCubit extends Cubit<ReportsState> {
       final lowerQuery = query.toLowerCase();
       final filteredReports =
           _allReports.where((report) {
-            return report.code.toLowerCase().contains(lowerQuery) ||
-                report.name.toLowerCase().contains(lowerQuery) ||
+            return report.site.code.toLowerCase().contains(lowerQuery) ||
+                report.site.name.toLowerCase().contains(lowerQuery) ||
                 report.visitType.arabicName.toLowerCase().contains(lowerQuery);
           }).toList();
 
@@ -118,13 +122,13 @@ class ReportsCubit extends Cubit<ReportsState> {
         case 'siteCode':
           reports.sort(
             (a, b) =>
-                ascending ? a.code.compareTo(b.code) : b.code.compareTo(a.code),
+                ascending ? a.site.code.compareTo(b.site.code) : b.site.code.compareTo(a.site.code),
           );
           break;
         case 'siteName':
           reports.sort(
             (a, b) =>
-                ascending ? a.name.compareTo(b.name) : b.name.compareTo(a.name),
+                ascending ? a.site.name.compareTo(b.site.name) : b.site.name.compareTo(a.site.name),
           );
           break;
         case 'visitType':

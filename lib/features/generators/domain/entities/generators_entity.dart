@@ -1,3 +1,0 @@
-class GeneratorsEntity {
-  GeneratorsEntity();
-}

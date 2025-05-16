@@ -2,7 +2,7 @@
 class ApiResponse<T> {
   final String message;
   final bool status;
-  final T? data;
+  final T data;
 
   static const String messageKey = 'message';
   static const String statusKey = 'status';
@@ -11,24 +11,23 @@ class ApiResponse<T> {
   ApiResponse({
     required this.message,
     required this.status,
-    this.data,
+    required this.data,
   });
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(dynamic) fromJsonT, {
-    bool dataCanBeNull = false,
-  }) {
+    T Function(dynamic) fromJsonT,
+  ) {
     final dataValue = json[dataKey];
-    T? parsedData;
-    
+    T parsedData;
+
     if (dataValue != null) {
       parsedData = fromJsonT(dataValue);
-    } else if (!dataCanBeNull) {
+    } else {
       // Provide default empty value based on type parameter
       parsedData = _getDefaultValue<T>() as T;
     }
-    
+
     return ApiResponse<T>(
       message: json[messageKey] ?? '',
       status: json[statusKey] ?? false,
@@ -36,14 +35,14 @@ class ApiResponse<T> {
     );
   }
 
-  Map<String, dynamic> toJson([dynamic Function(T?)? toJsonT]) {
+  Map<String, dynamic> toJson(dynamic Function(T) toJsonT) {
     return {
       messageKey: message,
       statusKey: status,
-      dataKey: data != null && toJsonT != null ? toJsonT(data) : data,
+      dataKey:  toJsonT(data) ,
     };
   }
-  
+
   // Helper method to get default empty values based on type
   static dynamic _getDefaultValue<V>() {
     if (V == List || V.toString().contains('List')) {

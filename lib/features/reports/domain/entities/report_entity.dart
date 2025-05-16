@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_entity.dart';
 
 enum VisitType {
   routine, // زيارة دورية
@@ -21,8 +22,7 @@ extension ReportTypeExtension on VisitType {
 
 class ReportEntity extends Equatable {
   final int id;
-  final String code;
-  final String name;
+  final SitesEntity site;
   final VisitType visitType;
   final DateTime visitDate;
 
@@ -32,14 +32,13 @@ class ReportEntity extends Equatable {
 
   const ReportEntity({
     required this.id,
-    required this.code,
-    required this.name,
+    required this.site,
     required this.visitType,
     required this.visitDate,
   });
 
   @override
-  List<Object?> get props => [id, code, name, visitType, visitDate];
+  List<Object?> get props => [id, site, visitType, visitDate];
 
   // For convenience in the app
   String get formattedDate {
@@ -49,17 +48,15 @@ class ReportEntity extends Equatable {
   // Create a copy of this report with updated fields
   ReportEntity copyWith({
     int? id,
-    String? code,
-    String? name,
-    VisitType? type,
-    DateTime? date,
+    SitesEntity? site,
+    VisitType? visitType,
+    DateTime? visitDate,
   }) {
     return ReportEntity(
       id: id ?? this.id,
-      code: code ?? this.code,
-      name: name ?? this.name,
-      visitType: type ?? this.visitType,
-      visitDate: date ?? this.visitDate,
+      site: site ?? this.site,
+      visitType: visitType ?? this.visitType,
+      visitDate: visitDate ?? this.visitDate,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
 
 class ReportPartEntity extends Equatable {
   final int id;
@@ -55,8 +56,7 @@ enum AtsStatus { ok, notOk }
 
 class ReportDetailsEntity extends Equatable {
   final int id;
-  final String siteName;
-  final String siteCode;
+  final GeneratorEntity generator;
   final String visitType;
   final String reportNumber;
   final DateTime visitDate;
@@ -67,9 +67,6 @@ class ReportDetailsEntity extends Equatable {
   final double oilQuantity;
   final double burnedOilQuantity;
   final double frequency;
-  final String generatorBrand;
-  final String engineBrand;
-  final int engineCapacity;
   final double meter;
   final double lastMeter;
   final AtsStatus atsStatus;
@@ -92,8 +89,7 @@ class ReportDetailsEntity extends Equatable {
 
   const ReportDetailsEntity({
     required this.id,
-    required this.siteName,
-    required this.siteCode,
+    required this.generator,
     required this.visitType,
     required this.reportNumber,
     required this.visitDate,
@@ -104,9 +100,6 @@ class ReportDetailsEntity extends Equatable {
     required this.oilQuantity,
     required this.burnedOilQuantity,
     required this.frequency,
-    required this.generatorBrand,
-    required this.engineBrand,
-    required this.engineCapacity,
     required this.meter,
     required this.lastMeter,
     required this.atsStatus,
@@ -128,8 +121,7 @@ class ReportDetailsEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    siteName,
-    siteCode,
+    generator,
     visitType,
     reportNumber,
     visitDate,
@@ -140,9 +132,6 @@ class ReportDetailsEntity extends Equatable {
     oilQuantity,
     burnedOilQuantity,
     frequency,
-    generatorBrand,
-    engineBrand,
-    engineCapacity,
     meter,
     lastMeter,
     atsStatus,
@@ -164,8 +153,7 @@ class ReportDetailsEntity extends Equatable {
   //creat copy with
   ReportDetailsEntity copyWith({
     int? id,
-    String? siteName,
-    String? siteCode,
+    GeneratorEntity? generator,
     String? visitType,
     String? reportNumber,
     DateTime? visitDate,
@@ -176,9 +164,6 @@ class ReportDetailsEntity extends Equatable {
     double? oilQuantity,
     double? burnedOilQuantity,
     double? frequency,
-    String? generatorBrand,
-    String? engineBrand,
-    int? engineCapacity,
     double? meter,
     double? lastMeter,
     AtsStatus? atsStatus,
@@ -198,8 +183,7 @@ class ReportDetailsEntity extends Equatable {
   }) {
     return ReportDetailsEntity(
       id: id ?? this.id,
-      siteName: siteName ?? this.siteName,
-      siteCode: siteCode ?? this.siteCode,
+      generator: generator ?? this.generator,
       visitType: visitType ?? this.visitType,
       reportNumber: reportNumber ?? this.reportNumber,
       visitDate: visitDate ?? this.visitDate,
@@ -210,9 +194,6 @@ class ReportDetailsEntity extends Equatable {
       oilQuantity: oilQuantity ?? this.oilQuantity,
       burnedOilQuantity: burnedOilQuantity ?? this.burnedOilQuantity,
       frequency: frequency ?? this.frequency,
-      generatorBrand: generatorBrand ?? this.generatorBrand,
-      engineBrand: engineBrand ?? this.engineBrand,
-      engineCapacity: engineCapacity ?? this.engineCapacity,
       meter: meter ?? this.meter,
       lastMeter: lastMeter ?? this.lastMeter,
       atsStatus: atsStatus ?? this.atsStatus,

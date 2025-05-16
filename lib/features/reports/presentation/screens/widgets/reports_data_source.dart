@@ -37,11 +37,11 @@ class ReportsDataSource extends DataGridSource {
                   ),
                   DataGridCell<String>(
                     columnName: 'siteCode',
-                    value: report.code,
+                    value: report.site.code,
                   ),
                   DataGridCell<String>(
                     columnName: 'siteName',
-                    value: report.name,
+                    value: report.site.name,
                   ),
                   DataGridCell<String>(
                     columnName: 'visitType',

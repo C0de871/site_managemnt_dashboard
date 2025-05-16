@@ -1,5 +1,6 @@
 import '../../../sites/data/models/sites_model.dart';
 import '../../domain/entities/generator_entity.dart';
+import 'engine_brand_model.dart';
 import 'engine_model.dart';
 
 class GeneratorModel extends GeneratorEntity {
@@ -20,7 +21,7 @@ class GeneratorModel extends GeneratorEntity {
   factory GeneratorModel.fromJson(Map<String, dynamic> json) {
     return GeneratorModel(
       id: json[idKey] as int,
-      brand: json[brandKey] as String,
+      brand: EngineBrandModel.fromJson(json[brandKey] as Map<String, dynamic>),
       engine: EngineModel.fromJson(json[engineKey] as Map<String, dynamic>),
       initalMeter: json[initalMeterKey] as String,
       site: SitesModel.fromJson(json[siteKey] as Map<String, dynamic>),

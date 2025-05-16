@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import '../../../sites/domain/entities/sites_entity.dart';
+import 'engine_brand_entity.dart';
 import 'engine_entity.dart';
 
 class GeneratorEntity extends Equatable {
   final int id;
-  final String brand;
+  final EngineBrandEntity brand;
   final EngineEntity engine;
   final String initalMeter;
   final SitesEntity site;
@@ -22,7 +23,7 @@ class GeneratorEntity extends Equatable {
 
   GeneratorEntity copyWith({
     int? id,
-    String? brand,
+    EngineBrandEntity? brand,
     EngineEntity? engine,
     String? initalMeter,
     SitesEntity? site,

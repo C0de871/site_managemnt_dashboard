@@ -1,3 +1,4 @@
+import '../../../generators/data/models/generator_model.dart';
 import '../../domain/entities/report_details_entity.dart';
 
 class ReportPartModel extends ReportPartEntity {
@@ -48,8 +49,7 @@ class ReportPartModel extends ReportPartEntity {
 
 class ReportDetailsModel extends ReportDetailsEntity {
   static const String idKey = 'id';
-  static const String siteNameKey = 'site_name';
-  static const String siteCodeKey = 'site_code';
+  static const String generatorKey = 'generator';
   static const String visitTypeKey = 'visit_type';
   static const String reportNumberKey = 'report_number';
   static const String visitDateKey = 'visit_date';
@@ -82,8 +82,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
 
   const ReportDetailsModel({
     required super.id,
-    required super.siteName,
-    required super.siteCode,
+    required super.generator,
     required super.visitType,
     required super.reportNumber,
     required super.visitDate,
@@ -94,9 +93,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
     required super.oilQuantity,
     required super.burnedOilQuantity,
     required super.frequency,
-    required super.generatorBrand,
-    required super.engineBrand,
-    required super.engineCapacity,
     required super.meter,
     required super.lastMeter,
     required super.atsStatus,
@@ -118,8 +114,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
   factory ReportDetailsModel.fromJson(Map<String, dynamic> json) {
     return ReportDetailsModel(
       id: json[idKey] as int,
-      siteName: json[siteNameKey] as String,
-      siteCode: json[siteCodeKey] as String,
+      generator: GeneratorModel.fromJson(json[generatorKey] as Map<String, dynamic>),
       visitType: json[visitTypeKey] as String,
       reportNumber: json[reportNumberKey] as String,
       visitDate: DateTime.parse(json[visitDateKey] as String),
@@ -130,9 +125,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
       oilQuantity: (json[oilQuantityKey] as num).toDouble(),
       burnedOilQuantity: (json[burnedOilQuantityKey] as num).toDouble(),
       frequency: (json[frequencyKey] as num).toDouble(),
-      generatorBrand: json[generatorBrandKey] as String,
-      engineBrand: json[engineBrandKey] as String,
-      engineCapacity: json[engineCapacityKey] as int,
       meter: (json[meterKey] as num).toDouble(),
       lastMeter: (json[lastMeterKey] as num).toDouble(),
       atsStatus: _parseAtsStatus(json[atsStatusKey] as String),
@@ -172,8 +164,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      siteNameKey: siteName,
-      siteCodeKey: siteCode,
+      generatorKey: generator,
       visitTypeKey: visitType,
       reportNumberKey: reportNumber,
       visitDateKey: visitDate.toIso8601String(),
@@ -184,9 +175,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
       oilQuantityKey: oilQuantity,
       burnedOilQuantityKey: burnedOilQuantity,
       frequencyKey: frequency,
-      generatorBrandKey: generatorBrand,
-      engineBrandKey: engineBrand,
-      engineCapacityKey: engineCapacity,
       meterKey: meter,
       lastMeterKey: lastMeter,
       atsStatusKey: atsStatus,

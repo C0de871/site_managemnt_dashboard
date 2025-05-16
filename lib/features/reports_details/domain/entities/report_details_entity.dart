@@ -1,0 +1,234 @@
+import 'package:equatable/equatable.dart';
+
+class ReportPartEntity extends Equatable {
+  final int id;
+  final String name;
+  final int quantity;
+  final String code;
+  final String note;
+  final bool isFaulty;
+  final DateTime lastReplacementDate;
+
+  const ReportPartEntity({
+    required this.id,
+    required this.name,
+    required this.quantity,
+    required this.code,
+    required this.note,
+    required this.isFaulty,
+    required this.lastReplacementDate,
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    quantity,
+    code,
+    note,
+    isFaulty,
+    lastReplacementDate,
+  ];
+
+  ReportPartEntity copyWith({
+    int? id,
+    String? name,
+    int? quantity,
+    String? code,
+    String? note,
+    bool? isFaulty,
+    DateTime? lastReplacementDate,
+  }) {
+    return ReportPartEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      code: code ?? this.code,
+      note: note ?? this.note,
+      isFaulty: isFaulty ?? this.isFaulty,
+      lastReplacementDate: lastReplacementDate ?? this.lastReplacementDate,
+    );
+  }
+}
+
+enum AtsStatus { ok, notOk }
+
+class ReportDetailsEntity extends Equatable {
+  final int id;
+  final String siteName;
+  final String siteCode;
+  final String visitType;
+  final String reportNumber;
+  final DateTime visitDate;
+  final String visitTime;
+  final double oilPressure;
+  final double temperature;
+  final double batterVolt;
+  final double oilQuantity;
+  final double burnedOilQuantity;
+  final double frequency;
+  final String generatorBrand;
+  final String engineBrand;
+  final int engineCapacity;
+  final double meter;
+  final double lastMeter;
+  final AtsStatus atsStatus;
+  final DateTime lastVisitDate;
+  final double voltL1;
+  final double voltL2;
+  final double voltL3;
+  final double loadL1;
+  final double loadL2;
+  final double loadL3;
+  final String visitResons;
+  final List<String> technicianNotes;
+  final String technicalStatus;
+  final List<String> completedWorks;
+  final String visitLocation;
+  final List<ReportPartEntity> parts;
+
+  static const String ok = 'ok';
+  static const String notOk = 'not ok';
+
+  const ReportDetailsEntity({
+    required this.id,
+    required this.siteName,
+    required this.siteCode,
+    required this.visitType,
+    required this.reportNumber,
+    required this.visitDate,
+    required this.visitTime,
+    required this.oilPressure,
+    required this.temperature,
+    required this.batterVolt,
+    required this.oilQuantity,
+    required this.burnedOilQuantity,
+    required this.frequency,
+    required this.generatorBrand,
+    required this.engineBrand,
+    required this.engineCapacity,
+    required this.meter,
+    required this.lastMeter,
+    required this.atsStatus,
+    required this.lastVisitDate,
+    required this.voltL1,
+    required this.voltL2,
+    required this.voltL3,
+    required this.loadL1,
+    required this.loadL2,
+    required this.loadL3,
+    required this.visitResons,
+    required this.technicianNotes,
+    required this.technicalStatus,
+    required this.completedWorks,
+    required this.visitLocation,
+    required this.parts,
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+    siteName,
+    siteCode,
+    visitType,
+    reportNumber,
+    visitDate,
+    visitTime,
+    oilPressure,
+    temperature,
+    batterVolt,
+    oilQuantity,
+    burnedOilQuantity,
+    frequency,
+    generatorBrand,
+    engineBrand,
+    engineCapacity,
+    meter,
+    lastMeter,
+    atsStatus,
+    lastVisitDate,
+    voltL1,
+    voltL2,
+    voltL3,
+    loadL1,
+    loadL2,
+    loadL3,
+    visitResons,
+    technicianNotes,
+    technicalStatus,
+    completedWorks,
+    visitLocation,
+    parts,
+  ];
+
+  //creat copy with
+  ReportDetailsEntity copyWith({
+    int? id,
+    String? siteName,
+    String? siteCode,
+    String? visitType,
+    String? reportNumber,
+    DateTime? visitDate,
+    String? visitTime,
+    double? oilPressure,
+    double? temperature,
+    double? batterVolt,
+    double? oilQuantity,
+    double? burnedOilQuantity,
+    double? frequency,
+    String? generatorBrand,
+    String? engineBrand,
+    int? engineCapacity,
+    double? meter,
+    double? lastMeter,
+    AtsStatus? atsStatus,
+    DateTime? lastVisitDate,
+    double? voltL1,
+    double? voltL2,
+    double? voltL3,
+    double? loadL1,
+    double? loadL2,
+    double? loadL3,
+    String? visitResons,
+    List<String>? technicianNotes,
+    String? technicalStatus,
+    List<String>? completedWorks,
+    String? visitLocation,
+    List<ReportPartEntity>? parts,
+  }) {
+    return ReportDetailsEntity(
+      id: id ?? this.id,
+      siteName: siteName ?? this.siteName,
+      siteCode: siteCode ?? this.siteCode,
+      visitType: visitType ?? this.visitType,
+      reportNumber: reportNumber ?? this.reportNumber,
+      visitDate: visitDate ?? this.visitDate,
+      visitTime: visitTime ?? this.visitTime,
+      oilPressure: oilPressure ?? this.oilPressure,
+      temperature: temperature ?? this.temperature,
+      batterVolt: batterVolt ?? this.batterVolt,
+      oilQuantity: oilQuantity ?? this.oilQuantity,
+      burnedOilQuantity: burnedOilQuantity ?? this.burnedOilQuantity,
+      frequency: frequency ?? this.frequency,
+      generatorBrand: generatorBrand ?? this.generatorBrand,
+      engineBrand: engineBrand ?? this.engineBrand,
+      engineCapacity: engineCapacity ?? this.engineCapacity,
+      meter: meter ?? this.meter,
+      lastMeter: lastMeter ?? this.lastMeter,
+      atsStatus: atsStatus ?? this.atsStatus,
+      lastVisitDate: lastVisitDate ?? this.lastVisitDate,
+      voltL1: voltL1 ?? this.voltL1,
+      voltL2: voltL2 ?? this.voltL2,
+      voltL3: voltL3 ?? this.voltL3,
+      loadL1: loadL1 ?? this.loadL1,
+      loadL2: loadL2 ?? this.loadL2,
+      loadL3: loadL3 ?? this.loadL3,
+      visitResons: visitResons ?? this.visitResons,
+      technicianNotes: technicianNotes ?? this.technicianNotes,
+      technicalStatus: technicalStatus ?? this.technicalStatus,
+      completedWorks: completedWorks ?? this.completedWorks,
+      visitLocation: visitLocation ?? this.visitLocation,
+      parts: parts ?? this.parts,
+    );
+  }
+}

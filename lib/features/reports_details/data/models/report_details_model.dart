@@ -1,3 +1,5 @@
+import 'package:site_managemnt_dashboard/features/reports/domain/entities/report_entity.dart';
+
 import '../../../generators/data/models/generator_model.dart';
 import '../../domain/entities/report_details_entity.dart';
 
@@ -9,6 +11,7 @@ class ReportPartModel extends ReportPartEntity {
   static const String noteKey = 'note';
   static const String isFaultyKey = 'is_faulty';
   static const String lastReplacementDateKey = 'last_replacement_date';
+  static const String lastReplacementMeterKey = 'last_replacement_meter';
 
   const ReportPartModel({
     required super.id,
@@ -18,6 +21,7 @@ class ReportPartModel extends ReportPartEntity {
     required super.note,
     required super.isFaulty,
     required super.lastReplacementDate,
+    required super.lastReplacementMeter,
   });
 
   factory ReportPartModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,7 @@ class ReportPartModel extends ReportPartEntity {
       lastReplacementDate: DateTime.parse(
         json[lastReplacementDateKey] as String,
       ),
+      lastReplacementMeter: (json[lastReplacementMeterKey] as num).toDouble(),
     );
   }
 
@@ -43,6 +48,7 @@ class ReportPartModel extends ReportPartEntity {
       noteKey: note,
       isFaultyKey: isFaulty,
       lastReplacementDateKey: lastReplacementDate.toIso8601String(),
+      lastReplacementMeterKey: lastReplacementMeter,
     };
   }
 }
@@ -77,7 +83,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
   static const String technicianNotesKey = 'technician_notes';
   static const String technicalStatusKey = 'technical_status';
   static const String completedWorksKey = 'completed_works';
-  static const String visitLocationKey = 'visit_location';
   static const String partsKey = 'parts';
 
   const ReportDetailsModel({
@@ -107,15 +112,16 @@ class ReportDetailsModel extends ReportDetailsEntity {
     required super.technicianNotes,
     required super.technicalStatus,
     required super.completedWorks,
-    required super.visitLocation,
     required super.parts,
   });
 
   factory ReportDetailsModel.fromJson(Map<String, dynamic> json) {
     return ReportDetailsModel(
       id: json[idKey] as int,
-      generator: GeneratorModel.fromJson(json[generatorKey] as Map<String, dynamic>),
-      visitType: json[visitTypeKey] as String,
+      generator: GeneratorModel.fromJson(
+        json[generatorKey] as Map<String, dynamic>,
+      ),
+      visitType: (json[visitTypeKey] as String).visitType,
       reportNumber: json[reportNumberKey] as String,
       visitDate: DateTime.parse(json[visitDateKey] as String),
       visitTime: json[visitTimeKey] as String,
@@ -139,7 +145,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
       technicianNotes: List<String>.from(json[technicianNotesKey] as List),
       technicalStatus: json[technicalStatusKey] as String,
       completedWorks: List<String>.from(json[completedWorksKey] as List),
-      visitLocation: json[visitLocationKey] as String,
       parts:
           (json[partsKey] as List)
               .map(
@@ -164,8 +169,8 @@ class ReportDetailsModel extends ReportDetailsEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      generatorKey: generator,
-      visitTypeKey: visitType,
+      generatorKey: (generator as GeneratorModel).toJson(),
+      visitTypeKey: visitType.toString(),
       reportNumberKey: reportNumber,
       visitDateKey: visitDate.toIso8601String(),
       visitTimeKey: visitTime,
@@ -177,7 +182,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
       frequencyKey: frequency,
       meterKey: meter,
       lastMeterKey: lastMeter,
-      atsStatusKey: atsStatus,
+      atsStatusKey: atsStatus.toString(),
       lastVisitDateKey: lastVisitDate.toIso8601String(),
       voltL1Key: voltL1,
       voltL2Key: voltL2,
@@ -189,7 +194,6 @@ class ReportDetailsModel extends ReportDetailsEntity {
       technicianNotesKey: technicianNotes,
       technicalStatusKey: technicalStatus,
       completedWorksKey: completedWorks,
-      visitLocationKey: visitLocation,
       partsKey:
           parts.map((part) => (part as ReportPartModel).toJson()).toList(),
     };

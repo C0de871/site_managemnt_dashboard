@@ -1,7 +1,7 @@
+import '../../../engine_brands/data/models/engine_brand_model.dart';
+import '../../../engines/data/models/engine_model.dart';
 import '../../../sites/data/models/sites_model.dart';
 import '../../domain/entities/generator_entity.dart';
-import 'engine_brand_model.dart';
-import 'engine_model.dart';
 
 class GeneratorModel extends GeneratorEntity {
   static const String idKey = 'id';
@@ -15,7 +15,7 @@ class GeneratorModel extends GeneratorEntity {
     required super.brand,
     required super.engine,
     required super.initalMeter,
-    required super.site,
+    super.site,
   });
 
   factory GeneratorModel.fromJson(Map<String, dynamic> json) {
@@ -31,7 +31,7 @@ class GeneratorModel extends GeneratorEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      brandKey: brand,
+      brandKey: (brand as EngineBrandModel).toJson(),
       engineKey: (engine as EngineModel).toJson(),
       initalMeterKey: initalMeter,
       siteKey: (site as SitesModel).toJson(),

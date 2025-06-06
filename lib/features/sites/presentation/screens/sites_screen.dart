@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/shared/widgets/my_error_widget.dart';
+import '../../../reports/presentation/screens/widgets/screen_header.dart';
+import '../cubit/sites_cubit.dart';
+import '../widgets/sites_content.dart';
 
 class SitesScreen extends StatelessWidget {
   const SitesScreen({super.key});
@@ -7,28 +13,41 @@ class SitesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.location_on,
-            size: 72,
-            color: colorScheme.primary.withValues(alpha: 0.5),
+          // Screen Header
+          ScreenHeader(
+            title: 'Sites',
+            subtitle: 'Manage your sites',
+            icon: Icons.energy_savings_leaf_outlined,
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Sites Screen',
-            style: TextStyle(
-              fontSize: 24,
-              color: colorScheme.primary,
-              fontWeight: FontWeight.bold,
+      
+          // Main Content
+          Expanded(
+            child: BlocBuilder<SitesCubit, SitesState>(
+              builder: (context, state) {
+                switch (state.sitesStatus) {
+                  case SitesStatus.loading || SitesStatus.initial:
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: colorScheme.primary,
+                      ),
+                    );
+                  case SitesStatus.error:
+                    return MyErrorWidget(
+                      colorScheme: colorScheme,
+                      message: state.error,
+                      onPressed: () => context.read<SitesCubit>().fetchSites(),
+                      title: 'Error loading sites',
+                    );
+                  case SitesStatus.loaded:
+                    return SitesContent(sites: state.sites);
+                }
+              },
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'This screen is under development',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),

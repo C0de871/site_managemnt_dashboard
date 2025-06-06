@@ -4,10 +4,10 @@ import '../../../../core/databases/errors/failure.dart';
 import '../entities/generator_entity.dart';
 import '../repository/generators_repository.dart';
 
-class Generators {
+class GetGeneratorsUseCase {
   final GeneratorsRepository repository;
 
-  Generators({required this.repository});
+  GetGeneratorsUseCase({required this.repository});
 
   Future<Either<Failure, List<GeneratorEntity>>> call() {
     return repository.getGenerators();

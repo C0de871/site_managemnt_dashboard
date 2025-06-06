@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
 import '../../../../core/databases/errors/failure.dart';
+import '../../../../core/databases/params/body.dart';
 import '../../domain/entities/generator_entity.dart';
 import '../../domain/repository/generators_repository.dart';
 import '../data sources/generators_remote_data_source.dart';
@@ -25,7 +26,54 @@ class GeneratorsRepositoryImple extends GeneratorsRepository {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }
     } else {
-      //TODO make this message adapt to app language:
+      return Left(Failure(errMessage: "There is no internet connnect"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GeneratorEntity>> createGenerator(
+    CreateEngineBody body,
+  ) async {
+    if (await networkInfo.isConnected!) {
+      try {
+        final remoteData = await remoteDataSource.addGenerator(body);
+        return Right(remoteData.data);
+      } on ServerException catch (e) {
+        return Left(Failure(errMessage: e.errorModel.errorMessage));
+      }
+    } else {
+      return Left(Failure(errMessage: "There is no internet connnect"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GeneratorEntity>> editGenerator(
+    EditGeneratorBody body,
+  ) async {
+    if (await networkInfo.isConnected!) {
+      try {
+        final remoteData = await remoteDataSource.editGenerator(body);
+        return Right(remoteData.data);
+      } on ServerException catch (e) {
+        return Left(Failure(errMessage: e.errorModel.errorMessage));
+      }
+    } else {
+      return Left(Failure(errMessage: "There is no internet connnect"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteGenerators(
+    DeleteGeneratorBody body,
+  ) async {
+    if (await networkInfo.isConnected!) {
+      try {
+        await remoteDataSource.deleteGenerators(body);
+        return const Right(null);
+      } on ServerException catch (e) {
+        return Left(Failure(errMessage: e.errorModel.errorMessage));
+      }
+    } else {
       return Left(Failure(errMessage: "There is no internet connnect"));
     }
   }

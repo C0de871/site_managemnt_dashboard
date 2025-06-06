@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/helper/cubit_helper.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/presentation/cubit/report_details_cubit.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 
+import '../../features/generators/presentation/cubit/generators_cubit.dart';
 import '../../features/generators/presentation/screens/generators_screen.dart';
-import '../../features/parts/presentation/screens/materials_screen.dart';
+import '../../features/parts/presentation/cubit/parts_cubit.dart';
+import '../../features/parts/presentation/screens/parts_screen.dart';
 import '../../features/navigation/presentation/cubits/nav_cubit.dart';
 import '../../features/navigation/presentation/screens/navigation_panel.dart';
 import '../../features/reports/presentation/screens/reports_screen.dart';
 import '../../features/reports_details/presentation/screens/report_details.dart';
+import '../../features/sites/presentation/cubit/sites_cubit.dart';
 import '../../features/sites/presentation/screens/sites_screen.dart';
 import '../Routes/app_router.dart';
 import '../Routes/app_routes.dart';
@@ -26,6 +30,21 @@ class MyApp extends StatelessWidget {
       title: 'Dashboard App',
       theme: AppTheme().light(),
       themeMode: ThemeMode.system,
+      builder: (context, child) {
+        final colorScheme = Theme.of(context).colorScheme;
+        return SfDataGridTheme(
+          data: SfDataGridThemeData(
+            headerColor: colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
+            gridLineColor: colorScheme.outlineVariant.withValues(alpha: 0.5),
+            gridLineStrokeWidth: 1,
+            selectionColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
+            rowHoverColor: colorScheme.primaryContainer.withValues(alpha: 0.1),
+          ),
+          child: child!,
+        );
+      },
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRouter().generateRoute,
     );
@@ -84,17 +103,44 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
           } else if (settings.name == AppRoutes.sites) {
             return MaterialPageRoute(
               settings: settings,
-              builder: (context) => SitesScreen(),
+              builder:
+                  (context) => BlocProvider(
+                    create:
+                        (context) =>
+                            getCubit<SitesCubit>(() => SitesCubit())
+                              ..fetchSites(),
+                    child: SitesScreen(),
+                  ),
             );
           } else if (settings.name == AppRoutes.generators) {
             return MaterialPageRoute(
               settings: settings,
-              builder: (context) => GeneratorsScreen(),
+              builder:
+                  (context) => BlocProvider(
+                    create:
+                        (context) =>
+                            getCubit<GeneratorsEnginesCubit>(
+                                () => GeneratorsEnginesCubit(),
+                              )
+                              ..fetchGenerators()
+                              ..loadEngineBrands()
+                              ..loadGeneratorBrands()
+                              ..loadEngineCapacities()
+                              ..loadEngines(),
+                    child: GeneratorsScreen(),
+                  ),
             );
-          } else if (settings.name == AppRoutes.materials) {
+          } else if (settings.name == AppRoutes.parts) {
             return MaterialPageRoute(
               settings: settings,
-              builder: (context) => MaterialsScreen(),
+              builder:
+                  (context) => BlocProvider(
+                    create:
+                        (context) =>
+                            getCubit<PartsCubit>(() => PartsCubit())
+                              ..fetchParts(),
+                    child: PartsScreen(),
+                  ),
             );
           }
           return null;

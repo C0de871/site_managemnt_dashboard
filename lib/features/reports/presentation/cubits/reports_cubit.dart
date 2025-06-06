@@ -36,6 +36,8 @@ class ReportsCubit extends Cubit<ReportsState> {
         id: index,
         name: 'Site Name ${index + 1}',
         code: 'SITE${100 + index}',
+        longitude: '${index + 1}',
+        latitude: '${index + 1}',
       ),
       visitType:
           index % 3 == 0

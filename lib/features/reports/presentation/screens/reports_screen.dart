@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/features/reports/presentation/screens/widgets/reports_content.dart';
-import 'package:site_managemnt_dashboard/features/reports/presentation/screens/widgets/reports_error_widget.dart';
+import 'package:site_managemnt_dashboard/core/shared/widgets/my_error_widget.dart';
 
 import '../cubits/reports_cubit.dart';
 import 'widgets/screen_header.dart';
@@ -24,7 +24,7 @@ class ReportsScreen extends StatelessWidget {
             subtitle: 'Manage your site visit reports',
             icon: Icons.summarize,
           ),
-
+      
           // Main Content
           Expanded(
             child: BlocBuilder<ReportsCubit, ReportsState>(
@@ -36,9 +36,11 @@ class ReportsScreen extends StatelessWidget {
                     ),
                   );
                 } else if (state is ReportsError) {
-                  return ReportsErrorWidget(
+                  return MyErrorWidget(
                     colorScheme: colorScheme,
                     message: state.message,
+                    onPressed: () => context.read<ReportsCubit>().loadReports(),
+                    title: 'Error loading reports',
                   );
                 } else if (state is ReportsActionInProgress) {
                   return Stack(
@@ -79,7 +81,7 @@ class ReportsScreen extends StatelessWidget {
                 } else if (state is ReportsLoaded) {
                   return ReportsContent(filteredReports: state.filteredReports);
                 }
-
+      
                 return const SizedBox.shrink();
               },
             ),

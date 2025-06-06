@@ -1,6 +1,10 @@
 class EndPoints {
   static const String baseUrl = "https://api.example.com";
 
+  //!auth
+  static const String login = "$baseUrl/login";
+  static const String logout = "$baseUrl/logout";
+
   //!get
   static const String getGenerators = "$baseUrl/getGenerators";
   static const String getReports = "$baseUrl/getReports";
@@ -37,6 +41,10 @@ class EndPoints {
   static const String deleteEngineBrand = "$baseUrl/deleteEngineBrand";
   static const String deleteEngineCapacity = "$baseUrl/deleteEngineCapacity";
   static const String deleteGeneratorBrand = "$baseUrl/deleteGeneratorBrand";
+
+  static const String addReport = "$baseUrl/addReport";
+  static const String editReport = "$baseUrl/editReport";
+  static const String deleteReport = "$baseUrl/deleteReport";
 }
 
 class ApiKey {

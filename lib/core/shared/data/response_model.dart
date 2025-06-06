@@ -36,11 +36,7 @@ class ApiResponse<T> {
   }
 
   Map<String, dynamic> toJson(dynamic Function(T) toJsonT) {
-    return {
-      messageKey: message,
-      statusKey: status,
-      dataKey:  toJsonT(data) ,
-    };
+    return {messageKey: message, statusKey: status, dataKey: toJsonT(data)};
   }
 
   // Helper method to get default empty values based on type

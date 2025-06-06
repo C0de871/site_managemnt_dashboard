@@ -64,7 +64,7 @@ class NavigationItems extends StatelessWidget {
               //   NavPage.materials,
               // ),
               () {
-                navigatorKey.currentState!.pushNamed(AppRoutes.materials);
+                navigatorKey.currentState!.pushNamed(AppRoutes.parts);
                 navigationCubit.navigateTo(NavPage.materials);
               },
             ),

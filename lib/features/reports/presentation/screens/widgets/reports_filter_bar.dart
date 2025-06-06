@@ -14,7 +14,7 @@ class ReportsFilterBar extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
@@ -26,22 +26,22 @@ class ReportsFilterBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Search Field
-          const Expanded(flex: 3, child: ReportsSearchField()),
+          // // Search Field
+          // const Expanded(flex: 3, child: ReportsSearchField()),
 
-          const SizedBox(width: 16),
+          // const SizedBox(width: 16),
 
-          // Visit Type Filter
-          BlocBuilder<ReportsCubit, ReportsState>(
-            builder: (context, state) {
-              if (state is ReportsLoaded) {
-                return const Expanded(flex: 2, child: VisitTypeFilter());
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+          // // Visit Type Filter
+          // BlocBuilder<ReportsCubit, ReportsState>(
+          //   builder: (context, state) {
+          //     if (state is ReportsLoaded) {
+          //       return const Expanded(flex: 2, child: VisitTypeFilter());
+          //     }
+          //     return const SizedBox.shrink();
+          //   },
+          // ),
 
-          const SizedBox(width: 16),
+          // const SizedBox(width: 16),
 
           // Action Buttons
           BlocBuilder<ReportsCubit, ReportsState>(

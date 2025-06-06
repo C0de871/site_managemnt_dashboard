@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
 
+import '../../../reports/domain/entities/report_entity.dart';
+
 class ReportPartEntity extends Equatable {
   final int id;
   final String name;
@@ -9,6 +11,7 @@ class ReportPartEntity extends Equatable {
   final String note;
   final bool isFaulty;
   final DateTime lastReplacementDate;
+  final double lastReplacementMeter;
 
   const ReportPartEntity({
     required this.id,
@@ -18,6 +21,7 @@ class ReportPartEntity extends Equatable {
     required this.note,
     required this.isFaulty,
     required this.lastReplacementDate,
+    required this.lastReplacementMeter,
   });
 
   @override
@@ -29,6 +33,7 @@ class ReportPartEntity extends Equatable {
     note,
     isFaulty,
     lastReplacementDate,
+    lastReplacementMeter,
   ];
 
   ReportPartEntity copyWith({
@@ -39,6 +44,7 @@ class ReportPartEntity extends Equatable {
     String? note,
     bool? isFaulty,
     DateTime? lastReplacementDate,
+    double? lastReplacementMeter,
   }) {
     return ReportPartEntity(
       id: id ?? this.id,
@@ -48,6 +54,7 @@ class ReportPartEntity extends Equatable {
       note: note ?? this.note,
       isFaulty: isFaulty ?? this.isFaulty,
       lastReplacementDate: lastReplacementDate ?? this.lastReplacementDate,
+      lastReplacementMeter: lastReplacementMeter ?? this.lastReplacementMeter,
     );
   }
 }
@@ -57,7 +64,7 @@ enum AtsStatus { ok, notOk }
 class ReportDetailsEntity extends Equatable {
   final int id;
   final GeneratorEntity generator;
-  final String visitType;
+  final VisitType visitType;
   final String reportNumber;
   final DateTime visitDate;
   final String visitTime;
@@ -81,7 +88,6 @@ class ReportDetailsEntity extends Equatable {
   final List<String> technicianNotes;
   final String technicalStatus;
   final List<String> completedWorks;
-  final String visitLocation;
   final List<ReportPartEntity> parts;
 
   static const String ok = 'ok';
@@ -114,7 +120,6 @@ class ReportDetailsEntity extends Equatable {
     required this.technicianNotes,
     required this.technicalStatus,
     required this.completedWorks,
-    required this.visitLocation,
     required this.parts,
   });
 
@@ -146,7 +151,6 @@ class ReportDetailsEntity extends Equatable {
     technicianNotes,
     technicalStatus,
     completedWorks,
-    visitLocation,
     parts,
   ];
 
@@ -154,7 +158,7 @@ class ReportDetailsEntity extends Equatable {
   ReportDetailsEntity copyWith({
     int? id,
     GeneratorEntity? generator,
-    String? visitType,
+    VisitType? visitType,
     String? reportNumber,
     DateTime? visitDate,
     String? visitTime,
@@ -208,7 +212,6 @@ class ReportDetailsEntity extends Equatable {
       technicianNotes: technicianNotes ?? this.technicianNotes,
       technicalStatus: technicalStatus ?? this.technicalStatus,
       completedWorks: completedWorks ?? this.completedWorks,
-      visitLocation: visitLocation ?? this.visitLocation,
       parts: parts ?? this.parts,
     );
   }

@@ -19,7 +19,7 @@ class ReportModel extends ReportEntity {
     return ReportModel(
       id: json[idKey] as int,
       site: SitesModel.fromJson(json[siteKey] as Map<String, dynamic>),
-      visitType: _parseReportType(json[typeKey] as String),
+      visitType: (json[typeKey] as String).visitType,
       visitDate: DateTime.parse(json[dateKey] as String),
     );
   }
@@ -28,23 +28,9 @@ class ReportModel extends ReportEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      siteKey: site,
-      typeKey: visitType.toString().split('.').last,
+      siteKey: (site as SitesModel).toJson(),
+      typeKey: visitType.toString(),
       dateKey: visitDate.toIso8601String(),
     };
-  }
-
-  // Helper method to parse report type from string
-  static VisitType _parseReportType(String type) {
-    switch (type) {
-      case ReportEntity.routine:
-        return VisitType.routine;
-      case ReportEntity.emergency:
-        return VisitType.emergency;
-      case ReportEntity.umrah:
-        return VisitType.umrah;
-      default:
-        return VisitType.routine;
-    }
   }
 }

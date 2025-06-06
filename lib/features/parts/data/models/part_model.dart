@@ -1,5 +1,5 @@
+import '../../../engines/data/models/engine_model.dart';
 import '../../domain/entities/part_entity.dart';
-import '../../../generators/data/models/engine_model.dart';
 
 class PartModel extends PartEntity {
   static const String idKey = 'id';

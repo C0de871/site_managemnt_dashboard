@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../generators/domain/entities/engine_entity.dart';
+import '../../../engines/domain/entities/engine_entity.dart';
+
 
 class PartEntity extends Equatable {
   final int id;

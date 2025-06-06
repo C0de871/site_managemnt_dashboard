@@ -16,7 +16,7 @@ class AppTheme {
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xFF059669), 
+      primary: Color(0xFF059669),
       surfaceTint: Color(0xff415e91),
       onPrimary: Color(0xffffffff),
       primaryContainer: Color(0xFFEFFAF5),
@@ -126,7 +126,7 @@ class AppTheme {
     return _theme(lightMediumContrastScheme());
   }
 
-//=============================================================
+  //=============================================================
 
   //! light High Contrast Mode:
   static ColorScheme lightHighContrastScheme() {
@@ -184,7 +184,7 @@ class AppTheme {
     return _theme(lightHighContrastScheme());
   }
 
-//==========================================================================
+  //==========================================================================
 
   //! dark mode:
   static ColorScheme darkScheme() {
@@ -300,7 +300,7 @@ class AppTheme {
     return _theme(darkMediumContrastScheme());
   }
 
-// ================================================
+  // ================================================
 
   //! dark high contrast Mode:
   static ColorScheme darkHighContrastScheme() {
@@ -361,44 +361,56 @@ class AppTheme {
   // ================================================
 
   ThemeData _theme(ColorScheme colorScheme) => ThemeData(
-        useMaterial3: true,
-        brightness: colorScheme.brightness,
-        colorScheme: colorScheme,
-        // textTheme: textTheme.apply(
-        //   bodyColor: colorScheme.onSurface,
-        //   displayColor: colorScheme.onSurface,
-        // ),
-        scaffoldBackgroundColor: colorScheme.surface,
-        canvasColor: colorScheme.surface,
-        // fontFamily: GoogleFonts.cairo().fontFamily,
-        fontFamily: 'Cairo',
-        inputDecorationTheme: InputDecorationTheme(
-
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(2),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(2),
-            borderSide: BorderSide(
-              color: colorScheme.outline,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(2),
-            borderSide: BorderSide(color: extendedColors.border, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(2),
-            borderSide: BorderSide(color: colorScheme.error, width: 1),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(2),
-            borderSide: BorderSide(color: colorScheme.error, width: 2),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        ),
-      );
+    useMaterial3: true,
+    brightness: colorScheme.brightness,
+    colorScheme: colorScheme,
+    // textTheme: textTheme.apply(
+    //   bodyColor: colorScheme.onSurface,
+    //   displayColor: colorScheme.onSurface,
+    // ),
+    scaffoldBackgroundColor: colorScheme.surface,
+    canvasColor: colorScheme.surface,
+    // fontFamily: GoogleFonts.cairo().fontFamily,
+    fontFamily: 'Cairo',
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(2),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: colorScheme.outline),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: extendedColors.border, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: colorScheme.error, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: colorScheme.error, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        elevation: 2,
+        shadowColor: Colors.black26,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      ),
+    ),
+    cardTheme: CardTheme(
+      elevation: 4,
+      shadowColor: Colors.black12,
+      // color: colorScheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    ),
+  );
 
   ExtendedColors get extendedColors {
     if (isDark) {
@@ -415,9 +427,7 @@ class AppTheme {
   }
 }
 
-enum AppColor {
-  BLUE,
-}
+enum AppColor { BLUE }
 
 abstract class ExtendedColors {
   Color get buttonShadow;

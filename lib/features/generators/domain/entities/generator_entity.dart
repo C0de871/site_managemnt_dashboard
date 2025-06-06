@@ -1,21 +1,21 @@
 import 'package:equatable/equatable.dart';
+import '../../../engine_brands/domain/entities/brand_entity.dart';
+import '../../../engines/domain/entities/engine_entity.dart';
 import '../../../sites/domain/entities/sites_entity.dart';
-import 'engine_brand_entity.dart';
-import 'engine_entity.dart';
 
 class GeneratorEntity extends Equatable {
   final int id;
-  final EngineBrandEntity brand;
+  final BrandEntity brand;
   final EngineEntity engine;
   final String initalMeter;
-  final SitesEntity site;
+  final SiteEntity? site;
 
   const GeneratorEntity({
     required this.id,
     required this.brand,
     required this.engine,
     required this.initalMeter,
-    required this.site,
+    this.site,
   });
 
   @override
@@ -23,10 +23,10 @@ class GeneratorEntity extends Equatable {
 
   GeneratorEntity copyWith({
     int? id,
-    EngineBrandEntity? brand,
+    BrandEntity? brand,
     EngineEntity? engine,
     String? initalMeter,
-    SitesEntity? site,
+    SiteEntity? site,
   }) {
     return GeneratorEntity(
       id: id ?? this.id,

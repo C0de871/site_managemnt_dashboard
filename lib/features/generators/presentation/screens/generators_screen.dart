@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/core/utils/services/dialog_launcher.dart';
+
+import '../../../../core/Routes/app_routes.dart';
+import '../../../../core/shared/widgets/my_error_widget.dart';
+import '../../../reports/presentation/screens/widgets/screen_header.dart';
+import '../cubit/generators_cubit.dart';
+import '../widgets/generators_engines_content.dart';
 
 class GeneratorsScreen extends StatelessWidget {
   const GeneratorsScreen({super.key});
@@ -6,29 +14,51 @@ class GeneratorsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final cubit = context.read<GeneratorsEnginesCubit>();
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.electrical_services,
-            size: 72,
-            color: colorScheme.primary.withValues(alpha: 0.5),
+          // Screen Header
+          ScreenHeader(
+            title: 'Generators',
+            subtitle: 'Manage your generators',
+            icon: Icons.energy_savings_leaf_outlined,
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Generators Screen',
-            style: TextStyle(
-              fontSize: 24,
-              color: colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'This screen is under development',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
+      
+          // Main Content
+          Expanded(
+            child:
+                BlocBuilder<GeneratorsEnginesCubit, GeneratorsEnginesState>(
+                  builder: (context, state) {
+                    switch (state.generatorsStatus) {
+                      case GeneratorsEnginesStatus.loading ||
+                          GeneratorsEnginesStatus.initial:
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: colorScheme.primary,
+                          ),
+                        );
+                      case GeneratorsEnginesStatus.error:
+                        return MyErrorWidget(
+                          colorScheme: colorScheme,
+                          message: state.error,
+                          onPressed:
+                              () =>
+                                  context
+                                      .read<GeneratorsEnginesCubit>()
+                                      .fetchGenerators(),
+                          title: 'Error loading generators',
+                        );
+                      case GeneratorsEnginesStatus.loaded:
+                        return GeneratorsEnginesContent(
+                          generators: state.generators,
+                        );
+                    }
+                  },
+                ),
           ),
         ],
       ),

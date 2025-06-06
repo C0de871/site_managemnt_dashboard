@@ -6,5 +6,5 @@ class AppRoutes {
   static const String reports = '/reports';
   static const String sites = '/sites';
   static const String generators = '/generators';
-  static const String materials = '/materials';
+  static const String parts = '/materials';
 }

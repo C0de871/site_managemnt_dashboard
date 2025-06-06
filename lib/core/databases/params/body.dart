@@ -17,14 +17,28 @@ class GetReportByIDBody {
 class AddSiteBody {
   final String name;
   final String code;
+  final String longitude;
+  final String latitude;
 
   static const String nameKey = 'name';
   static const String codeKey = 'code';
+  static const String longitudeKey = 'longitude';
+  static const String latitudeKey = 'latitude';
 
-  AddSiteBody({required this.name, required this.code});
+  AddSiteBody({
+    required this.name,
+    required this.code,
+    required this.longitude,
+    required this.latitude,
+  });
 
   Map<String, dynamic> toMap() {
-    return {nameKey: name, codeKey: code};
+    return {
+      nameKey: name,
+      codeKey: code,
+      longitudeKey: longitude,
+      latitudeKey: latitude,
+    };
   }
 }
 
@@ -144,15 +158,31 @@ class EditSiteBody {
   final String id;
   final String name;
   final String code;
+  final String longitude;
+  final String latitude;
 
   static const String idKey = 'id';
   static const String nameKey = 'name';
   static const String codeKey = 'code';
+  static const String longitudeKey = 'longitude';
+  static const String latitudeKey = 'latitude';
 
-  EditSiteBody({required this.id, required this.name, required this.code});
+  EditSiteBody({
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.longitude,
+    required this.latitude,
+  });
 
   Map<String, dynamic> toMap() {
-    return {idKey: id, nameKey: name, codeKey: code};
+    return {
+      idKey: id,
+      nameKey: name,
+      codeKey: code,
+      longitudeKey: longitude,
+      latitudeKey: latitude,
+    };
   }
 }
 
@@ -369,3 +399,297 @@ class DeleteEngineCapacityBody {
     return {idsKey: ids};
   }
 }
+
+// class AddReportBody {
+//   static const String generatorIdKey = 'generator_id';
+//   static const String visitTypeKey = 'visit_type';
+//   static const String reportNumberKey = 'report_number';
+//   static const String visitDateKey = 'visit_date';
+//   static const String visitTimeKey = 'visit_time';
+//   static const String oilPressureKey = 'oil_pressure';
+//   static const String temperatureKey = 'temperature';
+//   static const String batterVoltKey = 'batter_volt';
+//   static const String oilQuantityKey = 'oil_quantity';
+//   static const String burnedOilQuantityKey = 'burned_oil_quantity';
+//   static const String frequencyKey = 'frequency';
+//   static const String meterKey = 'meter';
+//   static const String lastMeterKey = 'last_meter';
+//   static const String atsStatusKey = 'ats_status';
+//   static const String lastVisitDateKey = 'last_visit_date';
+//   static const String voltL1Key = 'volt_l1';
+//   static const String voltL2Key = 'volt_l2';
+//   static const String voltL3Key = 'volt_l3';
+//   static const String loadL1Key = 'load_l1';
+//   static const String loadL2Key = 'load_l2';
+//   static const String loadL3Key = 'load_l3';
+//   static const String visitResonsKey = 'visit_resons';
+//   static const String technicianNotesKey = 'technician_notes';
+//   static const String technicalStatusKey = 'technical_status';
+//   static const String completedWorksKey = 'completed_works';
+//   static const String visitLocationKey = 'visit_location';
+//   static const String partsKey = 'parts';
+
+//   final int generatorId;
+//   final String visitType;
+//   final String reportNumber;
+//   final DateTime visitDate;
+//   final String visitTime;
+//   final double oilPressure;
+//   final double temperature;
+//   final double batterVolt;
+//   final double oilQuantity;
+//   final double burnedOilQuantity;
+//   final double frequency;
+//   final double meter;
+//   final double lastMeter;
+//   final String atsStatus;
+//   final DateTime lastVisitDate;
+//   final double voltL1;
+//   final double voltL2;
+//   final double voltL3;
+//   final double loadL1;
+//   final double loadL2;
+//   final double loadL3;
+//   final String visitResons;
+//   final List<String> technicianNotes;
+//   final String technicalStatus;
+//   final List<String> completedWorks;
+//   final String visitLocation;
+//   final List<AddReportPartBody> parts;
+
+//   AddReportBody({
+//     required this.generatorId,
+//     required this.visitType,
+//     required this.reportNumber,
+//     required this.visitDate,
+//     required this.visitTime,
+//     required this.oilPressure,
+//     required this.temperature,
+//     required this.batterVolt,
+//     required this.oilQuantity,
+//     required this.burnedOilQuantity,
+//     required this.frequency,
+//     required this.meter,
+//     required this.lastMeter,
+//     required this.atsStatus,
+//     required this.lastVisitDate,
+//     required this.voltL1,
+//     required this.voltL2,
+//     required this.voltL3,
+//     required this.loadL1,
+//     required this.loadL2,
+//     required this.loadL3,
+//     required this.visitResons,
+//     required this.technicianNotes,
+//     required this.technicalStatus,
+//     required this.completedWorks,
+//     required this.visitLocation,
+//     required this.parts,
+//   });
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       generatorIdKey: generatorId,
+//       visitTypeKey: visitType,
+//       reportNumberKey: reportNumber,
+//       visitDateKey: visitDate.toIso8601String(),
+//       visitTimeKey: visitTime,
+//       oilPressureKey: oilPressure,
+//       temperatureKey: temperature,
+//       batterVoltKey: batterVolt,
+//       oilQuantityKey: oilQuantity,
+//       burnedOilQuantityKey: burnedOilQuantity,
+//       frequencyKey: frequency,
+//       meterKey: meter,
+//       lastMeterKey: lastMeter,
+//       atsStatusKey: atsStatus,
+//       lastVisitDateKey: lastVisitDate.toIso8601String(),
+//       voltL1Key: voltL1,
+//       voltL2Key: voltL2,
+//       voltL3Key: voltL3,
+//       loadL1Key: loadL1,
+//       loadL2Key: loadL2,
+//       loadL3Key: loadL3,
+//       visitResonsKey: visitResons,
+//       technicianNotesKey: technicianNotes,
+//       technicalStatusKey: technicalStatus,
+//       completedWorksKey: completedWorks,
+//       visitLocationKey: visitLocation,
+//       partsKey: parts.map((e) => e.toMap()).toList(),
+//     };
+//   }
+// }
+
+// class AddReportPartBody {
+//   final int id;
+//   final String note;
+//   final String isFaulty;
+//   final String lastReplacementDate;
+//   final String quantity;
+//   final String lastReplacementMeter;
+
+//   static const String idKey = 'id';
+//   static const String nameKey = 'name';
+//   static const String quantityKey = 'quantity';
+//   static const String codeKey = 'code';
+//   static const String noteKey = 'note';
+//   static const String isFaultyKey = 'is_faulty';
+//   static const String lastReplacementDateKey = 'last_replacement_date';
+//   static const String lastReplacementMeterKey = 'last_replacement_meter';
+
+//   AddReportPartBody({
+//     required this.id,
+//     required this.note,
+//     required this.isFaulty,
+//     required this.lastReplacementDate,
+//     required this.lastReplacementMeter,
+//     required this.quantity,
+//   });
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       idKey: id,
+//       quantityKey: quantity,
+//       noteKey: note,
+//       isFaultyKey: isFaulty,
+//       lastReplacementDateKey: lastReplacementDate,
+//       lastReplacementMeterKey: lastReplacementMeter,
+//     };
+//   }
+// }
+
+// class EditReportBody {
+//   static const String idKey = 'id';
+//   static const String generatorIdKey = 'generator_id';
+//   static const String visitTypeKey = 'visit_type';
+//   static const String reportNumberKey = 'report_number';
+//   static const String visitDateKey = 'visit_date';
+//   static const String visitTimeKey = 'visit_time';
+//   static const String oilPressureKey = 'oil_pressure';
+//   static const String temperatureKey = 'temperature';
+//   static const String batterVoltKey = 'batter_volt';
+//   static const String oilQuantityKey = 'oil_quantity';
+//   static const String burnedOilQuantityKey = 'burned_oil_quantity';
+//   static const String frequencyKey = 'frequency';
+//   static const String meterKey = 'meter';
+//   static const String lastMeterKey = 'last_meter';
+//   static const String atsStatusKey = 'ats_status';
+//   static const String lastVisitDateKey = 'last_visit_date';
+//   static const String voltL1Key = 'volt_l1';
+//   static const String voltL2Key = 'volt_l2';
+//   static const String voltL3Key = 'volt_l3';
+//   static const String loadL1Key = 'load_l1';
+//   static const String loadL2Key = 'load_l2';
+//   static const String loadL3Key = 'load_l3';
+//   static const String visitResonsKey = 'visit_resons';
+//   static const String technicianNotesKey = 'technician_notes';
+//   static const String technicalStatusKey = 'technical_status';
+//   static const String completedWorksKey = 'completed_works';
+//   static const String visitLocationKey = 'visit_location';
+//   static const String partsKey = 'parts';
+
+//   final int id;
+//   final int generatorId;
+//   final String visitType;
+//   final String reportNumber;
+//   final DateTime visitDate;
+//   final String visitTime;
+//   final double oilPressure;
+//   final double temperature;
+//   final double batterVolt;
+//   final double oilQuantity;
+//   final double burnedOilQuantity;
+//   final double frequency;
+//   final double meter;
+//   final double lastMeter;
+//   final String atsStatus;
+//   final DateTime lastVisitDate;
+//   final double voltL1;
+//   final double voltL2;
+//   final double voltL3;
+//   final double loadL1;
+//   final double loadL2;
+//   final double loadL3;
+//   final String visitResons;
+//   final List<String> technicianNotes;
+//   final String technicalStatus;
+//   final List<String> completedWorks;
+//   final String visitLocation;
+//   final List<AddReportPartBody> parts;
+
+//   EditReportBody({
+//     required this.id,
+//     required this.generatorId,
+//     required this.visitType,
+//     required this.reportNumber,
+//     required this.visitDate,
+//     required this.visitTime,
+//     required this.oilPressure,
+//     required this.temperature,
+//     required this.batterVolt,
+//     required this.oilQuantity,
+//     required this.burnedOilQuantity,
+//     required this.frequency,
+//     required this.meter,
+//     required this.lastMeter,
+//     required this.atsStatus,
+//     required this.lastVisitDate,
+//     required this.voltL1,
+//     required this.voltL2,
+//     required this.voltL3,
+//     required this.loadL1,
+//     required this.loadL2,
+//     required this.loadL3,
+//     required this.visitResons,
+//     required this.technicianNotes,
+//     required this.technicalStatus,
+//     required this.completedWorks,
+//     required this.visitLocation,
+//     required this.parts,
+//   });
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       idKey: id,
+//       generatorIdKey: generatorId,
+//       visitTypeKey: visitType,
+//       reportNumberKey: reportNumber,
+//       visitDateKey: visitDate.toIso8601String(),
+//       visitTimeKey: visitTime,
+//       oilPressureKey: oilPressure,
+//       temperatureKey: temperature,
+//       batterVoltKey: batterVolt,
+//       oilQuantityKey: oilQuantity,
+//       burnedOilQuantityKey: burnedOilQuantity,
+//       frequencyKey: frequency,
+//       meterKey: meter,
+//       lastMeterKey: lastMeter,
+//       atsStatusKey: atsStatus,
+//       lastVisitDateKey: lastVisitDate.toIso8601String(),
+//       voltL1Key: voltL1,
+//       voltL2Key: voltL2,
+//       voltL3Key: voltL3,
+//       loadL1Key: loadL1,
+//       loadL2Key: loadL2,
+//       loadL3Key: loadL3,
+//       visitResonsKey: visitResons,
+//       technicianNotesKey: technicianNotes,
+//       technicalStatusKey: technicalStatus,
+//       completedWorksKey: completedWorks,
+//       visitLocationKey: visitLocation,
+//       partsKey: parts.map((e) => e.toMap()).toList(),
+//     };
+//   }
+// }
+
+// class DeleteReportBody {
+//   final List<int> ids;
+
+//   static const String idsKey = 'ids';
+
+//   DeleteReportBody({required this.ids});
+
+//   Map<String, dynamic> toMap() {
+//     return {idsKey: ids};
+//   }
+// }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/core/shared/dialog/loading_dialog.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
 
 import '../cubit/generators_cubit.dart';
@@ -27,15 +28,7 @@ class GeneratorDialog extends StatelessWidget {
     return BlocBuilder<GeneratorsEnginesCubit, GeneratorsEnginesState>(
       builder: (context, state) {
         return state.sitesStatus.isLoading
-            ? AlertDialog(
-              content: Row(
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 20),
-                  Text('Loading...'),
-                ],
-              ),
-            )
+            ? LoadingDialog()
             : StatefulBuilder(
               builder:
                   (context, setState) => AlertDialog(

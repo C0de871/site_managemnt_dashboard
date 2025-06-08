@@ -404,7 +404,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 4,
       shadowColor: Colors.black12,
       // color: colorScheme.surfaceContainerLowest,

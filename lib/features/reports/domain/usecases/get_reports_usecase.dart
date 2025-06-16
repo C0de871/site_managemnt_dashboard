@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/features/reports/domain/entities/report_response_entity.dart';
 
 import '../../../../core/databases/errors/failure.dart';
-import '../entities/report_entity.dart';
 import '../repository/reports_repository.dart';
 
 class GetReportsUsecase {
@@ -9,7 +9,7 @@ class GetReportsUsecase {
 
   GetReportsUsecase({required this.repository});
 
-  Future<Either<Failure, List<ReportEntity>>> call() {
+  Future<Either<Failure, ReportResponseEntity>> call() {
     return repository.getReports();
   }
 }

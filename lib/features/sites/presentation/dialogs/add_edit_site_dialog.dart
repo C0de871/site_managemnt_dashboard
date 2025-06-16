@@ -24,12 +24,21 @@ class AddEditSiteDialog extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final SiteEntity? site = siteIndex != null ? state.sites[siteIndex!] : null;
+        final SiteEntity? site =
+            siteIndex != null
+                ? state.sitesResponseEntity?.sites[siteIndex!]
+                : null;
         log("${state.generatorStatus}");
-        Widget generatorsDropDown = DropdownSearch<GeneratorEntity>.multiSelection(
+        Widget
+        generatorsDropDown = DropdownSearch<GeneratorEntity>.multiSelection(
           key: cubit.dropdownKey,
           selectedItems: site?.generators ?? [],
-          decoratorProps: DropDownDecoratorProps(decoration: InputDecoration(labelText: 'site generators', hintText: 'Select generator')),
+          decoratorProps: DropDownDecoratorProps(
+            decoration: InputDecoration(
+              labelText: 'site generators',
+              hintText: 'Select generator',
+            ),
+          ),
           compareFn: (a, b) {
             return a == b;
           },
@@ -41,7 +50,21 @@ class AddEditSiteDialog extends StatelessWidget {
             menuProps: MenuProps(align: MenuAlign.topCenter),
             showSelectedItems: true,
             showSearchBox: true,
-            title: Container(decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer), alignment: Alignment.center, padding: const EdgeInsets.symmetric(vertical: 16), child: Text('Generators:', style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimaryContainer))),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+              ),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'Generators:',
+                style: TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
             loadingBuilder: (context, message) {
               return Text(message);
             },
@@ -55,7 +78,50 @@ class AddEditSiteDialog extends StatelessWidget {
           },
         );
 
-        return AlertDialog(title: Text(site == null ? 'Add site' : 'Edit site'), content: ConstrainedBox(constraints: BoxConstraints(maxWidth: 400), child: Form(key: cubit.formKey, child: Column(mainAxisSize: MainAxisSize.min, children: [TextField(controller: cubit.siteNameController, decoration: InputDecoration(labelText: 'Site Name'), autofocus: true), const SizedBox(height: 16), TextField(controller: cubit.siteCodeController, decoration: InputDecoration(labelText: 'Site Code')), const SizedBox(height: 16), if (state.generatorStatus.isLoading) Center(child: CircularProgressIndicator()), if (state.generatorStatus.isLoaded) generatorsDropDown]))), actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')), ElevatedButton(onPressed: cubit.addEditSite, child: state.actionStatus.isLoading ? CircularProgressIndicator(padding: EdgeInsets.all(8), color: colors.onPrimary) : Text(site == null ? 'Add' : 'Update'))]);
+        return AlertDialog(
+          title: Text(site == null ? 'Add site' : 'Edit site'),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: Form(
+              key: cubit.formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: cubit.siteNameController,
+                    decoration: InputDecoration(labelText: 'Site Name'),
+                    autofocus: true,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: cubit.siteCodeController,
+                    decoration: InputDecoration(labelText: 'Site Code'),
+                  ),
+                  const SizedBox(height: 16),
+                  if (state.generatorStatus.isLoading)
+                    Center(child: CircularProgressIndicator()),
+                  if (state.generatorStatus.isLoaded) generatorsDropDown,
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: cubit.addEditSite,
+              child:
+                  state.actionStatus.isLoading
+                      ? CircularProgressIndicator(
+                        padding: EdgeInsets.all(8),
+                        color: colors.onPrimary,
+                      )
+                      : Text(site == null ? 'Add' : 'Update'),
+            ),
+          ],
+        );
       },
     );
   }

@@ -24,27 +24,34 @@ class SitesScreen extends StatelessWidget {
             subtitle: 'Manage your sites',
             icon: Icons.energy_savings_leaf_outlined,
           ),
-      
+
           // Main Content
           Expanded(
             child: BlocBuilder<SitesCubit, SitesState>(
               builder: (context, state) {
                 switch (state.sitesStatus) {
-                  case SitesStatus.loading || SitesStatus.initial:
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: colorScheme.primary,
-                      ),
-                    );
+                  // case SitesStatus.loading || SitesStatus.initial:
+                  //   return Center(
+                  //     child: CircularProgressIndicator(
+                  //       color: colorScheme.primary,
+                  //     ),
+                  //   );
                   case SitesStatus.error:
                     return MyErrorWidget(
                       colorScheme: colorScheme,
                       message: state.error,
-                      onPressed: () => context.read<SitesCubit>().fetchSites(),
+                      onPressed:
+                          () => context.read<SitesCubit>().fetchSites(
+                            page: state.lastPageNumber,
+                          ),
                       title: 'Error loading sites',
                     );
-                  case SitesStatus.loaded:
-                    return SitesContent(sites: state.sites);
+                  case SitesStatus.loaded ||
+                      SitesStatus.loading ||
+                      SitesStatus.initial:
+                    return SitesContent(
+                      sites: state.sitesResponseEntity?.sites ?? [],
+                    );
                 }
               },
             ),

@@ -7,7 +7,7 @@ class GeneratorModel extends GeneratorEntity {
   static const String idKey = 'id';
   static const String brandKey = 'brand';
   static const String engineKey = 'engine';
-  static const String initalMeterKey = 'inital_meter';
+  static const String initialMeterKey = 'initial_meter';
   static const String siteKey = 'site';
 
   const GeneratorModel({
@@ -23,8 +23,11 @@ class GeneratorModel extends GeneratorEntity {
       id: json[idKey] as int,
       brand: EngineBrandModel.fromJson(json[brandKey] as Map<String, dynamic>),
       engine: EngineModel.fromJson(json[engineKey] as Map<String, dynamic>),
-      initalMeter: json[initalMeterKey] as String,
-      site: SitesModel.fromJson(json[siteKey] as Map<String, dynamic>),
+      initalMeter: json[initialMeterKey] as String,
+      site:
+          (json[siteKey] ?? json["mtn_site"]) == null
+              ? null
+              : SitesModel.fromJson(json[siteKey] ?? json["mtn_site"]),
     );
   }
 
@@ -33,7 +36,7 @@ class GeneratorModel extends GeneratorEntity {
       idKey: id,
       brandKey: (brand as EngineBrandModel).toJson(),
       engineKey: (engine as EngineModel).toJson(),
-      initalMeterKey: initalMeter,
+      initialMeterKey: initalMeter,
       siteKey: (site as SitesModel).toJson(),
     };
   }

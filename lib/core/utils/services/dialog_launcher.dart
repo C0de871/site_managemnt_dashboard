@@ -9,7 +9,7 @@ class DialogLauncher {
     BuildContext context, {
     required String title,
     required String content,
-    required VoidCallback onConfirm,
+    required Future<void> Function() onConfirm,
   }) {
     showDialog(
       context: context,

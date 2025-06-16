@@ -21,7 +21,7 @@ class SitesContent extends StatelessWidget {
       child: Row(
         children: [
           LeftTable(),
-          state.currentSiteGeneratorsId != null
+          state.currentSiteGeneratorsId != -1
               ? SizedBox(width: 32)
               : SizedBox.shrink(),
           RightTable(),

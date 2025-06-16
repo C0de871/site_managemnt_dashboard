@@ -1,15 +1,23 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-
+import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
+import 'package:site_managemnt_dashboard/features/reports/domain/usecases/get_reports_usecase.dart';
+import '../../../../core/utils/services/service_locator.dart';
 import '../../../sites/data/models/sites_model.dart';
 import '../../domain/entities/report_entity.dart';
+import '../dialogs/report_dialog_service.dart';
 
 part 'reports_state.dart';
 
 class ReportsCubit extends Cubit<ReportsState> {
   final TextEditingController searchController = TextEditingController();
+  final dialogService = ReportDialogService();
   VisitType? selectedVisitType;
+
+  final GetReportsUsecase _getReportsUsecase = getIt();
 
   ReportsCubit() : super(ReportsInitial()) {
     // Load reports on initialization
@@ -42,7 +50,7 @@ class ReportsCubit extends Cubit<ReportsState> {
       visitType:
           index % 3 == 0
               ? VisitType.routine
-              : (index % 3 == 1 ? VisitType.emergency : VisitType.umrah),
+              : (index % 3 == 1 ? VisitType.emergency : VisitType.overhaul),
       visitDate: DateTime.now().subtract(Duration(days: index % 30)),
     ),
   );
@@ -50,20 +58,22 @@ class ReportsCubit extends Cubit<ReportsState> {
   void loadReports() async {
     emit(ReportsLoading());
 
-    try {
-      // Simulate API delay
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      emit(
-        ReportsLoaded(
-          reports: _allReports,
-          filteredReports: _allReports,
-          selectedReportIds: const {},
-        ),
-      );
-    } catch (e) {
-      emit(ReportsError(e.toString()));
-    }
+    final response = await _getReportsUsecase.call();
+    response.fold(
+      (failure) {
+        emit(ReportsError(failure.errMessage));
+      },
+      (reportsResponse) {
+        emit(
+          ReportsLoaded(
+            reports: reportsResponse.reports,
+            filteredReports: reportsResponse.reports,
+            selectedReportIds: const {},
+            pagination: reportsResponse.pagination,
+          ),
+        );
+      },
+    );
   }
 
   void searchReports(String query) {
@@ -124,13 +134,17 @@ class ReportsCubit extends Cubit<ReportsState> {
         case 'siteCode':
           reports.sort(
             (a, b) =>
-                ascending ? a.site.code.compareTo(b.site.code) : b.site.code.compareTo(a.site.code),
+                ascending
+                    ? a.site.code.compareTo(b.site.code)
+                    : b.site.code.compareTo(a.site.code),
           );
           break;
         case 'siteName':
           reports.sort(
             (a, b) =>
-                ascending ? a.site.name.compareTo(b.site.name) : b.site.name.compareTo(a.site.name),
+                ascending
+                    ? a.site.name.compareTo(b.site.name)
+                    : b.site.name.compareTo(a.site.name),
           );
           break;
         case 'visitType':
@@ -166,6 +180,8 @@ class ReportsCubit extends Cubit<ReportsState> {
         selectedIds.add(reportId);
       }
 
+      log(selectedIds.toString());
+
       emit(currentState.copyWith(selectedReportIds: selectedIds));
     }
   }
@@ -186,7 +202,11 @@ class ReportsCubit extends Cubit<ReportsState> {
     if (state is ReportsLoaded) {
       final currentState = state as ReportsLoaded;
 
-      if (currentState.selectedReportIds.isEmpty) return;
+      log(currentState.selectedReportIds.toString());
+
+      if (currentState.selectedReportIds.isEmpty) {
+        return;
+      }
 
       emit(
         ReportsActionInProgress(
@@ -197,7 +217,7 @@ class ReportsCubit extends Cubit<ReportsState> {
 
       try {
         // Simulate API call
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 2));
 
         // Filter out deleted reports
         final updatedReports =
@@ -211,10 +231,44 @@ class ReportsCubit extends Cubit<ReportsState> {
                 .toList();
 
         emit(
-          ReportsLoaded(
+          ReportsActionSuccess(
             reports: updatedReports,
             filteredReports: updatedReports,
             selectedReportIds: const {},
+            pagination: PaginationEntity(), //todo
+          ),
+        );
+      } catch (e) {
+        emit(ReportsError(e.toString()));
+      }
+    }
+  }
+
+  void deleteOneReport(int reportID) async {
+    if (state is ReportsLoaded) {
+      final currentState = state as ReportsLoaded;
+
+      emit(
+        ReportsActionInProgress(
+          baseState: currentState,
+          action: 'Deleting selected reports',
+        ),
+      );
+
+      try {
+        // Simulate API call
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Filter out deleted reports
+        final updatedReports =
+            _allReports.where((report) => report.id != reportID).toList();
+
+        emit(
+          ReportsActionSuccess(
+            reports: updatedReports,
+            filteredReports: updatedReports,
+            selectedReportIds: const {},
+            pagination: PaginationEntity(), //todo
           ),
         );
       } catch (e) {
@@ -246,4 +300,28 @@ class ReportsCubit extends Cubit<ReportsState> {
       }
     }
   }
+
+  void showConfirmDeleteDialog([int? reportID]) async {
+    final confirmed = await dialogService.showConfirmationDialog(
+      title: "Delete selected sites",
+      content: "Are you sure you want to delete the selected site?",
+    );
+
+    if (confirmed == true) {
+      if (reportID != null) {
+        deleteOneReport(reportID);
+      } else {
+        deleteSelectedReports();
+      }
+    }
+  }
+
+  void showLoadingDialog() {
+    dialogService.showLoadingDialog();
+  }
+
+  void hideDialog() => dialogService.hideDialog();
+
+  void showErrorDialog(String message) =>
+      dialogService.showErrorDialog(message);
 }

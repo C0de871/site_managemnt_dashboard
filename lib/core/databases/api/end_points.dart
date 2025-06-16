@@ -1,15 +1,15 @@
 class EndPoints {
-  static const String baseUrl = "https://api.example.com";
+  static const String baseUrl = "http://127.0.0.1:8000/api";
 
   //!auth
   static const String login = "$baseUrl/login";
   static const String logout = "$baseUrl/logout";
 
   //!get
-  static const String getGenerators = "$baseUrl/getGenerators";
-  static const String getReports = "$baseUrl/getReports";
+  static const String getGenerators = "$baseUrl/generators";
+  static const String getReports = "$baseUrl/reports";
   static const String getReportDetailsById = "$baseUrl/getReportDetailsById";
-  static const String getSites = "$baseUrl/getSites";
+  static const String getSites = "$baseUrl/mtn-sites";
   static const String getGeneratorsBrands = "$baseUrl/getGeneratorsBrands";
   static const String getParts = "$baseUrl/getParts";
   static const String getEnginesBrands = "$baseUrl/getEnginesBrands";
@@ -45,10 +45,18 @@ class EndPoints {
   static const String addReport = "$baseUrl/addReport";
   static const String editReport = "$baseUrl/editReport";
   static const String deleteReport = "$baseUrl/deleteReport";
+
+  static const String getGeneratorsBySiteID = "$baseUrl/mtn-sites/generators";
 }
 
 class ApiKey {
   static const String message = "message";
   static const String statusCode = "status";
   static const String data = "data";
+
+  static const String totalItems = "total";
+
+  static const String currentItemsCount = "count";
+
+  static const String currentPage = "current_page";
 }

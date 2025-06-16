@@ -1,3 +1,5 @@
+import 'package:site_managemnt_dashboard/features/generators/data/models/generator_response_model.dart';
+
 import '../../../../core/databases/api/api_consumer.dart';
 import '../../../../core/databases/api/end_points.dart';
 import '../../../../core/databases/cache/secure_storage_helper.dart';
@@ -10,12 +12,18 @@ class GeneratorsRemoteDataSource {
   final SecureStorageHelper cacheHelper;
   GeneratorsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<ApiResponse<List<GeneratorModel>>> getGenerators() async {
+  Future<GeneratorResponseModel> getGenerators() async {
     final response = await api.get(EndPoints.getGenerators);
-    return ApiResponse<List<GeneratorModel>>.fromJson(
-      response,
-      (json) => (json as List).map((e) => GeneratorModel.fromJson(e)).toList(),
+    return GeneratorResponseModel.fromJson(response);
+  }
+
+  Future<GeneratorResponseModel> getGeneratorsBySiteID({
+    required int siteID,
+  }) async {
+    final response = await api.get(
+      "${EndPoints.getGeneratorsBySiteID}/$siteID",
     );
+    return GeneratorResponseModel.fromJson(response);
   }
 
   Future<ApiResponse<GeneratorModel>> addGenerator(

@@ -23,6 +23,7 @@ class _ReportsDataTableState extends State<ReportsDataTable> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final reportCubit = context.read<ReportsCubit>();
 
     return BlocBuilder<ReportsCubit, ReportsState>(
       builder: (context, state) {
@@ -103,7 +104,7 @@ class _ReportsDataTableState extends State<ReportsDataTable> {
                   tooltip: 'Delete',
                   onPressed:
                       (report) =>
-                          context.read<ReportsCubit>().deleteSelectedReports(),
+                          reportCubit.showConfirmDeleteDialog(report.id),
                   color: colorScheme.error,
                 ),
               ],

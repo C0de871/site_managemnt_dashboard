@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/features/reports/domain/entities/report_response_entity.dart';
 
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
 import '../../../../core/databases/errors/failure.dart';
-import '../../domain/entities/report_entity.dart';
 import '../../domain/repository/reports_repository.dart';
 import '../data_sources/reports_remote_data_source.dart';
 
@@ -16,11 +16,11 @@ class ReportsRepositoryImpl extends ReportsRepository {
   });
 
   @override
-  Future<Either<Failure, List<ReportEntity>>> getReports() async {
+  Future<Either<Failure, ReportResponseEntity>> getReports() async {
     if (await networkInfo.isConnected!) {
       try {
         final remoteData = await remoteDataSource.getReports();
-        return Right(remoteData.data);
+        return Right(remoteData);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }

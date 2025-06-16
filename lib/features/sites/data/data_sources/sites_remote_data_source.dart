@@ -1,3 +1,6 @@
+import 'package:site_managemnt_dashboard/features/sites/data/models/sites_response_model.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_response_entity.dart';
+
 import '../../../../core/databases/api/api_consumer.dart';
 import '../../../../core/databases/api/end_points.dart';
 import '../../../../core/databases/cache/secure_storage_helper.dart';
@@ -10,12 +13,9 @@ class SitesRemoteDataSource {
   final SecureStorageHelper cacheHelper;
   SitesRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<ApiResponse<List<SitesModel>>> getSites() async {
-    final response = await api.get(EndPoints.getSites);
-    return ApiResponse<List<SitesModel>>.fromJson(
-      response,
-      (json) => (json as List).map((e) => SitesModel.fromJson(e)).toList(),
-    );
+  Future<SitesResponseModel> getSites({required int page}) async {
+    final response = await api.get("${EndPoints.getSites}/?page=$page");
+    return SitesResponseModel.fromJson(response);
   }
 
   Future<ApiResponse<SitesModel>> addSite(AddSiteBody body) async {

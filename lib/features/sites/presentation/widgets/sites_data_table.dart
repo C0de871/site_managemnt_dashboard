@@ -17,16 +17,17 @@ class SitesDataTable extends StatefulWidget {
 
 class _SitesDataTableState extends State<SitesDataTable> {
   final DataGridController _dataGridController = DataGridController();
-  final int _rowsPerPage = 10;
+  final int _rowsPerPage = 20;
   int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final sitesCubit = context.read<SitesCubit>();
 
     return BlocBuilder<SitesCubit, SitesState>(
       builder: (context, state) {
-        if (state.sites.isEmpty) {
+        if (state.sitesResponseEntity?.sites.isEmpty ?? false) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -49,6 +50,7 @@ class _SitesDataTableState extends State<SitesDataTable> {
             ),
           );
         }
+
         final siteColumns = [
           SelectionColumnConfig<SiteEntity>(
             idExtractor: (site) => site.id.toString(),
@@ -68,13 +70,13 @@ class _SitesDataTableState extends State<SitesDataTable> {
           ColumnConfig<SiteEntity>(
             columnName: 'longitude',
             displayName: 'Longitude',
-            valueExtractor: (site) => site.longitude,
+            valueExtractor: (site) => site.longitude ?? "Unkown",
             visible: false,
           ),
           ColumnConfig<SiteEntity>(
             columnName: 'latitude',
             displayName: 'Latitude',
-            valueExtractor: (site) => site.latitude,
+            valueExtractor: (site) => site.latitude ?? "Unkown",
             visible: false,
           ),
           ActionsColumnConfig<SiteEntity>(
@@ -95,7 +97,7 @@ class _SitesDataTableState extends State<SitesDataTable> {
                   log(site.toString());
                   context.read<SitesCubit>().showAddEditSiteDialog(
                     context,
-                    state.sites.indexOf(site),
+                    state.sitesResponseEntity?.sites.indexOf(site),
                   );
                 },
                 color: colorScheme.primary,
@@ -115,12 +117,14 @@ class _SitesDataTableState extends State<SitesDataTable> {
 
         // Then create your data source
         final dataSource = CustomDataSource<SiteEntity>(
-          data: state.sites,
+          data: state.sitesResponseEntity?.sites ?? [],
           columns: siteColumns,
         );
 
         // Calculate total pages
-        final int totalPages = (state.sites.length / _rowsPerPage).ceil();
+        log("${state.sitesResponseEntity?.pagination.totalItemsCount}");
+        final int totalPages =
+            (state.sitesResponseEntity?.pagination.totalItemsCount ?? 1);
 
         // Ensure current page is valid
         if (_currentPage >= totalPages && totalPages > 0) {
@@ -155,8 +159,11 @@ class _SitesDataTableState extends State<SitesDataTable> {
               height: 60,
               child: SfDataPager(
                 delegate: dataSource,
-                pageCount:
-                    (state.sites.length / _rowsPerPage).ceil().toDouble(),
+                pageCount: totalPages.toDouble(),
+                onPageNavigationStart: (pageNumber) {
+                  sitesCubit.fetchSites(page: pageNumber);
+                },
+                onPageNavigationEnd: (pageNumber) {},
               ),
             ),
           ],

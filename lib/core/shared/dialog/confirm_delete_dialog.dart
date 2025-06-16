@@ -10,7 +10,7 @@ class ConfirmDeleteDialog extends StatelessWidget {
 
   final String title;
   final String content;
-  final VoidCallback onConfirm;
+  final void Function() onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,6 @@ class ConfirmDeleteDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             onConfirm();
-            Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.error,

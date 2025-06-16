@@ -23,11 +23,11 @@ class SitesModel extends SiteEntity {
       id: json[idKey] as int,
       name: json[nameKey] as String,
       code: json[codeKey] as String,
-      longitude: json[longitudeKey] as String,
-      latitude: json[latitudeKey] as String,
+      longitude: json[longitudeKey] as String?,
+      latitude: json[latitudeKey] as String?,
       generators:
-          (json[generatorsKey] as List)
-              .map((e) => GeneratorModel.fromJson(e))
+          (json[generatorsKey] as List?)
+              ?.map((e) => GeneratorModel.fromJson(e))
               .toList(),
     );
   }

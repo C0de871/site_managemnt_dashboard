@@ -15,6 +15,7 @@ class GeneratorsEnginesState extends Equatable {
     this.engineBrands = const [],
     this.generatorBrands = const [],
     this.engineCapacities = const [],
+    this.pagination,
     this.engines = const [],
     this.sites = const [],
   });
@@ -22,6 +23,7 @@ class GeneratorsEnginesState extends Equatable {
   final GeneratorsEnginesStatus generatorsStatus;
   final GeneratorsEnginesStatus actionStatus;
   final List<GeneratorEntity> generators;
+  final PaginationEntity? pagination;
   final Set<String> selectedGeneratorIds;
   final String error;
 
@@ -30,6 +32,7 @@ class GeneratorsEnginesState extends Equatable {
   final GeneratorsEnginesStatus engineCapacitiesStatus;
   final GeneratorsEnginesStatus enginesStatus;
   final GeneratorsEnginesStatus sitesStatus;
+
   final List<BrandEntity> engineBrands;
   final List<BrandEntity> generatorBrands;
   final List<EngineCapacityEntity> engineCapacities;
@@ -53,6 +56,7 @@ class GeneratorsEnginesState extends Equatable {
     engineCapacities,
     engines,
     sites,
+    pagination,
   ];
 
   GeneratorsEnginesState copyWith({
@@ -74,6 +78,7 @@ class GeneratorsEnginesState extends Equatable {
     List<EngineCapacityEntity>? engineCapacities,
     List<EngineEntity>? engines,
     List<SiteEntity>? sites,
+    PaginationEntity? pagination,
   }) {
     return GeneratorsEnginesState(
       generatorsStatus: generatorsStatus ?? this.generatorsStatus,
@@ -93,6 +98,7 @@ class GeneratorsEnginesState extends Equatable {
       engineCapacities: engineCapacities ?? this.engineCapacities,
       engines: engines ?? this.engines,
       sites: sites ?? this.sites,
+      pagination: pagination ?? this.pagination,
     );
   }
 }

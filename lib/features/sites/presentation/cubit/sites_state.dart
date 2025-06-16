@@ -3,13 +3,14 @@ part of 'sites_cubit.dart';
 class SitesState extends Equatable {
   const SitesState({
     this.sitesStatus = SitesStatus.initial,
-    this.sites = const [],
+    this.sitesResponseEntity,
     this.error = '',
     this.actionStatus = SitesStatus.initial,
     this.generatorStatus = SitesStatus.initial,
     this.selectedSiteIds = const {},
     this.selectedGeneratorIds = const {},
-    this.currentSiteGeneratorsId,
+    this.lastPageNumber = 1,
+    this.currentSiteGeneratorsId = -1,
     this.freeGenerators = const [],
     this.selectedGenerators = const [],
     this.freeGeneratorsStatus = GeneratorsEnginesStatus.initial,
@@ -18,11 +19,12 @@ class SitesState extends Equatable {
   final SitesStatus sitesStatus;
   final SitesStatus actionStatus;
   final SitesStatus generatorStatus;
-  final List<SiteEntity> sites;
+  final SitesResponseEntity? sitesResponseEntity;
   final Set<String> selectedSiteIds;
   final Set<String> selectedGeneratorIds;
   final String error;
-  final int? currentSiteGeneratorsId;
+  final int currentSiteGeneratorsId;
+  final int lastPageNumber;
 
   final List<GeneratorEntity> freeGenerators;
   final List<GeneratorEntity> selectedGenerators;
@@ -31,12 +33,13 @@ class SitesState extends Equatable {
   @override
   List<Object?> get props => [
     sitesStatus,
-    sites,
+    sitesResponseEntity,
     error,
     actionStatus,
     generatorStatus,
     selectedSiteIds,
     selectedGeneratorIds,
+    lastPageNumber,
     currentSiteGeneratorsId,
     freeGenerators,
     freeGeneratorsStatus,
@@ -45,26 +48,29 @@ class SitesState extends Equatable {
 
   SitesState copyWith({
     SitesStatus? sitesStatus,
-    List<SiteEntity>? sites,
+    SitesResponseEntity? sitesResponseEntity,
     String? error,
     SitesStatus? actionStatus,
     SitesStatus? generatorStatus,
     Set<String>? selectedSiteIds,
     Set<String>? selectedGeneratorIds,
     int? currentSiteGeneratorsId,
+    int? lastPageNumber,
     List<GeneratorEntity>? freeGenerators,
     GeneratorsEnginesStatus? freeGeneratorsStatus,
     List<GeneratorEntity>? selectedGenerators,
   }) {
     return SitesState(
       sitesStatus: sitesStatus ?? this.sitesStatus,
-      sites: sites ?? this.sites,
+      sitesResponseEntity: sitesResponseEntity ?? this.sitesResponseEntity,
       error: error ?? this.error,
       actionStatus: actionStatus ?? this.actionStatus,
       generatorStatus: generatorStatus ?? this.generatorStatus,
       selectedSiteIds: selectedSiteIds ?? this.selectedSiteIds,
       selectedGeneratorIds: selectedGeneratorIds ?? this.selectedGeneratorIds,
-      currentSiteGeneratorsId: currentSiteGeneratorsId,
+      lastPageNumber: lastPageNumber ?? this.lastPageNumber,
+      currentSiteGeneratorsId:
+          currentSiteGeneratorsId ?? this.currentSiteGeneratorsId,
       freeGenerators: freeGenerators ?? this.freeGenerators,
       freeGeneratorsStatus: freeGeneratorsStatus ?? this.freeGeneratorsStatus,
       selectedGenerators: selectedGenerators ?? this.selectedGenerators,

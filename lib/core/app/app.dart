@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/helper/cubit_helper.dart';
+import 'package:site_managemnt_dashboard/features/reports/presentation/cubits/reports_cubit.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/presentation/cubit/report_details_cubit.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
@@ -20,11 +21,14 @@ import '../helper/app_functions.dart';
 import '../theme/theme.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp(this.dialogNavKey, {super.key});
+
+  final GlobalKey<NavigatorState> dialogNavKey;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: dialogNavKey,
       navigatorObservers: [RouteObserverService()],
       debugShowCheckedModeBanner: false,
       title: 'Dashboard App',
@@ -85,7 +89,10 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
             return MaterialPageRoute(
               settings: settings,
               builder: (context) {
-                return ReportsScreen();
+                return BlocProvider(
+                  create: (context) => ReportsCubit(),
+                  child: ReportsScreen(),
+                );
               },
             );
           } else if (settings.name == AppRoutes.reportDetails) {
@@ -104,11 +111,18 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
             return MaterialPageRoute(
               settings: settings,
               builder:
-                  (context) => BlocProvider(
-                    create:
-                        (context) =>
-                            getCubit<SitesCubit>(() => SitesCubit())
-                              ..fetchSites(),
+                  (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create:
+                            (context) =>
+                                getCubit<SitesCubit>(() => SitesCubit())
+                                  ..fetchSites(),
+                      ),
+                      BlocProvider(
+                        create: (context) => GeneratorsEnginesCubit(),
+                      ),
+                    ],
                     child: SitesScreen(),
                   ),
             );

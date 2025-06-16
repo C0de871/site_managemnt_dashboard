@@ -3,9 +3,9 @@ import '../../domain/entities/report_entity.dart';
 
 class ReportModel extends ReportEntity {
   static const String idKey = 'id';
-  static const String siteKey = 'site';
-  static const String typeKey = 'type';
-  static const String dateKey = 'date';
+  static const String siteKey = 'mtn_site';
+  static const String typeKey = 'visit_type';
+  static const String dateKey = 'visit_date';
 
   const ReportModel({
     required super.id,

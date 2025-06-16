@@ -4,19 +4,27 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_by_site_id.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/cubit/generators_cubit.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_response_entity.dart';
 
+import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
 import '../../../generators/domain/entities/generator_entity.dart';
 import '../../domain/entities/sites_entity.dart';
+import '../../domain/usecases/get_all_sites_usecase.dart';
 import '../dialogs/add_edit_site_dialog.dart';
 
 part 'sites_state.dart';
 
 class SitesCubit extends Cubit<SitesState> {
   SitesCubit() : super(const SitesState());
+
+  final GetAllSitesUseCase _getAllSitesUseCase = getIt<GetAllSitesUseCase>();
+  final GetGeneratorsBySiteIDUsecase _getAllSiteGeneratorsUseCase =
+      getIt<GetGeneratorsBySiteIDUsecase>();
 
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController siteCodeController = TextEditingController();
@@ -25,26 +33,34 @@ class SitesCubit extends Cubit<SitesState> {
   final GlobalKey<DropdownSearchState<GeneratorEntity>> dropdownKey =
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
 
-  Future<void> fetchSites() async {
+  Future<void> fetchSites({int page = 1}) async {
     emit(state.copyWith(sitesStatus: SitesStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
-    final sites = List<SiteEntity>.generate(
-      30,
-      (index) => SiteEntity(
-        id: index + 1,
-        name: 'site $index',
-        code: '${index + 1}000',
-        longitude: '123.456',
-        latitude: '78.910',
+    final response = await _getAllSitesUseCase.call(page: page);
+    response.fold(
+      (l) => emit(
+        SitesState(
+          sitesStatus: SitesStatus.error,
+          error: l.errMessage,
+          lastPageNumber: page,
+        ),
       ),
+      (sitesResponseEntity) {
+        log(sitesResponseEntity.toString());
+        emit(
+          state.copyWith(
+            sitesStatus: SitesStatus.loaded,
+            sitesResponseEntity: sitesResponseEntity,
+            lastPageNumber: page,
+          ),
+        );
+      },
     );
-    emit(state.copyWith(sitesStatus: SitesStatus.loaded, sites: sites));
   }
 
-  Future<void> fetchGenerators(int siteId) async {
+  Future<void> fetchGenerators(int siteID) async {
     bool isLoaded =
-        state.sites
-            .firstWhere((site) => site.id == siteId)
+        state.sitesResponseEntity?.sites
+            .firstWhere((site) => site.id == siteID)
             .generators
             ?.isNotEmpty ??
         false;
@@ -52,46 +68,41 @@ class SitesCubit extends Cubit<SitesState> {
       emit(
         state.copyWith(
           generatorStatus: SitesStatus.loaded,
-          currentSiteGeneratorsId: siteId,
+          currentSiteGeneratorsId: siteID,
         ),
       );
       return;
     }
     emit(state.copyWith(generatorStatus: SitesStatus.loading));
-    await Future.delayed(const Duration(seconds: 2));
-    final newSites =
-        state.sites.map((site) {
-          if (site.id == siteId) {
-            return site.copyWith(
-              generators: List.generate(
-                6,
-                (index) => GeneratorEntity(
-                  id: index + 1,
-                  brand: BrandEntity(id: index + 1, brand: 'brand $index'),
-                  engine: EngineEntity(
-                    id: index + 1,
-                    engineBrand: BrandEntity(
-                      id: index + 1,
-                      brand: 'brand $index',
-                    ),
-                    engineCapacity: EngineCapacityEntity(
-                      id: index + 1,
-                      capacity: index + 1,
-                    ),
-                  ),
-                  initalMeter: '123.456',
-                ),
-              ),
-            );
-          }
-          return site;
-        }).toList();
-    emit(
-      state.copyWith(
-        generatorStatus: SitesStatus.loaded,
-        sites: newSites,
-        currentSiteGeneratorsId: siteId,
-      ),
+    final response = await _getAllSiteGeneratorsUseCase.call(siteID: siteID);
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            generatorStatus: SitesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (generators) {
+        final newSitesResponseEntity = state.sitesResponseEntity?.copyWith(
+          sites:
+              state.sitesResponseEntity!.sites.map((site) {
+                if (site.id == siteID) {
+                  return site.copyWith(generators: generators.generators);
+                }
+                return site;
+              }).toList(),
+        );
+        emit(
+          state.copyWith(
+            generatorStatus: SitesStatus.loaded,
+            sitesResponseEntity: newSitesResponseEntity,
+            currentSiteGeneratorsId: siteID,
+          ),
+        );
+      },
     );
   }
 
@@ -133,10 +144,10 @@ class SitesCubit extends Cubit<SitesState> {
     // log(site.toString());
     fetchFreeGenerators();
     final SiteEntity? site;
-    if (index != null) {
-      site = state.sites[index];
-      fetchGenerators(site.id);
-    }
+    // if (index != null) {
+    //   site = state.sites[index];
+    //   fetchGenerators(site.id);
+    // }
     showDialog(
       context: parentContext,
       builder:
@@ -162,12 +173,12 @@ class SitesCubit extends Cubit<SitesState> {
   }
 
   void selectAllSites(bool selected) {
-    if (state.sitesStatus.isLoaded) {
-      final Set<String> selectedIds =
-          selected ? Set.from(state.sites.map((r) => r.id)) : {};
+    // if (state.sitesStatus.isLoaded) {
+    //   final Set<String> selectedIds =
+    //       selected ? Set.from(state.sites.map((r) => r.id)) : {};
 
-      emit(state.copyWith(selectedSiteIds: selectedIds));
-    }
+    //   emit(state.copyWith(selectedSiteIds: selectedIds));
+    // }
   }
 
   void setCurrentSiteGeneratorsId(int siteId) {
@@ -175,7 +186,7 @@ class SitesCubit extends Cubit<SitesState> {
     if (siteId != state.currentSiteGeneratorsId) {
       fetchGenerators(siteId);
     } else {
-      emit(state.copyWith(currentSiteGeneratorsId: null));
+      emit(state.copyWith(currentSiteGeneratorsId: -1));
     }
   }
 

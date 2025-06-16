@@ -7,6 +7,7 @@ import '../../../../core/databases/params/body.dart';
 import '../../domain/entities/generator_entity.dart';
 import '../../domain/repository/generators_repository.dart';
 import '../data sources/generators_remote_data_source.dart';
+import '../models/generator_response_model.dart';
 
 class GeneratorsRepositoryImple extends GeneratorsRepository {
   final NetworkInfo networkInfo;
@@ -16,12 +17,30 @@ class GeneratorsRepositoryImple extends GeneratorsRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, List<GeneratorEntity>>> getGenerators() async {
+  Future<Either<Failure, GeneratorResponseModel>> getGenerators() async {
     if (await networkInfo.isConnected!) {
       try {
         final remoteTempleT = await remoteDataSource.getGenerators();
 
-        return Right(remoteTempleT.data);
+        return Right(remoteTempleT);
+      } on ServerException catch (e) {
+        return Left(Failure(errMessage: e.errorModel.errorMessage));
+      }
+    } else {
+      return Left(Failure(errMessage: "There is no internet connnect"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GeneratorResponseModel>> getGeneratorsBySiteID({
+    required int siteID,
+  }) async {
+    if (await networkInfo.isConnected!) {
+      try {
+        final remoteResponse = await remoteDataSource.getGeneratorsBySiteID(
+          siteID: siteID,
+        );
+        return Right(remoteResponse);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }

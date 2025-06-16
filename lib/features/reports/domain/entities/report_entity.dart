@@ -6,7 +6,7 @@ import '../../../../core/utils/constants/constant.dart';
 enum VisitType {
   routine, // زيارة دورية
   emergency, // طارئة
-  umrah, // عمرة
+  overhaul, // عمرة
 }
 
 extension ReportTypeExtension on VisitType {
@@ -16,7 +16,7 @@ extension ReportTypeExtension on VisitType {
         return 'زيارة دورية';
       case VisitType.emergency:
         return 'طارئة';
-      case VisitType.umrah:
+      case VisitType.overhaul:
         return 'عمرة';
     }
   }
@@ -30,7 +30,7 @@ extension GetVisitType on String {
       case Constant.emergency:
         return VisitType.emergency;
       case Constant.umrah:
-        return VisitType.umrah;
+        return VisitType.overhaul;
       default:
         return VisitType.routine;
     }
@@ -43,7 +43,12 @@ class ReportEntity extends Equatable {
   final VisitType visitType;
   final DateTime visitDate;
 
-  const ReportEntity({required this.id, required this.site, required this.visitType, required this.visitDate});
+  const ReportEntity({
+    required this.id,
+    required this.site,
+    required this.visitType,
+    required this.visitDate,
+  });
 
   @override
   List<Object?> get props => [id, site, visitType, visitDate];
@@ -54,7 +59,17 @@ class ReportEntity extends Equatable {
   }
 
   // Create a copy of this report with updated fields
-  ReportEntity copyWith({int? id, SiteEntity? site, VisitType? visitType, DateTime? visitDate}) {
-    return ReportEntity(id: id ?? this.id, site: site ?? this.site, visitType: visitType ?? this.visitType, visitDate: visitDate ?? this.visitDate);
+  ReportEntity copyWith({
+    int? id,
+    SiteEntity? site,
+    VisitType? visitType,
+    DateTime? visitDate,
+  }) {
+    return ReportEntity(
+      id: id ?? this.id,
+      site: site ?? this.site,
+      visitType: visitType ?? this.visitType,
+      visitDate: visitDate ?? this.visitDate,
+    );
   }
 }

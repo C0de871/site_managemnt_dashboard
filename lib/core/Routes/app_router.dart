@@ -22,7 +22,6 @@ class AppRouter with CubitProviderMixin {
               (_) => MultiBlocProvider(
                 providers: [
                   BlocProvider(create: (_) => NavigationCubit()),
-                  BlocProvider(create: (_) => ReportsCubit()),
                 ],
                 child: const DashboardLayout(),
               ),

@@ -6,16 +6,16 @@ class SiteEntity extends Equatable {
   final int id;
   final String name;
   final String code;
-  final String longitude;
-  final String latitude;
+  final String? longitude;
+  final String? latitude;
   final List<GeneratorEntity>? generators;
 
   const SiteEntity({
     required this.id,
     required this.name,
     required this.code,
-    required this.longitude,
-    required this.latitude,
+    this.longitude,
+    this.latitude,
     this.generators,
   });
 
@@ -34,8 +34,8 @@ class SiteEntity extends Equatable {
       id: id ?? this.id,
       name: name ?? this.name,
       code: code ?? this.code,
-      longitude: longitude ?? this.longitude,
-      latitude: latitude ?? this.latitude,
+      // longitude: longitude ?? this.longitude,
+      // latitude: latitude ?? this.latitude,
       generators: generators ?? this.generators,
     );
   }

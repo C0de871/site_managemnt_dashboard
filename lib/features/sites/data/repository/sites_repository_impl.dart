@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_response_entity.dart';
 
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
@@ -16,11 +19,14 @@ class SitesRepositoryImpl extends SitesRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, List<SiteEntity>>> getSites() async {
+  Future<Either<Failure, SitesResponseEntity>> getSites({
+    required int page,
+  }) async {
     if (await networkInfo.isConnected!) {
       try {
-        final remoteData = await remoteDataSource.getSites();
-        return Right(remoteData.data);
+        final remoteData = await remoteDataSource.getSites(page: page);
+        log(remoteData.toString());
+        return Right(remoteData);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }

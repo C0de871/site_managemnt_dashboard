@@ -41,7 +41,9 @@ class ReportsActionButtons extends StatelessWidget {
                 onPressed:
                     hasSelectedReports
                         ? () {
-                          context.read<ReportsCubit>().deleteSelectedReports();
+                          context
+                              .read<ReportsCubit>()
+                              .showConfirmDeleteDialog();
                         }
                         : null,
                 icon: const Icon(Icons.delete),

@@ -9,7 +9,7 @@ class EngineBrandModel extends BrandEntity {
   factory EngineBrandModel.fromJson(Map<String, dynamic> json) {
     return EngineBrandModel(
       id: json[idKey] as int,
-      brand: json[brandKey] as String,
+      brand: json[brandKey] ?? json['name'] as String,
     );
   }
 

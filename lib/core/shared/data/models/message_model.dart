@@ -9,4 +9,6 @@ class MessageModel extends MessageEntity {
       message: json[ApiKey.message],
     );
   }
+
+  
 }

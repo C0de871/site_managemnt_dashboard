@@ -109,42 +109,33 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
       _currentPage = totalPages - 1;
     }
 
-    return SizedBox(
-      height: 500,
-      child: Column(
-        children: [
-          Expanded(
-            child: SfDataGrid(
-              onQueryRowHeight: (details) {
-                return details.getIntrinsicRowHeight(details.rowIndex);
-              },
-              source: dataSource,
-              controller: _dataGridController,
-              allowSorting: true, // We're handling sorting in Cubit
-              selectionMode: SelectionMode.multiple,
-              navigationMode: GridNavigationMode.cell,
-              frozenColumnsCount: 1, // Freeze the checkbox column
-              highlightRowOnHover: true,
-              // allowFiltering: true,
-              // Use pagination instead of fixed row sizes
-              rowsPerPage: _rowsPerPage,
-              gridLinesVisibility: GridLinesVisibility.both,
-              headerGridLinesVisibility: GridLinesVisibility.both,
-              columnWidthMode: ColumnWidthMode.fill,
-              columns: dataSource.getGridColumns(),
-            ),
-          ),
-
-          SizedBox(
-            height: 60,
-            child: SfDataPager(
-              delegate: dataSource,
-              pageCount:
-                  (widget.generators.length / _rowsPerPage).ceil().toDouble(),
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        SfDataGrid(
+          onQueryRowHeight: (details) {
+            return details.getIntrinsicRowHeight(details.rowIndex);
+          },
+          source: dataSource,
+          controller: _dataGridController,
+          allowSorting: true, // We're handling sorting in Cubit
+          selectionMode: SelectionMode.multiple,
+          navigationMode: GridNavigationMode.cell,
+          frozenColumnsCount: 1, // Freeze the checkbox column
+          highlightRowOnHover: true,
+          // allowFiltering: true,
+          // Use pagination instead of fixed row sizes
+          rowsPerPage: _rowsPerPage,
+          gridLinesVisibility: GridLinesVisibility.both,
+          headerGridLinesVisibility: GridLinesVisibility.both,
+          columnWidthMode: ColumnWidthMode.fill,
+          columns: dataSource.getGridColumns(),
+        ),
+        SfDataPager(
+          delegate: dataSource,
+          pageCount:
+              (widget.generators.length / _rowsPerPage).ceil().toDouble(),
+        ),
+      ],
     );
   }
 }

@@ -2,12 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/features/sites/presentation/cubit/sites_cubit.dart';
+import 'package:site_managemnt_dashboard/features/sites/presentation/widgets/site_generators_action_buttons.dart';
 
-import '../cubit/generators_cubit.dart';
-import 'generators_action_buttons.dart';
-
-class GeneratorsFilterBar extends StatelessWidget {
-  const GeneratorsFilterBar({super.key, });
+class SiteGeneratorsFilterBar extends StatelessWidget {
+  const SiteGeneratorsFilterBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +25,11 @@ class GeneratorsFilterBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          BlocBuilder<GeneratorsEnginesCubit, GeneratorsEnginesState>(
+          BlocBuilder<SitesCubit, SitesState>(
             builder: (context, state) {
-              if (state.generatorsStatus.isLoaded) {
+              if (state.generatorStatus.isLoaded) {
                 log("generators is loaded ");
-                return GeneratorsActionButtons();
+                return SiteGeneratorsActionButtons();
               }
               return const SizedBox.shrink();
             },

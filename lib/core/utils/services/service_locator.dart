@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:site_managemnt_dashboard/features/engine_capacities/data/data%20sources/engine_capacities_remote_data_source.dart';
 import 'package:site_managemnt_dashboard/features/engines/data/data%20sources/engine_remote_data_source.dart';
 import 'package:site_managemnt_dashboard/features/generator_brand/data/data%20sources/generator_brands_remote_data_source.dart';
+import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_by_site_id.dart';
 import 'package:site_managemnt_dashboard/features/reports/data/data_sources/reports_remote_data_source.dart';
 import '../../../features/auth/data/data_sources/user_local_data_source.dart';
 import '../../../features/auth/data/data_sources/user_remote_data_source.dart';
@@ -56,6 +57,7 @@ import '../../../features/parts/domain/usecases/get_parts_usecase.dart';
 import '../../../features/reports/data/repository/reports_repository_impl.dart';
 import '../../../features/reports/domain/repository/reports_repository.dart';
 import '../../../features/reports/domain/usecases/get_reports_usecase.dart';
+import '../../../features/reports/presentation/dialogs/report_dialog_service.dart';
 import '../../../features/reports_details/data/data_sources/report_details_remote_data_source.dart';
 import '../../../features/reports_details/data/repository/report_details_repository_impl.dart';
 import '../../../features/reports_details/domain/repository/report_details_repository.dart';
@@ -111,9 +113,9 @@ void setupServicesLocator() {
     () => ReportDetailsRemoteDataSource(api: getIt(), cacheHelper: getIt()),
   );
 
-  getIt.registerLazySingleton<ReportsRemoteDataSource>(
-    () => ReportsRemoteDataSource(api: getIt(), cacheHelper: getIt()),
-  );
+  // getIt.registerLazySingleton<ReportsRemoteDataSource>(
+  //   () => ReportsRemoteDataSource(api: getIt(), cacheHelper: getIt()),
+  // );
 
   getIt.registerLazySingleton<PartsRemoteDataSource>(
     () => PartsRemoteDataSource(api: getIt(), cacheHelper: getIt()),
@@ -260,6 +262,9 @@ void setupServicesLocator() {
   getIt.registerLazySingleton<GetGeneratorsUseCase>(
     () => GetGeneratorsUseCase(repository: getIt()),
   );
+  getIt.registerLazySingleton<GetGeneratorsBySiteIDUsecase>(
+    () => GetGeneratorsBySiteIDUsecase(repository: getIt()),
+  );
 
   //! GENERATOR BRANDS USE CASES
   getIt.registerLazySingleton<AddGeneratorBrandUsecase>(
@@ -333,8 +338,8 @@ void setupServicesLocator() {
   );
 }
 
-Future<void> initApp() async {
+Future<void> initApp(GlobalKey<NavigatorState> dialogNavKey) async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  ReportDialogService().registerNavigationKey(dialogNavKey);
   setupServicesLocator();
 }

@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
+import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/dialogs/generator_dialog.dart';
 
+import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
@@ -20,34 +22,29 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
 
   final TextEditingController capacityController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
+
+  final GetGeneratorsUseCase _getGeneratorsUseCase = getIt();
   Future<void> fetchGenerators() async {
     emit(state.copyWith(generatorsStatus: GeneratorsEnginesStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
-    final generators = List<GeneratorEntity>.generate(
-      30,
-      (index) => GeneratorEntity(
-        id: index + 1,
-        brand: BrandEntity(id: index + 1, brand: 'Generator Brand $index'),
-        engine: EngineEntity(
-          id: index + 1,
-          engineBrand: BrandEntity(id: index + 1, brand: 'Engine Brand $index'),
-          engineCapacity: EngineCapacityEntity(id: index + 1, capacity: 100),
-        ),
-        initalMeter: '1000',
-        site: SiteEntity(
-          code: '1000',
-          id: index + 1,
-          name: 'Site $index',
-          latitude: '100',
-          longitude: '100',
-        ),
-      ),
-    );
-    emit(
-      state.copyWith(
-        generatorsStatus: GeneratorsEnginesStatus.loaded,
-        generators: generators,
-      ),
+    final response = await _getGeneratorsUseCase.call();
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            generatorsStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (generatorsResponse) {
+        emit(
+          state.copyWith(
+            generatorsStatus: GeneratorsEnginesStatus.loaded,
+            generators: generatorsResponse.generators,
+            pagination: generatorsResponse.pagination,
+          ),
+        );
+      },
     );
   }
 
@@ -153,7 +150,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     }
   }
 
-  void deleteEngineBrand(int id) {
+  Future<void> deleteEngineBrand(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
     try {
       final updatedBrands =
@@ -248,7 +245,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     }
   }
 
-  void deleteGeneratorBrand(int id) {
+  Future<void> deleteGeneratorBrand(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
     try {
       final updatedBrands =
@@ -343,7 +340,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     }
   }
 
-  void deleteEngineCapacity(int id) {
+  Future<void> deleteEngineCapacity(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
     try {
       final updatedCapacities =
@@ -558,7 +555,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     }
   }
 
-  void deleteEngine(int id) {
+  Future<void> deleteEngine(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
     try {
       final updatedEngines =

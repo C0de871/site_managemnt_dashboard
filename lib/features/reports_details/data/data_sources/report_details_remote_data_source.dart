@@ -14,7 +14,7 @@ class ReportDetailsRemoteDataSource {
     GetReportByIDBody body,
   ) async {
     final response = await api.get(
-      EndPoints.getReportDetailsById,
+      "${EndPoints.getReportDetailsById}/${body.id}",
       data: body.toMap(),
     );
     return ApiResponse<ReportDetailsModel>.fromJson(

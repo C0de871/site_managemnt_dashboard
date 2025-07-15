@@ -17,8 +17,8 @@ class GetReportByIDBody {
 class AddSiteBody {
   final String name;
   final String code;
-  final String longitude;
-  final String latitude;
+  final String? longitude;
+  final String? latitude;
 
   static const String nameKey = 'name';
   static const String codeKey = 'code';
@@ -28,17 +28,18 @@ class AddSiteBody {
   AddSiteBody({
     required this.name,
     required this.code,
-    required this.longitude,
-    required this.latitude,
+    this.longitude,
+    this.latitude,
   });
 
   Map<String, dynamic> toMap() {
-    return {
+    final result = {
       nameKey: name,
       codeKey: code,
-      longitudeKey: longitude,
-      latitudeKey: latitude,
+      if (longitude != null) longitudeKey: longitude,
+      if (latitude != null) latitudeKey: latitude,
     };
+    return result;
   }
 }
 
@@ -46,18 +47,18 @@ class AddPartBody {
   final String name;
   final String code;
   final String isGeneral;
-  final String engineId;
+  final List<String> enginesId;
 
   static const String nameKey = 'name';
   static const String codeKey = 'code';
   static const String isGeneralKey = 'is_general';
-  static const String engineIdKey = 'engine_id';
+  static const String engineIdKey = 'engine_ids';
 
   AddPartBody({
     required this.name,
     required this.code,
     required this.isGeneral,
-    required this.engineId,
+    required this.enginesId,
   });
 
   Map<String, dynamic> toMap() {
@@ -65,7 +66,7 @@ class AddPartBody {
       nameKey: name,
       codeKey: code,
       isGeneralKey: isGeneral,
-      engineIdKey: engineId,
+      engineIdKey: enginesId,
     };
   }
 }
@@ -73,7 +74,7 @@ class AddPartBody {
 class AddGeneratorBrandBody {
   final String brand;
 
-  static const String brandKey = 'brand';
+  static const String brandKey = 'name';
 
   AddGeneratorBrandBody({required this.brand});
 
@@ -85,26 +86,26 @@ class AddGeneratorBrandBody {
 class CreateGeneratorBody {
   final String generatorBrandId;
   final String engineId;
-  final String initalMeter;
-  final String siteId;
+  final String initialMeter;
+  final String? siteId;
 
-  static const String generatorBrandIdKey = 'generator_brand_id';
+  static const String generatorBrandIdKey = 'brand_id';
   static const String engineIdKey = 'engine_id';
-  static const String initalMeterKey = 'inital_meter';
-  static const String siteIdKey = 'site_id';
+  static const String initalMeterKey = 'initial_meter';
+  static const String siteIdKey = 'mtn_site_id';
 
   CreateGeneratorBody({
     required this.generatorBrandId,
     required this.engineId,
-    required this.initalMeter,
-    required this.siteId,
+    required this.initialMeter,
+    this.siteId,
   });
 
   Map<String, dynamic> toMap() {
     return {
       generatorBrandIdKey: generatorBrandId,
       engineIdKey: engineId,
-      initalMeterKey: initalMeter,
+      initalMeterKey: initialMeter,
       siteIdKey: siteId,
     };
   }
@@ -113,7 +114,7 @@ class CreateGeneratorBody {
 class AddEngineBrandBody {
   final String brand;
 
-  static const String brandKey = 'brand';
+  static const String brandKey = 'name';
 
   AddEngineBrandBody({required this.brand});
 
@@ -125,7 +126,7 @@ class AddEngineBrandBody {
 class AddEngineCapacityBody {
   final String capacity;
 
-  static const String capacityKey = 'capacity';
+  static const String capacityKey = 'value';
 
   AddEngineCapacityBody({required this.capacity});
 
@@ -138,8 +139,8 @@ class CreateEngineBody {
   final String engineBrandId;
   final String engineCapacityId;
 
-  static const String engineBrandIdKey = 'engine_brand_id';
-  static const String engineCapacityIdKey = 'engine_capacity_id';
+  static const String engineBrandIdKey = 'brand_id';
+  static const String engineCapacityIdKey = 'capacity_id';
 
   CreateEngineBody({
     required this.engineBrandId,
@@ -398,6 +399,14 @@ class DeleteEngineCapacityBody {
   Map<String, dynamic> toMap() {
     return {idsKey: ids};
   }
+}
+
+class ExportReportsBody {
+  final List<int> ids;
+  static const String idsKey = "report_ids";
+  ExportReportsBody({required this.ids});
+
+  Map<String, dynamic> toMap() => {idsKey: ids};
 }
 
 // class AddReportBody {

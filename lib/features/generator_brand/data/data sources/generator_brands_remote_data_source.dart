@@ -1,8 +1,11 @@
+import 'package:site_managemnt_dashboard/features/engine_brands/data/models/engine_brand_model.dart';
+
 import '../../../../core/databases/api/api_consumer.dart';
 import '../../../../core/databases/api/end_points.dart';
 import '../../../../core/databases/cache/secure_storage_helper.dart';
 import '../../../../core/databases/params/body.dart';
 import '../../../../core/shared/data/response_model.dart';
+import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../models/generator_brand_model.dart';
 
 class GeneratorBrandsRemoteDataSource {
@@ -14,25 +17,24 @@ class GeneratorBrandsRemoteDataSource {
     required this.cacheHelper,
   });
 
-  Future<ApiResponse<List<GeneratorBrandModel>>> getGeneratorBrands() async {
+  Future<ApiResponse<List<BrandEntity>>> getGeneratorBrands() async {
     final response = await api.get(EndPoints.getGeneratorsBrands);
-    return ApiResponse<List<GeneratorBrandModel>>.fromJson(
+    return ApiResponse<List<BrandEntity>>.fromJson(
       response,
-      (json) =>
-          (json as List).map((e) => GeneratorBrandModel.fromJson(e)).toList(),
+      (json) => (json as List).map((e) => BrandModel.fromJson(e)).toList(),
     );
   }
 
-  Future<ApiResponse<GeneratorBrandModel>> addGeneratorBrand(
+  Future<ApiResponse<BrandEntity>> addGeneratorBrand(
     AddGeneratorBrandBody body,
   ) async {
     final response = await api.post(
       EndPoints.addGeneratorBrand,
       data: body.toMap(),
     );
-    return ApiResponse<GeneratorBrandModel>.fromJson(
+    return ApiResponse<BrandModel>.fromJson(
       response,
-      (json) => GeneratorBrandModel.fromJson(json),
+      (json) => BrandModel.fromJson(json),
     );
   }
 

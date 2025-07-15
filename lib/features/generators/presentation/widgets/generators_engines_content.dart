@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/cubit/generators_cubit.dart';
@@ -25,8 +27,10 @@ class GeneratorsEnginesContent extends StatelessWidget {
             GeneratorsFilterBar(),
             BlocBuilder<GeneratorsEnginesCubit, GeneratorsEnginesState>(
               builder: (context, state) {
+                log("generators is loaded ");
                 return GeneratorsDataTable(
                   isEmpty: state.generators.isEmpty,
+                  isGeneratorsAndEngineScreen: true,
                   emptyMessage: 'No generators found',
                   showSiteColumn: true,
                   selectedGeneratorIds: state.selectedGeneratorIds,

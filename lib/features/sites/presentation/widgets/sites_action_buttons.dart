@@ -12,39 +12,56 @@ class SitesActionButtons extends StatelessWidget {
 
     return BlocBuilder<SitesCubit, SitesState>(
       builder: (context, state) {
-        if (state.sitesStatus.isLoaded) {
-          final hasSelectedSites = state.selectedSiteIds.isNotEmpty;
+        final hasSelectedSites = state.selectedSiteIds.isNotEmpty;
 
-          return Row(
-            children: [
-              // Delete Button
-              ElevatedButton.icon(
-                onPressed:
-                    hasSelectedSites
-                        ? () {
-                          context.read<SitesCubit>().deleteSelectedSites();
-                        }
-                        : null,
-                icon: const Icon(Icons.delete),
-                label: Text('Delete (${state.selectedSiteIds.length})'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.errorContainer,
-                  foregroundColor: colorScheme.onErrorContainer,
-                  disabledBackgroundColor: colorScheme.errorContainer
-                      .withValues(alpha: 0.3),
-                  disabledForegroundColor: colorScheme.onErrorContainer
-                      .withValues(alpha: 0.5),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
+        return Row(
+          children: [
+            // add site Button
+            ElevatedButton.icon(
+              onPressed: () {
+                context.read<SitesCubit>().showAddEditSiteDialog(context);
+              },
+              icon: const Icon(Icons.add),
+              label: Text('Add new site'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.tertiary,
+                foregroundColor: colorScheme.onTertiary,
+                // disabledBackgroundColor: colorScheme.errorContainer
+                //     .withValues(alpha: 0.3),
+                // disabledForegroundColor: colorScheme.onErrorContainer
+                //     .withValues(alpha: 0.5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
                 ),
               ),
-            ],
-          );
-        }
+            ),
+            // ElevatedButton.icon(
+            //   onPressed:
+            //       hasSelectedSites
+            //           ? () {
+            //             context.read<SitesCubit>().deleteSelectedSites();
+            //           }
+            //           : null,
+            //   icon: const Icon(Icons.delete),
+            //   label: Text('Delete (${state.selectedSiteIds.length})'),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: colorScheme.errorContainer,
+            //     foregroundColor: colorScheme.onErrorContainer,
+            //     disabledBackgroundColor: colorScheme.errorContainer
+            //         .withValues(alpha: 0.3),
+            //     disabledForegroundColor: colorScheme.onErrorContainer
+            //         .withValues(alpha: 0.5),
+            //     padding: const EdgeInsets.symmetric(
+            //       horizontal: 16,
+            //       vertical: 10,
+            //     ),
+            //   ),
+            // ),
+          ],
+        );
 
-        return const SizedBox.shrink();
+        // return const SizedBox.shrink();
       },
     );
   }

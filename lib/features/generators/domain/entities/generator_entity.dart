@@ -5,14 +5,14 @@ import '../../../sites/domain/entities/sites_entity.dart';
 
 class GeneratorEntity extends Equatable {
   final int id;
-  final BrandEntity brand;
+  final BrandEntity? brand;
   final EngineEntity engine;
   final String initalMeter;
   final SiteEntity? site;
 
   const GeneratorEntity({
     required this.id,
-    required this.brand,
+    this.brand,
     required this.engine,
     required this.initalMeter,
     this.site,

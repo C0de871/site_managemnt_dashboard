@@ -10,7 +10,7 @@ class GetGeneratorsUseCase {
 
   GetGeneratorsUseCase({required this.repository});
 
-  Future<Either<Failure, GeneratorResponseModel>> call() {
-    return repository.getGenerators();
+  Future<Either<Failure, GeneratorResponseModel>> call({required int page}) {
+    return repository.getGenerators(page:page);
   }
 }

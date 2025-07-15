@@ -1,7 +1,7 @@
 // Create a generic base response model
 class ApiResponse<T> {
   final String message;
-  final bool status;
+  final int statusCode;
   final T data;
 
   static const String messageKey = 'message';
@@ -10,7 +10,7 @@ class ApiResponse<T> {
 
   ApiResponse({
     required this.message,
-    required this.status,
+    required this.statusCode,
     required this.data,
   });
 
@@ -30,13 +30,13 @@ class ApiResponse<T> {
 
     return ApiResponse<T>(
       message: json[messageKey] ?? '',
-      status: json[statusKey] ?? false,
+      statusCode: json[statusKey] ?? -1,
       data: parsedData,
     );
   }
 
   Map<String, dynamic> toJson(dynamic Function(T) toJsonT) {
-    return {messageKey: message, statusKey: status, dataKey: toJsonT(data)};
+    return {messageKey: message, statusKey: statusCode, dataKey: toJsonT(data)};
   }
 
   // Helper method to get default empty values based on type

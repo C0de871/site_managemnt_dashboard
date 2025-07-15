@@ -56,6 +56,7 @@ import '../../../features/parts/domain/usecases/edit_part_usecase.dart';
 import '../../../features/parts/domain/usecases/get_parts_usecase.dart';
 import '../../../features/reports/data/repository/reports_repository_impl.dart';
 import '../../../features/reports/domain/repository/reports_repository.dart';
+import '../../../features/reports/domain/usecases/export_reports_usecase.dart';
 import '../../../features/reports/domain/usecases/get_reports_usecase.dart';
 import '../../../features/reports/presentation/dialogs/report_dialog_service.dart';
 import '../../../features/reports_details/data/data_sources/report_details_remote_data_source.dart';
@@ -327,6 +328,11 @@ void setupServicesLocator() {
     () => GetReportsUsecase(repository: getIt()),
   );
 
+  //! report export USE CASES
+  getIt.registerLazySingleton<ExportReportsUsecase>(
+    () => ExportReportsUsecase(repository: getIt()),
+  );
+
   //! report details USE CASES
   getIt.registerLazySingleton<GetReportDetailsUsecase>(
     () => GetReportDetailsUsecase(repository: getIt()),
@@ -342,4 +348,7 @@ Future<void> initApp(GlobalKey<NavigatorState> dialogNavKey) async {
   WidgetsFlutterBinding.ensureInitialized();
   ReportDialogService().registerNavigationKey(dialogNavKey);
   setupServicesLocator();
+  (getIt<ApiConsumer>() as DioConsumer).addInterceptors(
+    getIt<AuthInterceptor>(),
+  );
 }

@@ -12,8 +12,11 @@ class GeneratorsRemoteDataSource {
   final SecureStorageHelper cacheHelper;
   GeneratorsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<GeneratorResponseModel> getGenerators() async {
-    final response = await api.get(EndPoints.getGenerators);
+  Future<GeneratorResponseModel> getGenerators({required int page}) async {
+    final response = await api.get(
+      EndPoints.getGenerators,
+      queryParameters: {"page": page},
+    );
     return GeneratorResponseModel.fromJson(response);
   }
 
@@ -27,7 +30,7 @@ class GeneratorsRemoteDataSource {
   }
 
   Future<ApiResponse<GeneratorModel>> addGenerator(
-    CreateEngineBody body,
+    CreateGeneratorBody body,
   ) async {
     final response = await api.post(
       EndPoints.createGenerator,

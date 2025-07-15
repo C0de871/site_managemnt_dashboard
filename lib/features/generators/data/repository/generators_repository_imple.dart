@@ -17,10 +17,10 @@ class GeneratorsRepositoryImple extends GeneratorsRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, GeneratorResponseModel>> getGenerators() async {
+  Future<Either<Failure, GeneratorResponseModel>> getGenerators({required int page}) async {
     if (await networkInfo.isConnected!) {
       try {
-        final remoteTempleT = await remoteDataSource.getGenerators();
+        final remoteTempleT = await remoteDataSource.getGenerators(page:page);
 
         return Right(remoteTempleT);
       } on ServerException catch (e) {
@@ -51,7 +51,7 @@ class GeneratorsRepositoryImple extends GeneratorsRepository {
 
   @override
   Future<Either<Failure, GeneratorEntity>> createGenerator(
-    CreateEngineBody body,
+    CreateGeneratorBody body,
   ) async {
     if (await networkInfo.isConnected!) {
       try {

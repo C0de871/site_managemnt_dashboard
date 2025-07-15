@@ -26,10 +26,7 @@ class SitesFilterBar extends StatelessWidget {
         children: [
           BlocBuilder<SitesCubit, SitesState>(
             builder: (context, state) {
-              if (state.sitesStatus.isLoaded) {
                 return const SitesActionButtons();
-              }
-              return const SizedBox.shrink();
             },
           ),
         ],

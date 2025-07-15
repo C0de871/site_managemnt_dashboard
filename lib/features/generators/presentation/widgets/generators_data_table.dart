@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/shared/widgets/my_data_source.dart';
@@ -11,6 +13,7 @@ class GeneratorsDataTable extends StatefulWidget {
   const GeneratorsDataTable({
     super.key,
     required this.isEmpty,
+    this.isGeneratorsAndEngineScreen = false,
     required this.emptyMessage,
     required this.showSiteColumn,
     required this.selectedGeneratorIds,
@@ -19,6 +22,7 @@ class GeneratorsDataTable extends StatefulWidget {
   });
 
   final bool isEmpty;
+  final bool isGeneratorsAndEngineScreen;
   final String emptyMessage;
   final bool showSiteColumn;
   final Set<String> selectedGeneratorIds;
@@ -31,16 +35,14 @@ class GeneratorsDataTable extends StatefulWidget {
 
 class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
   final DataGridController _dataGridController = DataGridController();
-  final int _rowsPerPage = 10;
+  final int _rowsPerPage = 20;
   int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final cubit = context.read<GeneratorsEnginesCubit>();
-    if (widget.generators.isEmpty) {
-      return NotFoundWidget(message: widget.emptyMessage);
-    }
+
     final generatorColumns = [
       SelectionColumnConfig<GeneratorEntity>(
         idExtractor: (generator) => generator.id.toString(),
@@ -50,7 +52,7 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
       ColumnConfig<GeneratorEntity>(
         columnName: 'brand',
         displayName: 'Brand',
-        valueExtractor: (generator) => generator.brand.brand,
+        valueExtractor: (generator) => generator.brand?.brand ?? "غير معروف",
       ),
       ColumnConfig<GeneratorEntity>(
         columnName: 'engine_capacity',
@@ -75,24 +77,24 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
         visible: widget.showSiteColumn,
         valueExtractor: (generator) => generator.site?.name ?? 'No site',
       ),
-      ActionsColumnConfig(
-        actions: [
-          ActionButton<GeneratorEntity>(
-            icon: Icons.edit,
-            tooltip: 'Edit',
-            onPressed: (generator) {
-              cubit.showGeneratorDialog(context, generator: generator);
-            },
-            color: colorScheme.primary,
-          ),
-          ActionButton<GeneratorEntity>(
-            icon: Icons.delete,
-            tooltip: 'Delete',
-            onPressed: (generator) {},
-            color: colorScheme.error,
-          ),
-        ],
-      ),
+      // ActionsColumnConfig(
+      //   actions: [
+      //     ActionButton<GeneratorEntity>(
+      //       icon: Icons.edit,
+      //       tooltip: 'Edit',
+      //       onPressed: (generator) {
+      //         cubit.showGeneratorDialog(context, generator: generator);
+      //       },
+      //       color: colorScheme.primary,
+      //     ),
+      //     ActionButton<GeneratorEntity>(
+      //       icon: Icons.delete,
+      //       tooltip: 'Delete',
+      //       onPressed: (generator) {},
+      //       color: colorScheme.error,
+      //     ),
+      //   ],
+      // ),
     ];
 
     // Then create your data source
@@ -102,40 +104,78 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
     );
 
     // Calculate total pages
-    final int totalPages = (widget.generators.length / _rowsPerPage).ceil();
+    final int totalPages =
+        ((cubit.state.pagination?.totalItemsCount ?? 1) / _rowsPerPage).ceil();
 
     // Ensure current page is valid
     if (_currentPage >= totalPages && totalPages > 0) {
       _currentPage = totalPages - 1;
     }
 
-    return Column(
-      children: [
-        SfDataGrid(
-          onQueryRowHeight: (details) {
-            return details.getIntrinsicRowHeight(details.rowIndex);
-          },
-          source: dataSource,
-          controller: _dataGridController,
-          allowSorting: true, // We're handling sorting in Cubit
-          selectionMode: SelectionMode.multiple,
-          navigationMode: GridNavigationMode.cell,
-          frozenColumnsCount: 1, // Freeze the checkbox column
-          highlightRowOnHover: true,
-          // allowFiltering: true,
-          // Use pagination instead of fixed row sizes
-          rowsPerPage: _rowsPerPage,
-          gridLinesVisibility: GridLinesVisibility.both,
-          headerGridLinesVisibility: GridLinesVisibility.both,
-          columnWidthMode: ColumnWidthMode.fill,
-          columns: dataSource.getGridColumns(),
-        ),
-        SfDataPager(
-          delegate: dataSource,
-          pageCount:
-              (widget.generators.length / _rowsPerPage).ceil().toDouble(),
-        ),
-      ],
+    return BlocBuilder<GeneratorsEnginesCubit, GeneratorsEnginesState>(
+      builder: (context, state) {
+        return Stack(
+          children: [
+            if (widget.generators.isEmpty && !state.generatorsStatus.isLoading)
+              NotFoundWidget(message: widget.emptyMessage),
+
+            if (state.generatorsStatus.isLoading)
+              Container(
+                height: 600,
+                width: double.infinity,
+                color: Colors.grey.withValues(alpha: 200),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            IgnorePointer(
+              ignoring:
+                  state.actionStatus.isLoading ||
+                  state.generatorsStatus.isLoading,
+              child: Column(
+                children: [
+                  IgnorePointer(
+                    child: SizedBox(
+                      height: 600,
+                      child: SfDataGrid(
+                        onQueryRowHeight: (details) {
+                          return details.getIntrinsicRowHeight(
+                            details.rowIndex,
+                          );
+                        },
+                        source: dataSource,
+                        controller: _dataGridController,
+                        allowSorting: true, // We're handling sorting in Cubit
+                        selectionMode: SelectionMode.multiple,
+                        navigationMode: GridNavigationMode.cell,
+                        frozenColumnsCount: 1, // Freeze the checkbox column
+                        highlightRowOnHover: true,
+                        // allowFiltering: true,
+                        // Use pagination instead of fixed row sizes
+                        rowsPerPage:
+                            widget.isGeneratorsAndEngineScreen
+                                ? _rowsPerPage
+                                : null,
+                        gridLinesVisibility: GridLinesVisibility.both,
+                        headerGridLinesVisibility: GridLinesVisibility.both,
+                        columnWidthMode: ColumnWidthMode.fill,
+                        columns: dataSource.getGridColumns(),
+                      ),
+                    ),
+                  ),
+                  if (widget.isGeneratorsAndEngineScreen)
+                    SfDataPager(
+                      delegate: dataSource,
+                      pageCount: totalPages.toDouble(),
+                      onPageNavigationEnd: (page) {
+                        int newPage = page + 1;
+                        cubit.fetchGenerators(page: newPage);
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

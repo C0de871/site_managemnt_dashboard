@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import 'error_model.dart';
@@ -89,7 +91,6 @@ handleDioException(DioException e) {
 
         case 401: //unauthorized
           throw UnauthorizedException(ErrorModel.fromJson(e.response!.data));
-          
 
         case 403: //forbidden
           throw ForbiddenException(ErrorModel.fromJson(e.response!.data));
@@ -102,11 +103,17 @@ handleDioException(DioException e) {
           throw CofficientException(ErrorModel.fromJson(e.response!.data));
 
         case 422: //Unprocessable Content
-          throw UnprocessableContentException(ErrorModel.fromJson(e.response!.data));
+          throw UnprocessableContentException(
+            ErrorModel.fromJson(e.response!.data),
+          );
 
         case 504: // Bad request
-
-          throw BadResponseException(ErrorModel(errorMessage: e.response!.data));
+          throw BadResponseException(
+            ErrorModel(errorMessage: e.response!.data),
+          );
+        case 500:
+          log(e.response!.data.toString());
+          throw BadResponseException(ErrorModel.fromJson(e.response!.data));
       }
 
     case DioExceptionType.cancel:

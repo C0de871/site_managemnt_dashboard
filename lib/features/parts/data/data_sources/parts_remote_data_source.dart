@@ -4,6 +4,7 @@ import '../../../../core/databases/cache/secure_storage_helper.dart';
 import '../../../../core/databases/params/body.dart';
 import '../../../../core/shared/data/response_model.dart';
 import '../models/part_model.dart';
+import '../models/part_response_model.dart';
 
 class PartsRemoteDataSource {
   final ApiConsumer api;
@@ -11,12 +12,12 @@ class PartsRemoteDataSource {
 
   PartsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<ApiResponse<List<PartModel>>> getParts() async {
-    final response = await api.get(EndPoints.getParts);
-    return ApiResponse<List<PartModel>>.fromJson(
-      response,
-      (json) => (json as List).map((e) => PartModel.fromJson(e)).toList(),
+  Future<PartResponseModel> getParts({required int page}) async {
+    final response = await api.get(
+      EndPoints.getParts,
+      queryParameters: {"page": page},
     );
+    return PartResponseModel.fromJson(response);
   }
 
   Future<ApiResponse<PartModel>> addPart(AddPartBody body) async {

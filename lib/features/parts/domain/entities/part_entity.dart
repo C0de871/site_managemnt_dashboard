@@ -2,13 +2,16 @@ import 'package:equatable/equatable.dart';
 
 import '../../../engines/domain/entities/engine_entity.dart';
 
-
 class PartEntity extends Equatable {
   final int id;
-  final String code;
+  final String? code;
   final String name;
-  final bool isGeneral;
+  final bool? isGeneral;
   final List<EngineEntity> engines;
+  final int? quantity;
+  final int? faultyQuantity;
+  final bool? isFaulty;
+  final String? note;
 
   const PartEntity({
     required this.id,
@@ -16,8 +19,22 @@ class PartEntity extends Equatable {
     required this.name,
     required this.isGeneral,
     required this.engines,
+    required this.quantity,
+    required this.faultyQuantity,
+    required this.isFaulty,
+    required this.note,
   });
 
   @override
-  List<Object?> get props => [id, code, name, isGeneral, engines];
+  List<Object?> get props => [
+    id,
+    code,
+    name,
+    isGeneral,
+    engines,
+    quantity,
+    faultyQuantity,
+    isFaulty,
+    note,
+  ];
 }

@@ -11,38 +11,37 @@ class EngineBrandsRemoteDataSource {
 
   EngineBrandsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<ApiResponse<List<EngineBrandModel>>> getEngineBrands() async {
+  Future<ApiResponse<List<BrandModel>>> getEngineBrands() async {
     final response = await api.get(EndPoints.getEnginesBrands);
-    return ApiResponse<List<EngineBrandModel>>.fromJson(
+    return ApiResponse<List<BrandModel>>.fromJson(
       response,
-      (json) =>
-          (json as List).map((e) => EngineBrandModel.fromJson(e)).toList(),
+      (json) => (json as List).map((e) => BrandModel.fromJson(e)).toList(),
     );
   }
 
-  Future<ApiResponse<EngineBrandModel>> addEngineBrand(
+  Future<ApiResponse<BrandModel>> addEngineBrand(
     AddEngineBrandBody body,
   ) async {
     final response = await api.post(
       EndPoints.addEngineBrand,
       data: body.toMap(),
     );
-    return ApiResponse<EngineBrandModel>.fromJson(
+    return ApiResponse<BrandModel>.fromJson(
       response,
-      (json) => EngineBrandModel.fromJson(json),
+      (json) => BrandModel.fromJson(json),
     );
   }
 
-  Future<ApiResponse<EngineBrandModel>> editEngineBrand(
+  Future<ApiResponse<BrandModel>> editEngineBrand(
     EditEngineBrandBody body,
   ) async {
     final response = await api.put(
       EndPoints.editEngineBrand,
       data: body.toMap(),
     );
-    return ApiResponse<EngineBrandModel>.fromJson(
+    return ApiResponse<BrandModel>.fromJson(
       response,
-      (json) => EngineBrandModel.fromJson(json),
+      (json) => BrandModel.fromJson(json),
     );
   }
 

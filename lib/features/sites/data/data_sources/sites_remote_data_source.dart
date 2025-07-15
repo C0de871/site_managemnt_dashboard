@@ -19,7 +19,14 @@ class SitesRemoteDataSource {
   }
 
   Future<ApiResponse<SitesModel>> addSite(AddSiteBody body) async {
-    final response = await api.post(EndPoints.addSite, data: body.toMap());
+    final response = await api.post(
+      EndPoints.addSite,
+      data: body.toMap(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
     return ApiResponse<SitesModel>.fromJson(
       response,
       (json) => SitesModel.fromJson(json),

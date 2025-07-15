@@ -12,7 +12,7 @@ class GeneratorModel extends GeneratorEntity {
 
   const GeneratorModel({
     required super.id,
-    required super.brand,
+    super.brand,
     required super.engine,
     required super.initalMeter,
     super.site,
@@ -21,7 +21,10 @@ class GeneratorModel extends GeneratorEntity {
   factory GeneratorModel.fromJson(Map<String, dynamic> json) {
     return GeneratorModel(
       id: json[idKey] as int,
-      brand: EngineBrandModel.fromJson(json[brandKey] as Map<String, dynamic>),
+      brand:
+          json[brandKey] == null
+              ? null
+              : BrandModel.fromJson(json[brandKey] as Map<String, dynamic>),
       engine: EngineModel.fromJson(json[engineKey] as Map<String, dynamic>),
       initalMeter: json[initialMeterKey] as String,
       site:
@@ -34,7 +37,7 @@ class GeneratorModel extends GeneratorEntity {
   Map<String, dynamic> toJson() {
     return {
       idKey: id,
-      brandKey: (brand as EngineBrandModel).toJson(),
+      brandKey: (brand as BrandModel).toJson(),
       engineKey: (engine as EngineModel).toJson(),
       initialMeterKey: initalMeter,
       siteKey: (site as SitesModel).toJson(),

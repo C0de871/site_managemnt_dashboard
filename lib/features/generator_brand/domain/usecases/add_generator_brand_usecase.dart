@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/features/engine_brands/domain/entities/brand_entity.dart';
 
 import '../../../../core/databases/errors/failure.dart';
 import '../../../../core/databases/params/body.dart';
@@ -10,7 +11,7 @@ class AddGeneratorBrandUsecase {
 
   AddGeneratorBrandUsecase({required this.repository});
 
-  Future<Either<Failure, GeneratorBrandEntity>> call(
+  Future<Either<Failure, BrandEntity>> call(
     AddGeneratorBrandBody params,
   ) async {
     return await repository.addGeneratorBrand(params);

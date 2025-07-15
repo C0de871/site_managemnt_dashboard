@@ -57,7 +57,7 @@ class NavigationItems extends StatelessWidget {
             ),
             NavigationItem(
               icon: Icons.category,
-              label: 'Materials',
+              label: 'Parts',
               isSelected: state.currentPage == NavPage.materials,
               onTap:
               // () => context.read<NavigationCubit>().navigateTo(

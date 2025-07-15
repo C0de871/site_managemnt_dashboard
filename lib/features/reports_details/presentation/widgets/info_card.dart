@@ -6,11 +6,13 @@ class InfoCard extends StatelessWidget {
     required this.child,
     required this.title,
     this.width,
+    this.height,
   });
 
   final Widget child;
   final String title;
   final double? width;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -18,6 +20,7 @@ class InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       width: width,
+      height: height,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [

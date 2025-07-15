@@ -10,7 +10,7 @@ class CreateGeneratorUsecase {
 
   CreateGeneratorUsecase({required this.repository});
 
-  Future<Either<Failure, GeneratorEntity>> call(CreateEngineBody body) async {
+  Future<Either<Failure, GeneratorEntity>> call(CreateGeneratorBody body) async {
     return repository.createGenerator(body);
   }
 }

@@ -20,6 +20,17 @@ extension ReportTypeExtension on VisitType {
         return 'عمرة';
     }
   }
+
+  String get englishName {
+    switch (this) {
+      case VisitType.routine:
+        return Constant.routine;
+      case VisitType.emergency:
+        return Constant.emergency;
+      case VisitType.overhaul:
+        return Constant.overhaul;
+    }
+  }
 }
 
 extension GetVisitType on String {
@@ -29,7 +40,7 @@ extension GetVisitType on String {
         return VisitType.routine;
       case Constant.emergency:
         return VisitType.emergency;
-      case Constant.umrah:
+      case Constant.overhaul:
         return VisitType.overhaul;
       default:
         return VisitType.routine;

@@ -6,22 +6,25 @@ class PartsState extends Equatable {
     this.parts = const [],
     this.error = '',
     this.actionStatus = PartsStatus.initial,
-    this.engineStatus = PartsStatus.initial,
+    this.engineStatus = AvailableEnginesStatus.initial,
     this.selectedPartIds = const {},
     this.selectedEngineIds = const {},
     this.availableEngines = const [],
-    this.currentPartEnginesId,
+    this.currentPartEnginesId = -1,
+    this.pagination = const PaginationEntity(),
   });
 
   final PartsStatus partsStatus;
   final PartsStatus actionStatus;
-  final PartsStatus engineStatus;
+  final AvailableEnginesStatus engineStatus;
   final List<PartEntity> parts;
   final List<EngineEntity> availableEngines;
   final Set<String> selectedPartIds;
   final Set<String> selectedEngineIds;
   final String error;
-  final int? currentPartEnginesId;
+  final int currentPartEnginesId;
+
+  final PaginationEntity pagination;
 
   @override
   List<Object?> get props => [
@@ -34,6 +37,7 @@ class PartsState extends Equatable {
     selectedEngineIds,
     currentPartEnginesId,
     availableEngines,
+    pagination,
   ];
 
   PartsState copyWith({
@@ -42,10 +46,11 @@ class PartsState extends Equatable {
     List<EngineEntity>? availableEngines,
     String? error,
     PartsStatus? actionStatus,
-    PartsStatus? engineStatus,
+    AvailableEnginesStatus? engineStatus,
     Set<String>? selectedPartIds,
     Set<String>? selectedEngineIds,
     int? currentPartEnginesId,
+    PaginationEntity? pagination,
   }) {
     return PartsState(
       partsStatus: partsStatus ?? this.partsStatus,
@@ -56,7 +61,8 @@ class PartsState extends Equatable {
       engineStatus: engineStatus ?? this.engineStatus,
       selectedPartIds: selectedPartIds ?? this.selectedPartIds,
       selectedEngineIds: selectedEngineIds ?? this.selectedEngineIds,
-      currentPartEnginesId: currentPartEnginesId,
+      currentPartEnginesId: currentPartEnginesId ?? this.currentPartEnginesId,
+      pagination: pagination ?? this.pagination,
     );
   }
 }
@@ -68,4 +74,13 @@ extension PartsStatusX on PartsStatus {
   bool get isLoading => this == PartsStatus.loading;
   bool get isLoaded => this == PartsStatus.loaded;
   bool get isError => this == PartsStatus.error;
+}
+
+enum AvailableEnginesStatus { initial, loading, loaded, error }
+
+extension AvailableEnginesStatusX on AvailableEnginesStatus {
+  bool get isInitial => this == AvailableEnginesStatus.initial;
+  bool get isLoading => this == AvailableEnginesStatus.loading;
+  bool get isLoaded => this == AvailableEnginesStatus.loaded;
+  bool get isError => this == AvailableEnginesStatus.error;
 }

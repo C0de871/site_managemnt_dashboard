@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/features/reports/presentation/cubits/reports_cubit.dart';
 
-import 'reports_search_field.dart';
-import 'visit_type_filter.dart';
 import 'reports_action_buttons.dart';
 
 class ReportsFilterBar extends StatelessWidget {
@@ -46,10 +44,8 @@ class ReportsFilterBar extends StatelessWidget {
           // Action Buttons
           BlocBuilder<ReportsCubit, ReportsState>(
             builder: (context, state) {
-              if (state is ReportsLoaded) {
-                return const ReportsActionButtons();
-              }
-              return const SizedBox.shrink();
+              return const ReportsActionButtons();
+              // return const SizedBox.shrink();
             },
           ),
         ],

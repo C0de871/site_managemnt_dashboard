@@ -15,9 +15,10 @@ class GeneratorResponseModel extends GeneratorResponseEntity {
     };
     return GeneratorResponseModel(
       generators:
-          (json[ApiKey.data] as List).map((generator) {
+          (json[ApiKey.data] as List?)?.map((generator) {
             return GeneratorModel.fromJson(generator);
-          }).toList(),
+          }).toList() ??
+          [],
       pagination: PaginationModel.fromJson(paginationMap),
     );
   }

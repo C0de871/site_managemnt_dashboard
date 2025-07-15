@@ -17,28 +17,28 @@ class SiteGeneratorsActionButtons extends StatelessWidget {
           return Row(
             children: [
               // Delete Button
-              ElevatedButton.icon(
-                onPressed:
-                    hasSelectedGenerators
-                        ? () {
-                          // context.read<SitesCubit>().del();
-                        }
-                        : null,
-                icon: const Icon(Icons.delete),
-                label: Text('Delete (${state.selectedGeneratorIds.length})'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.errorContainer,
-                  foregroundColor: colorScheme.onErrorContainer,
-                  disabledBackgroundColor: colorScheme.errorContainer
-                      .withValues(alpha: 0.3),
-                  disabledForegroundColor: colorScheme.onErrorContainer
-                      .withValues(alpha: 0.5),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                ),
-              ),
+              // ElevatedButton.icon(
+              //   onPressed:
+              //       hasSelectedGenerators
+              //           ? () {
+              //             // context.read<SitesCubit>().del();
+              //           }
+              //           : null,
+              //   icon: const Icon(Icons.delete),
+              //   label: Text('Delete (${state.selectedGeneratorIds.length})'),
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: colorScheme.errorContainer,
+              //     foregroundColor: colorScheme.onErrorContainer,
+              //     disabledBackgroundColor: colorScheme.errorContainer
+              //         .withValues(alpha: 0.3),
+              //     disabledForegroundColor: colorScheme.onErrorContainer
+              //         .withValues(alpha: 0.5),
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 16,
+              //       vertical: 10,
+              //     ),
+              //   ),
+              // ),
             ],
           );
         }

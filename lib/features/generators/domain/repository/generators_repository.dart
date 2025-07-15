@@ -6,10 +6,10 @@ import '../../data/models/generator_response_model.dart';
 import '../entities/generator_entity.dart';
 
 abstract class GeneratorsRepository {
-  Future<Either<Failure, GeneratorResponseModel>> getGenerators();
+  Future<Either<Failure, GeneratorResponseModel>> getGenerators({required int page});
   Future<Either<Failure, GeneratorResponseModel>> getGeneratorsBySiteID({required int siteID});
   Future<Either<Failure, GeneratorEntity>> createGenerator(
-    CreateEngineBody body,
+    CreateGeneratorBody body,
   );
   Future<Either<Failure, GeneratorEntity>> editGenerator(
     EditGeneratorBody body,

@@ -1,10 +1,10 @@
 name: site_managemnt_dashboard
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.7.0 <4.0.0'
+  sdk: ">=3.7.0 <4.0.0"
 
 dependencies:
   bloc: ^9.0.0
@@ -18,21 +18,32 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_launcher_icons: ^0.14.4
   flutter_localization: ^0.3.2
   flutter_secure_storage: ^9.2.4
   get_it: ^8.0.3
   google_fonts: ^6.2.1
   image_picker: ^1.1.2
+  intl: ^0.20.2
   pinput: ^5.0.1
   shared_preferences: ^2.5.3
   svg_flutter: ^0.0.1
   syncfusion_flutter_core: ^29.1.41
   syncfusion_flutter_datagrid: ^29.1.41
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
+flutter_launcher_icons:
+  image_path: "assets/app_icon/communication_tower.png" # Your main icon file
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/app_icon/communication_tower.png"
+
 flutter:
   uses-material-design: true
 
@@ -41,6 +52,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/videos/
+    - assets/app_icon/
   # fonts:
   #   - family: Schyler
   #     fonts:

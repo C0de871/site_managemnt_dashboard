@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/shared/widgets/my_data_source.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../core/shared/widgets/not_found_widget.dart';
 import '../../domain/entities/sites_entity.dart';
 import '../cubit/sites_cubit.dart';
 
@@ -24,33 +25,10 @@ class _SitesDataTableState extends State<SitesDataTable> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final sitesCubit = context.read<SitesCubit>();
+    log("rebuild the sites data table widget");
 
     return BlocBuilder<SitesCubit, SitesState>(
       builder: (context, state) {
-        if (state.sitesResponseEntity?.sites.isEmpty ?? false) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.search_off,
-                  size: 64,
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No sites found',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
         final siteColumns = [
           SelectionColumnConfig<SiteEntity>(
             idExtractor: (site) => site.id.toString(),
@@ -90,27 +68,27 @@ class _SitesDataTableState extends State<SitesDataTable> {
                         .setCurrentSiteGeneratorsId(site.id),
                 color: colorScheme.onSurface,
               ),
-              ActionButton<SiteEntity>(
-                icon: Icons.edit,
-                tooltip: 'Edit',
-                onPressed: (site) {
-                  log(site.toString());
-                  context.read<SitesCubit>().showAddEditSiteDialog(
-                    context,
-                    state.sitesResponseEntity?.sites.indexOf(site),
-                  );
-                },
-                color: colorScheme.primary,
-              ),
-              ActionButton<SiteEntity>(
-                icon: Icons.delete,
-                tooltip: 'Delete',
-                onPressed:
-                    (site) => context
-                        .read<SitesCubit>()
-                        .setCurrentSiteGeneratorsId(site.id),
-                color: colorScheme.error,
-              ),
+              // ActionButton<SiteEntity>(
+              //   icon: Icons.edit,
+              //   tooltip: 'Edit',
+              //   onPressed: (site) {
+              //     log(site.toString());
+              //     context.read<SitesCubit>().showAddEditSiteDialog(
+              //       context,
+              //       state.sitesResponseEntity?.sites.indexOf(site),
+              //     );
+              //   },
+              //   color: colorScheme.primary,
+              // ),
+              // ActionButton<SiteEntity>(
+              //   icon: Icons.delete,
+              //   tooltip: 'Delete',
+              //   onPressed:
+              //       (site) => context
+              //           .read<SitesCubit>()
+              //           .setCurrentSiteGeneratorsId(site.id),
+              //   color: colorScheme.error,
+              // ),
             ],
           ),
         ];
@@ -124,46 +102,69 @@ class _SitesDataTableState extends State<SitesDataTable> {
         // Calculate total pages
         log("${state.sitesResponseEntity?.pagination.totalItemsCount}");
         final int totalPages =
-            (state.sitesResponseEntity?.pagination.totalItemsCount ?? 1);
+            ((state.sitesResponseEntity?.pagination.totalItemsCount ?? 1) /
+                    _rowsPerPage)
+                .ceil();
 
         // Ensure current page is valid
         if (_currentPage >= totalPages && totalPages > 0) {
           _currentPage = totalPages - 1;
         }
 
-        return Column(
+        return Stack(
           children: [
-            Expanded(
-              child: SfDataGrid(
-                onQueryRowHeight: (details) {
-                  return details.getIntrinsicRowHeight(details.rowIndex);
-                },
-                source: dataSource,
-                controller: _dataGridController,
-                allowSorting: true, // We're handling sorting in Cubit
-                selectionMode: SelectionMode.multiple,
-                navigationMode: GridNavigationMode.cell,
-                frozenColumnsCount: 1, // Freeze the checkbox column
-                highlightRowOnHover: true,
-                // allowFiltering: true,
-                // Use pagination instead of fixed row sizes
-                rowsPerPage: _rowsPerPage,
-                gridLinesVisibility: GridLinesVisibility.both,
-                headerGridLinesVisibility: GridLinesVisibility.both,
-                columnWidthMode: ColumnWidthMode.fill,
-                columns: dataSource.getGridColumns(),
-              ),
-            ),
+            if ((state.sitesResponseEntity?.sites.isEmpty ?? false) &&
+                !state.sitesStatus.isLoading)
+              NotFoundWidget(message: "No sites found"),
 
-            SizedBox(
-              height: 60,
-              child: SfDataPager(
-                delegate: dataSource,
-                pageCount: totalPages.toDouble(),
-                onPageNavigationStart: (pageNumber) {
-                  sitesCubit.fetchSites(page: pageNumber);
-                },
-                onPageNavigationEnd: (pageNumber) {},
+            if (state.sitesStatus.isLoading || state.actionStatus.isLoading)
+              Container(
+                height: 600,
+                width: double.infinity,
+                color: Colors.grey.withValues(alpha: 200),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            IgnorePointer(
+              ignoring:
+                  state.sitesStatus.isLoading || state.actionStatus.isLoading,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SfDataGrid(
+                      onQueryRowHeight: (details) {
+                        return details.getIntrinsicRowHeight(details.rowIndex);
+                      },
+                      source: dataSource,
+                      controller: _dataGridController,
+                      allowSorting: true, // We're handling sorting in Cubit
+                      selectionMode: SelectionMode.multiple,
+                      navigationMode: GridNavigationMode.cell,
+                      frozenColumnsCount: 1, // Freeze the checkbox column
+                      highlightRowOnHover: true,
+                      // allowFiltering: true,
+                      // Use pagination instead of fixed row sizes
+                      rowsPerPage: _rowsPerPage,
+                      gridLinesVisibility: GridLinesVisibility.both,
+                      headerGridLinesVisibility: GridLinesVisibility.both,
+                      columnWidthMode: ColumnWidthMode.fill,
+                      columns: dataSource.getGridColumns(),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 60,
+                    child: SfDataPager(
+                      delegate: dataSource,
+                      pageCount: totalPages.toDouble(),
+                      initialPageIndex: 1,
+                      onPageNavigationStart: (pageNumber) {},
+                      onPageNavigationEnd: (pageNumber) {
+                        log("page number: $pageNumber");
+                        sitesCubit.fetchSites(page: pageNumber + 1);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

@@ -9,7 +9,7 @@ class GetReportsUsecase {
 
   GetReportsUsecase({required this.repository});
 
-  Future<Either<Failure, ReportResponseEntity>> call() {
-    return repository.getReports();
+  Future<Either<Failure, ReportResponseEntity>> call({required int page}) {
+    return repository.getReports(page: page);
   }
 }

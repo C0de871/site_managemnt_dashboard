@@ -1,10 +1,20 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
+import 'package:site_managemnt_dashboard/features/engines/domain/usecases/get_engines_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
 import 'package:site_managemnt_dashboard/features/parts/domain/entities/part_entity.dart';
+import 'package:site_managemnt_dashboard/features/parts/domain/usecases/add_part_usecase.dart';
+import 'package:site_managemnt_dashboard/features/parts/domain/usecases/get_parts_usecase.dart';
+import 'package:site_managemnt_dashboard/features/parts/presentation/dialog/add_edit_part_dialog.dart';
 
+import '../../../../core/databases/params/body.dart';
+import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
@@ -21,29 +31,54 @@ class PartsCubit extends Cubit<PartsState> {
   final GlobalKey<DropdownSearchState<GeneratorEntity>> dropdownKey =
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
 
-  Future<void> fetchParts() async {
+  final GetPartsUsecase _getPartsUsecase = getIt();
+  final GetEnginesUseCase _getEnginesUseCase = getIt();
+  final AddPartUsecase _addPartUsecase = getIt();
+
+  Future<void> fetchParts({int page = 1}) async {
     emit(state.copyWith(partsStatus: PartsStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
-    final parts = List<PartEntity>.generate(
-      30,
-      (index) => PartEntity(
-        id: index + 1,
-        name: 'part $index',
-        code: '${index + 1}000',
-        isGeneral: true,
-        engines: [
-          EngineEntity(
-            id: index + 1,
-            engineBrand: BrandEntity(
-              id: index + 1,
-              brand: 'Engine Brand $index',
-            ),
-            engineCapacity: EngineCapacityEntity(id: index + 1, capacity: 100),
-          ),
-        ],
+    final response = await _getPartsUsecase.call(page:page);
+    response.fold(
+      (failure) => emit(
+        state.copyWith(
+          partsStatus: PartsStatus.error,
+          error: failure.errMessage,
+        ),
+      ),
+      (data) => emit(
+        state.copyWith(
+          partsStatus: PartsStatus.loaded,
+          parts: data.parts,
+          pagination: data.pagination,
+        ),
       ),
     );
-    emit(state.copyWith(partsStatus: PartsStatus.loaded, parts: parts));
+  }
+
+  Future<void> addPart(List<EngineEntity> engines) async {
+    log("engines in the add part method is ${engines.length}");
+    emit(state.copyWith(actionStatus: PartsStatus.loading));
+    final body = AddPartBody(
+      name: partNameController.text,
+      code: partCodeController.text,
+      isGeneral: engines.isEmpty ? "1" : "0",
+      enginesId: engines.map((e) => e.id.toString()).toList(),
+    );
+    final response = await _addPartUsecase.call(body);
+    response.fold(
+      (failure) => emit(
+        state.copyWith(
+          actionStatus: PartsStatus.error,
+          error: failure.errMessage,
+        ),
+      ),
+      (data) => emit(
+        state.copyWith(
+          actionStatus: PartsStatus.loaded,
+          parts: [...state.parts, data],
+        ),
+      ),
+    );
   }
 
   void deleteSelectedParts() {
@@ -85,7 +120,7 @@ class PartsCubit extends Cubit<PartsState> {
     if (partId != state.currentPartEnginesId) {
       emit(state.copyWith(currentPartEnginesId: partId));
     } else {
-      emit(state.copyWith(currentPartEnginesId: null));
+      emit(state.copyWith(currentPartEnginesId: -1));
     }
   }
 
@@ -114,30 +149,41 @@ class PartsCubit extends Cubit<PartsState> {
     }
   }
 
-   // Engines Management
-  // void loadEngines() {
-  //   emit(state.copyWith(enginesStatus: GeneratorsEnginesStatus.loading));
-  //   try {
-  //     final engines = [
-  //       EngineEntity(
-  //         id: 1,
-  //         engineBrand: state.engineBrands.first,
-  //         engineCapacity: state.engineCapacities.first,
-  //       ),
-  //     ];
-  //     emit(
-  //       state.copyWith(
-  //         enginesStatus: GeneratorsEnginesStatus.loaded,
-  //         engines: engines,
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     emit(
-  //       state.copyWith(
-  //         enginesStatus: GeneratorsEnginesStatus.error,
-  //         error: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
+  void showAddEditPartDialog(BuildContext parentContext, [int? index]) {
+    // if (index != null) {
+    //   fetchFreeGenerators();
+    // }
+    showDialog(
+      context: parentContext,
+      builder:
+          (context) => BlocProvider.value(
+            value: this,
+            child: AddEditPartDialog(partIndex: index),
+          ),
+    );
+  }
+
+  Future<List<EngineEntity>> loadEngines() async {
+    emit(state.copyWith(engineStatus: AvailableEnginesStatus.loading));
+    final response = await _getEnginesUseCase.call();
+    List<EngineEntity> engines = [];
+    response.fold(
+      (failure) => emit(
+        state.copyWith(
+          engineStatus: AvailableEnginesStatus.error,
+          error: failure.errMessage,
+        ),
+      ),
+      (data) {
+        engines = data;
+        emit(
+          state.copyWith(
+            engineStatus: AvailableEnginesStatus.loaded,
+            availableEngines: data,
+          ),
+        );
+      },
+    );
+    return engines;
+  }
 }

@@ -1,5 +1,5 @@
 class EndPoints {
-  static const String baseUrl = "http://127.0.0.1:8000/api";
+  static const String baseUrl = "https://www.trueonline.org/api";
 
   //!auth
   static const String login = "$baseUrl/login";
@@ -8,21 +8,22 @@ class EndPoints {
   //!get
   static const String getGenerators = "$baseUrl/generators";
   static const String getReports = "$baseUrl/reports";
-  static const String getReportDetailsById = "$baseUrl/getReportDetailsById";
+  static const String getReportDetailsById = "$baseUrl/reports";
   static const String getSites = "$baseUrl/mtn-sites";
-  static const String getGeneratorsBrands = "$baseUrl/getGeneratorsBrands";
-  static const String getParts = "$baseUrl/getParts";
-  static const String getEnginesBrands = "$baseUrl/getEnginesBrands";
-  static const String getEnginesCapacities = "$baseUrl/getEnginesCapacities";
-  static const String getEngines = "$baseUrl/getEngines";
+  static const String getGeneratorsBrands = "$baseUrl/brands?type=generator";
+  static const String getParts = "$baseUrl/parts";
+  static const String getEnginesBrands = "$baseUrl/brands?type=engine";
+  static const String getEnginesCapacities = "$baseUrl/capacities";
+  static const String getEngines = "$baseUrl/engines";
 
-  static const String addSite = "$baseUrl/addSite";
-  static const String createEngine = "$baseUrl/createEngine";
-  static const String addPart = "$baseUrl/addPart";
-  static const String addEngineBrand = "$baseUrl/addEngineBrand";
-  static const String addEngineCapacity = "$baseUrl/addEngineCapacity";
-  static const String addGeneratorBrand = "$baseUrl/addGeneratorBrand";
-  static const String createGenerator = "$baseUrl/createGenerator";
+  //!add
+  static const String addSite = "$baseUrl/mtn-sites";
+  static const String createEngine = "$baseUrl/engines";
+  static const String addPart = "$baseUrl/parts";
+  static const String addEngineBrand = "$baseUrl/brands?type=engine";
+  static const String addEngineCapacity = "$baseUrl/capacities";
+  static const String addGeneratorBrand = "$baseUrl/brands?type=generator";
+  static const String createGenerator = "$baseUrl/generators";
 
   //!edits
   static const String editSite = "$baseUrl/editSite";
@@ -47,6 +48,9 @@ class EndPoints {
   static const String deleteReport = "$baseUrl/deleteReport";
 
   static const String getGeneratorsBySiteID = "$baseUrl/mtn-sites/generators";
+
+  //!export reports
+  static String exportReports = "$baseUrl/reports/export";
 }
 
 class ApiKey {

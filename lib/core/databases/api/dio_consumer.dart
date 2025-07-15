@@ -9,21 +9,23 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoints.baseUrl;
-    dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: true,
-      error: true,
-    ));
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+      ),
+    );
   }
 
-  addInterceptors(Interceptor interceptor) {
+  void addInterceptors(Interceptor interceptor) {
     dio.interceptors.add(interceptor);
   }
 
-//!POST
+  //!POST
   @override
   Future post(
     String path, {
@@ -31,6 +33,7 @@ class DioConsumer extends ApiConsumer {
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? extra,
+    ResponseType? responseType,
     bool isFormData = false,
   }) async {
     try {
@@ -38,6 +41,7 @@ class DioConsumer extends ApiConsumer {
         options: Options(
           headers: headers,
           extra: extra,
+          responseType: responseType,
         ),
         path,
         data: isFormData ? FormData.fromMap(data) : data,
@@ -49,7 +53,7 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-//!GET
+  //!GET
   @override
   Future get(
     String path, {
@@ -76,7 +80,7 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-//!DELETE
+  //!DELETE
   @override
   Future delete(
     String path, {
@@ -87,10 +91,7 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       var res = await dio.delete(
-        options: Options(
-          headers: headers,
-          extra: extra,
-        ),
+        options: Options(headers: headers, extra: extra),
         path,
         data: data,
         queryParameters: queryParameters,
@@ -101,7 +102,7 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-//!PATCH
+  //!PATCH
   @override
   Future patch(
     String path, {
@@ -113,10 +114,7 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       var res = await dio.patch(
-        options: Options(
-          headers: headers,
-          extra: extra,
-        ),
+        options: Options(headers: headers, extra: extra),
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
@@ -128,13 +126,17 @@ class DioConsumer extends ApiConsumer {
   }
 
   @override
-  Future put(String path, {data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers, bool isFormData = false, Map<String, dynamic>? extra}) async {
+  Future put(
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+    bool isFormData = false,
+    Map<String, dynamic>? extra,
+  }) async {
     try {
       var res = await dio.put(
-        options: Options(
-          headers: headers,
-          extra: extra,
-        ),
+        options: Options(headers: headers, extra: extra),
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,

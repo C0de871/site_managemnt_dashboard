@@ -16,6 +16,7 @@ abstract class ApiConsumer {
     Map<String, dynamic>? headers,
     bool isFormData = false,
     Map<String, dynamic>? extra,
+    ResponseType? responseType,
   });
   Future<dynamic> patch(
     String path, {

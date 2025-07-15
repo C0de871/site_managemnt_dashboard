@@ -5,6 +5,7 @@ import '../../../../core/databases/errors/expentions.dart';
 import '../../../../core/databases/errors/failure.dart';
 import '../../../../core/databases/params/body.dart';
 import '../../domain/entities/part_entity.dart';
+import '../../domain/entities/part_response_entity.dart';
 import '../../domain/repository/parts_repository.dart';
 import '../data_sources/parts_remote_data_source.dart';
 
@@ -18,11 +19,11 @@ class PartsRepositoryImpl extends PartsRepository {
   });
 
   @override
-  Future<Either<Failure, List<PartEntity>>> getParts() async {
+  Future<Either<Failure, PartResponseEntity>> getParts({required int page}) async {
     if (await networkInfo.isConnected!) {
       try {
-        final remoteData = await remoteDataSource.getParts();
-        return Right(remoteData.data);
+        final remoteData = await remoteDataSource.getParts(page:page);
+        return Right(remoteData);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }

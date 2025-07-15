@@ -17,29 +17,46 @@ class PartsActionButtons extends StatelessWidget {
 
           return Row(
             children: [
-              // Delete Button
+              // add site Button
               ElevatedButton.icon(
-                onPressed:
-                    hasSelectedParts
-                        ? () {
-                          context.read<PartsCubit>().deleteSelectedParts();
-                        }
-                        : null,
-                icon: const Icon(Icons.delete),
-                label: Text('Delete (${state.selectedPartIds.length})'),
+                onPressed: () {
+                  context.read<PartsCubit>().showAddEditPartDialog(context);
+                },
+                icon: const Icon(Icons.add),
+                label: Text('Add new part'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.errorContainer,
-                  foregroundColor: colorScheme.onErrorContainer,
-                  disabledBackgroundColor: colorScheme.errorContainer
-                      .withValues(alpha: 0.3),
-                  disabledForegroundColor: colorScheme.onErrorContainer
-                      .withValues(alpha: 0.5),
+                  backgroundColor: colorScheme.tertiary,
+                  foregroundColor: colorScheme.onTertiary,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 10,
                   ),
                 ),
               ),
+
+              // Delete Button
+              // ElevatedButton.icon(
+              //   onPressed:
+              //       hasSelectedParts
+              //           ? () {
+              //             context.read<PartsCubit>().deleteSelectedParts();
+              //           }
+              //           : null,
+              //   icon: const Icon(Icons.delete),
+              //   label: Text('Delete (${state.selectedPartIds.length})'),
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: colorScheme.errorContainer,
+              //     foregroundColor: colorScheme.onErrorContainer,
+              //     disabledBackgroundColor: colorScheme.errorContainer
+              //         .withValues(alpha: 0.3),
+              //     disabledForegroundColor: colorScheme.onErrorContainer
+              //         .withValues(alpha: 0.5),
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 16,
+              //       vertical: 10,
+              //     ),
+              //   ),
+              // ),
             ],
           );
         }

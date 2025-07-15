@@ -36,17 +36,26 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       builder: (context, child) {
         final colorScheme = Theme.of(context).colorScheme;
-        return SfDataGridTheme(
-          data: SfDataGridThemeData(
-            headerColor: colorScheme.surfaceContainerHighest.withValues(
-              alpha: 0.3,
-            ),
-            gridLineColor: colorScheme.outlineVariant.withValues(alpha: 0.5),
-            gridLineStrokeWidth: 1,
-            selectionColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
-            rowHoverColor: colorScheme.primaryContainer.withValues(alpha: 0.1),
+        return SfDataPagerTheme(
+          data: SfDataPagerThemeData(
+            selectedItemColor: Theme.of(context).colorScheme.primary,
           ),
-          child: child!,
+          child: SfDataGridTheme(
+            data: SfDataGridThemeData(
+              headerColor: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.3,
+              ),
+              gridLineColor: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              gridLineStrokeWidth: 1,
+              selectionColor: colorScheme.primaryContainer.withValues(
+                alpha: 0.3,
+              ),
+              rowHoverColor: colorScheme.primaryContainer.withValues(
+                alpha: 0.1,
+              ),
+            ),
+            child: child!,
+          ),
         );
       },
       initialRoute: AppRoutes.home,
@@ -96,14 +105,15 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
               },
             );
           } else if (settings.name == AppRoutes.reportDetails) {
+            String reportId = settings.arguments as String;
             return MaterialPageRoute(
               settings: settings,
               builder:
                   (context) => BlocProvider(
                     create:
-                        (context) => getCubit<ReportDetailsCubit>(
-                          () => ReportDetailsCubit(),
-                        ),
+                        (context) =>
+                            ReportDetailsCubit(reportId: reportId)
+                              ..loadReportDetails(),
                     child: ReportDetailsScreen(),
                   ),
             );
@@ -114,10 +124,7 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
                   (context) => MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create:
-                            (context) =>
-                                getCubit<SitesCubit>(() => SitesCubit())
-                                  ..fetchSites(),
+                        create: (context) => SitesCubit()..fetchSites(),
                       ),
                       BlocProvider(
                         create: (context) => GeneratorsEnginesCubit(),
@@ -133,9 +140,7 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
                   (context) => BlocProvider(
                     create:
                         (context) =>
-                            getCubit<GeneratorsEnginesCubit>(
-                                () => GeneratorsEnginesCubit(),
-                              )
+                            GeneratorsEnginesCubit()
                               ..fetchGenerators()
                               ..loadEngineBrands()
                               ..loadGeneratorBrands()
@@ -149,10 +154,7 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
               settings: settings,
               builder:
                   (context) => BlocProvider(
-                    create:
-                        (context) =>
-                            getCubit<PartsCubit>(() => PartsCubit())
-                              ..fetchParts(),
+                    create: (context) => PartsCubit()..fetchParts(),
                     child: PartsScreen(),
                   ),
             );

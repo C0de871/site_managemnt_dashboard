@@ -22,6 +22,7 @@ class SiteEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, code, longitude, latitude, generators];
 
+
   SiteEntity copyWith({
     int? id,
     String? name,

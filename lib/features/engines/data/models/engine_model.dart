@@ -17,7 +17,7 @@ class EngineModel extends EngineEntity {
   factory EngineModel.fromJson(Map<String, dynamic> json) {
     return EngineModel(
       id: json[idKey] as int,
-      engineBrand: EngineBrandModel.fromJson(
+      engineBrand: BrandModel.fromJson(
         json[engineBrandKey] as Map<String, dynamic>,
       ),
       engineCapacity: EngineCapacityModel.fromJson(

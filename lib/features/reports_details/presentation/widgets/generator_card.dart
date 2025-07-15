@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/presentation/cubit/report_details_cubit.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/presentation/widgets/custom_input_text_field.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/presentation/widgets/info_card.dart';
 
+import '../../../../core/utils/constants/constant.dart';
+
 class GeneratorCard extends StatelessWidget {
-  const GeneratorCard({
-    super.key,
-    required this.cubit,
-  });
+  const GeneratorCard({super.key, required this.cubit});
 
   final ReportDetailsCubit cubit;
 
@@ -54,9 +54,20 @@ class GeneratorCard extends StatelessWidget {
                   controller: cubit.lastCounterReadingController,
                 ),
                 SizedBox(height: 12),
-                CustomInputTextField(
-                  labelText: "Cables status",
-                  controller: cubit.cablesStatusController,
+                BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
+                  builder: (context, state) {
+                    return DropdownButtonFormField<String>(
+                      items:
+                          [Constant.ok, Constant.notOk]
+                              .map(
+                                (e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)),
+                              )
+                              .toList(),
+                      onChanged: (newValue) {},
+                      value: state.reportDetails?.atsStatus,
+                    );
+                  },
                 ),
                 SizedBox(height: 12),
                 CustomInputTextField(

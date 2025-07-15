@@ -1,201 +1,171 @@
+import 'package:intl/intl.dart';
 import 'package:site_managemnt_dashboard/features/reports/domain/entities/report_entity.dart';
+import 'package:site_managemnt_dashboard/features/reports_details/domain/entities/report_details_entity.dart';
 
+import '../../../../core/utils/constants/constant.dart';
 import '../../../generators/data/models/generator_model.dart';
-import '../../domain/entities/report_details_entity.dart';
-
-class ReportPartModel extends ReportPartEntity {
-  static const String idKey = 'id';
-  static const String nameKey = 'name';
-  static const String quantityKey = 'quantity';
-  static const String codeKey = 'code';
-  static const String noteKey = 'note';
-  static const String isFaultyKey = 'is_faulty';
-  static const String lastReplacementDateKey = 'last_replacement_date';
-  static const String lastReplacementMeterKey = 'last_replacement_meter';
-
-  const ReportPartModel({
-    required super.id,
-    required super.name,
-    required super.quantity,
-    required super.code,
-    required super.note,
-    required super.isFaulty,
-    required super.lastReplacementDate,
-    required super.lastReplacementMeter,
-  });
-
-  factory ReportPartModel.fromJson(Map<String, dynamic> json) {
-    return ReportPartModel(
-      id: json[idKey] as int,
-      name: json[nameKey] as String,
-      quantity: json[quantityKey] as int,
-      code: json[codeKey] as String,
-      note: json[noteKey] as String,
-      isFaulty: json[isFaultyKey] as bool,
-      lastReplacementDate: DateTime.parse(
-        json[lastReplacementDateKey] as String,
-      ),
-      lastReplacementMeter: (json[lastReplacementMeterKey] as num).toDouble(),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      idKey: id,
-      nameKey: name,
-      quantityKey: quantity,
-      codeKey: code,
-      noteKey: note,
-      isFaultyKey: isFaulty,
-      lastReplacementDateKey: lastReplacementDate.toIso8601String(),
-      lastReplacementMeterKey: lastReplacementMeter,
-    };
-  }
-}
+import '../../../parts/data/models/part_model.dart';
+import 'completed_work_model.dart';
+import 'technician_note_model.dart';
 
 class ReportDetailsModel extends ReportDetailsEntity {
-  static const String idKey = 'id';
-  static const String generatorKey = 'generator';
-  static const String visitTypeKey = 'visit_type';
-  static const String reportNumberKey = 'report_number';
-  static const String visitDateKey = 'visit_date';
-  static const String visitTimeKey = 'visit_time';
-  static const String oilPressureKey = 'oil_pressure';
-  static const String temperatureKey = 'temperature';
-  static const String batterVoltKey = 'batter_volt';
-  static const String oilQuantityKey = 'oil_quantity';
-  static const String burnedOilQuantityKey = 'burned_oil_quantity';
-  static const String frequencyKey = 'frequency';
-  static const String generatorBrandKey = 'generator_brand';
-  static const String engineBrandKey = 'engine_brand';
-  static const String engineCapacityKey = 'engine_capacity';
-  static const String meterKey = 'meter';
-  static const String lastMeterKey = 'last_meter';
-  static const String atsStatusKey = 'ats_status';
-  static const String lastVisitDateKey = 'last_visit_date';
-  static const String voltL1Key = 'volt_l1';
-  static const String voltL2Key = 'volt_l2';
-  static const String voltL3Key = 'volt_l3';
-  static const String loadL1Key = 'load_l1';
-  static const String loadL2Key = 'load_l2';
-  static const String loadL3Key = 'load_l3';
-  static const String visitResonsKey = 'visit_resons';
-  static const String technicianNotesKey = 'technician_notes';
-  static const String technicalStatusKey = 'technical_status';
-  static const String completedWorksKey = 'completed_works';
-  static const String partsKey = 'parts';
-
   const ReportDetailsModel({
     required super.id,
     required super.generator,
     required super.visitType,
     required super.reportNumber,
-    required super.visitDate,
-    required super.visitTime,
+    required super.visitDateAndTime,
     required super.oilPressure,
     required super.temperature,
-    required super.batterVolt,
+    required super.batteryVoltage,
     required super.oilQuantity,
     required super.burnedOilQuantity,
     required super.frequency,
-    required super.meter,
-    required super.lastMeter,
+    required super.currentMeter,
     required super.atsStatus,
-    required super.lastVisitDate,
     required super.voltL1,
     required super.voltL2,
     required super.voltL3,
     required super.loadL1,
     required super.loadL2,
     required super.loadL3,
-    required super.visitResons,
+    required super.visitReason,
+    required super.longitude,
+    required super.latitude,
+    required super.lastMeter,
+    required super.lastRoutineVisitDate,
     required super.technicianNotes,
     required super.technicalStatus,
     required super.completedWorks,
     required super.parts,
   });
 
+  static const String kId = 'id';
+  static const String kGenerator = 'generator';
+  static const String kVisitType = 'visit_type';
+  static const String kReportNumber = 'report_number';
+  static const String kVisitDate = 'visit_date';
+  static const String kVisitTime = 'visit_time';
+  static const String kOilPressure = 'oil_pressure';
+  static const String kTemperature = 'temperature';
+  static const String kBatteryVoltage = 'battery_voltage';
+  static const String kOilQuantity = 'oil_quantity';
+  static const String kBurnedOilQuantity = 'burned_oil_quantity';
+  static const String kFrequency = 'frequency';
+  static const String kCurrentMeter = 'current_meter';
+  static const String kAtsStatus = 'ats_status';
+  static const String kVoltL1 = 'volt_l1';
+  static const String kVoltL2 = 'volt_l2';
+  static const String kVoltL3 = 'volt_l3';
+  static const String kLoadL1 = 'load_l1';
+  static const String kLoadL2 = 'load_l2';
+  static const String kLoadL3 = 'load_l3';
+  static const String kVisitReason = 'visit_reason';
+  static const String kLongitude = 'longitude';
+  static const String kLatitude = 'latitude';
+  static const String kLastMeter = 'last_meter';
+  static const String kLastRoutineVisitDate = 'last_routine_visit_date';
+  static const String kTechnicianNotes = 'technician_notes';
+  static const String kTechnicalStatus = 'technical_status';
+  static const String kCompletedWorks = 'completed_works';
+  static const String kParts = 'parts';
+
   factory ReportDetailsModel.fromJson(Map<String, dynamic> json) {
+    final DateTime visitDateAndTime = DateTime.parse(
+      "${json[kVisitDate]} ${json[kVisitTime]}",
+    );
+
+    final DateTime? lastVisitDate =
+        json[kLastRoutineVisitDate] == null
+            ? null
+            : DateTime.tryParse(json[kLastRoutineVisitDate]);
+
     return ReportDetailsModel(
-      id: json[idKey] as int,
-      generator: GeneratorModel.fromJson(
-        json[generatorKey] as Map<String, dynamic>,
-      ),
-      visitType: (json[visitTypeKey] as String).visitType,
-      reportNumber: json[reportNumberKey] as String,
-      visitDate: DateTime.parse(json[visitDateKey] as String),
-      visitTime: json[visitTimeKey] as String,
-      oilPressure: (json[oilPressureKey] as num).toDouble(),
-      temperature: (json[temperatureKey] as num).toDouble(),
-      batterVolt: (json[batterVoltKey] as num).toDouble(),
-      oilQuantity: (json[oilQuantityKey] as num).toDouble(),
-      burnedOilQuantity: (json[burnedOilQuantityKey] as num).toDouble(),
-      frequency: (json[frequencyKey] as num).toDouble(),
-      meter: (json[meterKey] as num).toDouble(),
-      lastMeter: (json[lastMeterKey] as num).toDouble(),
-      atsStatus: _parseAtsStatus(json[atsStatusKey] as String),
-      lastVisitDate: DateTime.parse(json[lastVisitDateKey] as String),
-      voltL1: (json[voltL1Key] as num).toDouble(),
-      voltL2: (json[voltL2Key] as num).toDouble(),
-      voltL3: (json[voltL3Key] as num).toDouble(),
-      loadL1: (json[loadL1Key] as num).toDouble(),
-      loadL2: (json[loadL2Key] as num).toDouble(),
-      loadL3: (json[loadL3Key] as num).toDouble(),
-      visitResons: json[visitResonsKey] as String,
-      technicianNotes: List<String>.from(json[technicianNotesKey] as List),
-      technicalStatus: json[technicalStatusKey] as String,
-      completedWorks: List<String>.from(json[completedWorksKey] as List),
-      parts:
-          (json[partsKey] as List)
-              .map(
-                (part) =>
-                    ReportPartModel.fromJson(part as Map<String, dynamic>),
-              )
+      id: json[kId],
+      generator: GeneratorModel.fromJson(json[kGenerator]),
+      visitType: (json[kVisitType] as String).visitType,
+      reportNumber: json[kReportNumber],
+      visitDateAndTime: visitDateAndTime,
+      oilPressure: json[kOilPressure],
+      temperature: json[kTemperature],
+      batteryVoltage: json[kBatteryVoltage],
+      oilQuantity: json[kOilQuantity],
+      burnedOilQuantity: json[kBurnedOilQuantity],
+      frequency: json[kFrequency],
+      currentMeter: json[kCurrentMeter],
+      atsStatus:
+          (json[kAtsStatus] as bool?) == null
+              ? null
+              : (json[kAtsStatus] as bool) == true
+              ? Constant.ok
+              : Constant.notOk,
+      voltL1: json[kVoltL1],
+      voltL2: json[kVoltL2],
+      voltL3: json[kVoltL3],
+      loadL1: json[kLoadL1],
+      loadL2: json[kLoadL2],
+      loadL3: json[kLoadL3],
+      visitReason: json[kVisitReason],
+      longitude: json[kLongitude],
+      latitude: json[kLatitude],
+      lastMeter: json[kLastMeter],
+      lastRoutineVisitDate: lastVisitDate,
+      technicianNotes:
+          (json[kTechnicianNotes] as List)
+              .map((e) => TechnicianNoteModel.fromJson(e))
               .toList(),
+      technicalStatus: json[kTechnicalStatus],
+      completedWorks:
+          (json[kCompletedWorks] as List)
+              .map((e) => CompletedWorkModel.fromJson(e))
+              .toList(),
+      parts: (json[kParts] as List).map((e) => PartModel.fromJson(e)).toList(),
     );
   }
 
-  static AtsStatus _parseAtsStatus(String status) {
-    switch (status) {
-      case ReportDetailsEntity.ok:
-        return AtsStatus.ok;
-      case ReportDetailsEntity.notOk:
-        return AtsStatus.notOk;
-      default:
-        return AtsStatus.ok;
-    }
-  }
-
   Map<String, dynamic> toJson() {
+    String formattedDate = DateFormat(
+      'yyyy-MM-dd',
+    ).format(super.visitDateAndTime);
+    String formattedTime = DateFormat(
+      'HH:mm:ss',
+    ).format(super.visitDateAndTime);
     return {
-      idKey: id,
-      generatorKey: (generator as GeneratorModel).toJson(),
-      visitTypeKey: visitType.toString(),
-      reportNumberKey: reportNumber,
-      visitDateKey: visitDate.toIso8601String(),
-      visitTimeKey: visitTime,
-      oilPressureKey: oilPressure,
-      temperatureKey: temperature,
-      batterVoltKey: batterVolt,
-      oilQuantityKey: oilQuantity,
-      burnedOilQuantityKey: burnedOilQuantity,
-      frequencyKey: frequency,
-      meterKey: meter,
-      lastMeterKey: lastMeter,
-      atsStatusKey: atsStatus.toString(),
-      lastVisitDateKey: lastVisitDate.toIso8601String(),
-      voltL1Key: voltL1,
-      voltL2Key: voltL2,
-      voltL3Key: voltL3,
-      loadL1Key: loadL1,
-      loadL2Key: loadL2,
-      loadL3Key: loadL3,
-      visitResonsKey: visitResons,
-      technicianNotesKey: technicianNotes,
-      technicalStatusKey: technicalStatus,
-      completedWorksKey: completedWorks,
-      partsKey:
-          parts.map((part) => (part as ReportPartModel).toJson()).toList(),
+      kId: id,
+      kGenerator: (generator as GeneratorModel).toJson(),
+      kVisitType: visitType.englishName,
+      kReportNumber: reportNumber,
+      kVisitDate: formattedDate,
+      kVisitTime: formattedTime,
+      kOilPressure: oilPressure,
+      kTemperature: temperature,
+      kBatteryVoltage: batteryVoltage,
+      kOilQuantity: oilQuantity,
+      kBurnedOilQuantity: burnedOilQuantity,
+      kFrequency: frequency,
+      kCurrentMeter: currentMeter,
+      kAtsStatus: atsStatus,
+      kVoltL1: voltL1,
+      kVoltL2: voltL2,
+      kVoltL3: voltL3,
+      kLoadL1: loadL1,
+      kLoadL2: loadL2,
+      kLoadL3: loadL3,
+      kVisitReason: visitReason,
+      kLongitude: longitude,
+      kLatitude: latitude,
+      kLastMeter: lastMeter,
+      kLastRoutineVisitDate: lastRoutineVisitDate,
+      kTechnicianNotes:
+          technicianNotes
+              .map((e) => (e as TechnicianNoteModel).toJson())
+              .toList(),
+      kTechnicalStatus: technicalStatus,
+      kCompletedWorks:
+          completedWorks
+              .map((e) => (e as CompletedWorkModel).toJson())
+              .toList(),
+      kParts: parts.map((e) => (e as PartModel).toJson()).toList(),
     };
   }
 }

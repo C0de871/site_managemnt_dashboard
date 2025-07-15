@@ -25,7 +25,10 @@ class _EnginesDataTableState extends State<EnginesDataTable> {
 
     return BlocBuilder<PartsCubit, PartsState>(
       builder: (context, state) {
-        final engines = state.parts[widget.partId].engines;
+        final engines =
+            state.parts
+                .firstWhere((part) => part.id == state.currentPartEnginesId)
+                .engines;
         if (engines.isEmpty) {
           return Center(
             child: Column(
@@ -110,8 +113,7 @@ class _EnginesDataTableState extends State<EnginesDataTable> {
               height: 60,
               child: SfDataPager(
                 delegate: dataSource,
-                pageCount:
-                    (engines.length / _rowsPerPage).ceil().toDouble(),
+                pageCount: (engines.length / _rowsPerPage).ceil().toDouble(),
               ),
             ),
           ],

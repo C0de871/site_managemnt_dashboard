@@ -9,9 +9,18 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({required this.retrieveAccessTokenUseCase});
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Check if request should be excluded from authentication
-    if (options.extra.containsKey('no_auth') && options.extra['no_auth'] == true) {
+
+    //todo: this need to be more tested:
+    options.headers['Content-Type'] = 'application/json';
+    options.headers['Accept'] = 'application/json';
+
+    if (options.extra.containsKey('no_auth') &&
+        options.extra['no_auth'] == true) {
       // Skip authentication for this request
       return handler.next(options);
     }
@@ -23,7 +32,9 @@ class AuthInterceptor extends Interceptor {
       (failure) {
         // If there's a failure, proceed without token
         if (kDebugMode) {
-          print('AuthInterceptor: Failed to retrieve token - ${failure.errMessage.toString()}');
+          print(
+            'AuthInterceptor: Failed to retrieve token - ${failure.errMessage.toString()}',
+          );
         }
         handler.next(options);
       },

@@ -4,9 +4,12 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:site_managemnt_dashboard/core/databases/params/body.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_by_site_id.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/cubit/generators_cubit.dart';
 import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_response_entity.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/add_site_usecase.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/edit_site_usecase.dart';
 
 import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
@@ -26,12 +29,16 @@ class SitesCubit extends Cubit<SitesState> {
   final GetGeneratorsBySiteIDUsecase _getAllSiteGeneratorsUseCase =
       getIt<GetGeneratorsBySiteIDUsecase>();
 
+  final EditSiteUseCase _editSiteUseCase = getIt<EditSiteUseCase>();
+  final AddSiteUseCase _addSiteUseCase = getIt<AddSiteUseCase>();
+
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController siteCodeController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
   final GlobalKey<DropdownSearchState<GeneratorEntity>> dropdownKey =
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
+
 
   Future<void> fetchSites({int page = 1}) async {
     emit(state.copyWith(sitesStatus: SitesStatus.loading));
@@ -140,14 +147,10 @@ class SitesCubit extends Cubit<SitesState> {
     emit(state.copyWith(actionStatus: SitesStatus.loaded));
   }
 
-  void showAddEditSiteDialog(BuildContext parentContext, int? index) {
-    // log(site.toString());
-    fetchFreeGenerators();
-    final SiteEntity? site;
-    // if (index != null) {
-    //   site = state.sites[index];
-    //   fetchGenerators(site.id);
-    // }
+  void showAddEditSiteDialog(BuildContext parentContext, [int? index]) {
+    if (index != null) {
+      fetchFreeGenerators();
+    }
     showDialog(
       context: parentContext,
       builder:
@@ -204,9 +207,32 @@ class SitesCubit extends Cubit<SitesState> {
     }
   }
 
-  void addEditSite() async {
-    emit(state.copyWith(actionStatus: SitesStatus.loading));
-    await Future.delayed(const Duration(seconds: 2));
-    emit(state.copyWith(actionStatus: SitesStatus.loaded));
+  Future<void> addEditSite({int? siteId}) async {
+    if (siteId != null) {
+    } else {
+      _addSite();
+    }
+  }
+
+  Future<void> _addSite() async {
+    final AddSiteBody body = AddSiteBody(
+      name: siteNameController.text,
+      code: siteCodeController.text,
+    );
+    final response = await _addSiteUseCase.call(body);
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: SitesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (site) {
+        emit(state.copyWith(actionStatus: SitesStatus.loaded));
+      },
+    );
   }
 }

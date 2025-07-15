@@ -17,12 +17,12 @@ class AddEditSiteDialog extends StatelessWidget {
     final cubit = context.read<SitesCubit>();
     final colors = Theme.of(context).colorScheme;
 
-    return BlocConsumer<SitesCubit, SitesState>(
-      listener: (context, state) {
-        if (state.actionStatus.isLoaded) {
-          Navigator.pop(context);
-        }
-      },
+    return BlocBuilder<SitesCubit, SitesState>(
+      // listener: (context, state) {
+      //   if (state.actionStatus.isLoaded) {
+      //     Navigator.pop(context);
+      //   }
+      // },
       builder: (context, state) {
         final SiteEntity? site =
             siteIndex != null
@@ -44,7 +44,7 @@ class AddEditSiteDialog extends StatelessWidget {
           },
 
           itemAsString: (generator) {
-            return "${generator.brand.brand} ${generator.engine.engineBrand.brand} ${generator.engine.engineCapacity.capacity}";
+            return "${generator.brand?.brand ?? "غير معروف"} ${generator.engine.engineBrand.brand} ${generator.engine.engineCapacity.capacity}";
           },
           popupProps: PopupPropsMultiSelection.menu(
             menuProps: MenuProps(align: MenuAlign.topCenter),
@@ -100,7 +100,8 @@ class AddEditSiteDialog extends StatelessWidget {
                   const SizedBox(height: 16),
                   if (state.generatorStatus.isLoading)
                     Center(child: CircularProgressIndicator()),
-                  if (state.generatorStatus.isLoaded) generatorsDropDown,
+                  if (state.generatorStatus.isLoaded && site != null)
+                    generatorsDropDown,
                 ],
               ),
             ),
@@ -111,7 +112,12 @@ class AddEditSiteDialog extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: cubit.addEditSite,
+              onPressed: () async {
+                await cubit.addEditSite();
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
               child:
                   state.actionStatus.isLoading
                       ? CircularProgressIndicator(

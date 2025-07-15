@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/features/engine_brands/domain/entities/brand_entity.dart';
 
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
@@ -18,8 +19,7 @@ class GeneratorBrandsRepositoryImpl extends GeneratorBrandsRepository {
   });
 
   @override
-  Future<Either<Failure, List<GeneratorBrandEntity>>>
-  getGeneratorBrands() async {
+  Future<Either<Failure, List<BrandEntity>>> getGeneratorBrands() async {
     if (await networkInfo.isConnected!) {
       try {
         final remoteData = await remoteDataSource.getGeneratorBrands();
@@ -33,7 +33,7 @@ class GeneratorBrandsRepositoryImpl extends GeneratorBrandsRepository {
   }
 
   @override
-  Future<Either<Failure, GeneratorBrandEntity>> addGeneratorBrand(
+  Future<Either<Failure, BrandEntity>> addGeneratorBrand(
     AddGeneratorBrandBody body,
   ) async {
     if (await networkInfo.isConnected!) {

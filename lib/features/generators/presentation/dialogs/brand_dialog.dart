@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../../engine_brands/domain/entities/brand_entity.dart';
@@ -36,8 +38,11 @@ class BrandDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             if (cubit.brandController.text.trim().isNotEmpty) {
+              log("brand controller isn't empty");
               if (brand == null) {
+                log("brand is null");
                 if (isEngine) {
+                  log("brand is engine brand");
                   cubit.addEngineBrand(cubit.brandController.text.trim());
                 } else {
                   cubit.addGeneratorBrand(cubit.brandController.text.trim());

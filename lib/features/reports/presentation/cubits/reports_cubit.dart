@@ -23,8 +23,6 @@ class ReportsCubit extends Cubit<ReportsState> {
   final ExportReportsUsecase _exportReportsUsecase = getIt();
 
   ReportsCubit() : super(ReportsState()) {
-    loadReports();
-    // Listen to search controller changes
     searchController.addListener(() {
       searchReports(searchController.text);
     });
@@ -53,6 +51,7 @@ class ReportsCubit extends Cubit<ReportsState> {
               ? VisitType.routine
               : (index % 3 == 1 ? VisitType.emergency : VisitType.overhaul),
       visitDate: DateTime.now().subtract(Duration(days: index % 30)),
+      username: "",
     ),
   );
 
@@ -269,7 +268,7 @@ class ReportsCubit extends Cubit<ReportsState> {
     }
   }
 
-  void exportReportsToExcel() async {
+  Future<void> exportReportsToExcel(String startDate, String endDate) async {
     final currentState = state;
 
     emit(state.copyWith(exportReportsStatus: ExportReportsStatus.loading));

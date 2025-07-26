@@ -6,12 +6,14 @@ class ReportModel extends ReportEntity {
   static const String siteKey = 'mtn_site';
   static const String typeKey = 'visit_type';
   static const String dateKey = 'visit_date';
+  static const String usernameKey = 'username';
 
   const ReportModel({
     required super.id,
     required super.site,
     required super.visitType,
     required super.visitDate,
+    required super.username,
   });
 
   // Factory method to create a ReportModel from a JSON Map
@@ -21,6 +23,7 @@ class ReportModel extends ReportEntity {
       site: SitesModel.fromJson(json[siteKey] as Map<String, dynamic>),
       visitType: (json[typeKey] as String).visitType,
       visitDate: DateTime.parse(json[dateKey] as String),
+      username: json[usernameKey] as String?,
     );
   }
 
@@ -31,6 +34,7 @@ class ReportModel extends ReportEntity {
       siteKey: (site as SitesModel).toJson(),
       typeKey: visitType.toString(),
       dateKey: visitDate.toIso8601String(),
+      usernameKey: username,
     };
   }
 }

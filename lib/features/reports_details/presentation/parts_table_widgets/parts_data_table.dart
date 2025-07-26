@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/shared/widgets/my_data_source.dart';
@@ -56,7 +58,7 @@ class _PartsDataTableState extends State<PartsDataTable> {
           ColumnConfig<PartEntity>(
             columnName: 'Code',
             displayName: 'Part Code',
-            valueExtractor: (part) => part.code?? "غير معروف",
+            valueExtractor: (part) => part.code ?? "غير معروف",
           ),
           ColumnConfig<PartEntity>(
             columnName: 'Name',
@@ -83,6 +85,18 @@ class _PartsDataTableState extends State<PartsDataTable> {
             columnName: 'Note',
             displayName: 'note',
             valueExtractor: (part) => part.note.toString(),
+          ),
+          ColumnConfig<PartEntity>(
+            columnName: 'lastReplacementDate',
+            displayName: 'Last Replacement Date',
+            valueExtractor: (part) => part.fomattedLastReplacementDate,
+          ),
+          ColumnConfig<PartEntity>(
+            columnName: 'generatorHoursAtLastReplacement',
+            displayName: 'Generator Hours At Last Replacement',
+            valueExtractor:
+                (part) =>
+                    part.generatorHoursAtLastReplacement?.toString() ?? '-',
           ),
           // ActionsColumnConfig<PartEntity>(
           //   actions: [
@@ -131,6 +145,10 @@ class _PartsDataTableState extends State<PartsDataTable> {
         if (_currentPage >= totalPages && totalPages > 0) {
           _currentPage = totalPages - 1;
         }
+
+        log("total pages: $totalPages");
+        log("current page: $_currentPage");
+        log("parts: ${state.reportDetails!.parts}");
 
         return Column(
           children: [

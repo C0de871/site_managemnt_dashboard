@@ -104,8 +104,9 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
     );
 
     // Calculate total pages
-    final int totalPages =
+    int totalPages =
         ((cubit.state.pagination?.totalItemsCount ?? 1) / _rowsPerPage).ceil();
+    totalPages = totalPages == 0 ? 1 : totalPages;
 
     // Ensure current page is valid
     if (_currentPage >= totalPages && totalPages > 0) {
@@ -126,39 +127,34 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
                 color: Colors.grey.withValues(alpha: 200),
                 child: Center(child: CircularProgressIndicator()),
               ),
+
             IgnorePointer(
               ignoring:
                   state.actionStatus.isLoading ||
                   state.generatorsStatus.isLoading,
               child: Column(
                 children: [
-                  IgnorePointer(
-                    child: SizedBox(
-                      height: 600,
-                      child: SfDataGrid(
-                        onQueryRowHeight: (details) {
-                          return details.getIntrinsicRowHeight(
-                            details.rowIndex,
-                          );
-                        },
-                        source: dataSource,
-                        controller: _dataGridController,
-                        allowSorting: true, // We're handling sorting in Cubit
-                        selectionMode: SelectionMode.multiple,
-                        navigationMode: GridNavigationMode.cell,
-                        frozenColumnsCount: 1, // Freeze the checkbox column
-                        highlightRowOnHover: true,
-                        // allowFiltering: true,
-                        // Use pagination instead of fixed row sizes
-                        rowsPerPage:
-                            widget.isGeneratorsAndEngineScreen
-                                ? _rowsPerPage
-                                : null,
-                        gridLinesVisibility: GridLinesVisibility.both,
-                        headerGridLinesVisibility: GridLinesVisibility.both,
-                        columnWidthMode: ColumnWidthMode.fill,
-                        columns: dataSource.getGridColumns(),
-                      ),
+                  SizedBox(
+                    height: 600,
+                    child: SfDataGrid(
+                      onQueryRowHeight: (details) {
+                        return details.getIntrinsicRowHeight(details.rowIndex);
+                      },
+                      source: dataSource,
+                      controller: _dataGridController,
+                      allowSorting: true,
+                      selectionMode: SelectionMode.multiple,
+                      navigationMode: GridNavigationMode.cell,
+                      frozenColumnsCount: 1,
+                      highlightRowOnHover: true,
+                      rowsPerPage:
+                          widget.isGeneratorsAndEngineScreen
+                              ? _rowsPerPage
+                              : null,
+                      gridLinesVisibility: GridLinesVisibility.both,
+                      headerGridLinesVisibility: GridLinesVisibility.both,
+                      columnWidthMode: ColumnWidthMode.fill,
+                      columns: dataSource.getGridColumns(),
                     ),
                   ),
                   if (widget.isGeneratorsAndEngineScreen)

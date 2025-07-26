@@ -12,7 +12,6 @@ class GeneratorsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final cubit = context.read<GeneratorsEnginesCubit>();
 
     return BlocListener<GeneratorsEnginesCubit, GeneratorsEnginesState>(
       listenWhen: (old, current) => old.actionStatus != current.actionStatus,

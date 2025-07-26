@@ -53,16 +53,18 @@ class ReportEntity extends Equatable {
   final SiteEntity site;
   final VisitType visitType;
   final DateTime visitDate;
+  final String? username;
 
   const ReportEntity({
     required this.id,
     required this.site,
     required this.visitType,
     required this.visitDate,
+    required this.username,
   });
 
   @override
-  List<Object?> get props => [id, site, visitType, visitDate];
+  List<Object?> get props => [id, site, visitType, visitDate, username];
 
   // For convenience in the app
   String get formattedDate {
@@ -75,12 +77,14 @@ class ReportEntity extends Equatable {
     SiteEntity? site,
     VisitType? visitType,
     DateTime? visitDate,
+    String? username,
   }) {
     return ReportEntity(
       id: id ?? this.id,
       site: site ?? this.site,
       visitType: visitType ?? this.visitType,
       visitDate: visitDate ?? this.visitDate,
+      username: username ?? this.username,
     );
   }
 }

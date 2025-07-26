@@ -10,6 +10,7 @@ import 'package:site_managemnt_dashboard/features/engines/domain/usecases/get_en
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
 import 'package:site_managemnt_dashboard/features/parts/domain/entities/part_entity.dart';
 import 'package:site_managemnt_dashboard/features/parts/domain/usecases/add_part_usecase.dart';
+import 'package:site_managemnt_dashboard/features/parts/domain/usecases/delete_part_usecase.dart';
 import 'package:site_managemnt_dashboard/features/parts/domain/usecases/get_parts_usecase.dart';
 import 'package:site_managemnt_dashboard/features/parts/presentation/dialog/add_edit_part_dialog.dart';
 
@@ -32,12 +33,14 @@ class PartsCubit extends Cubit<PartsState> {
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
 
   final GetPartsUsecase _getPartsUsecase = getIt();
-  final GetEnginesUseCase _getEnginesUseCase = getIt();
   final AddPartUsecase _addPartUsecase = getIt();
+  final DeletePartsUsecase _deletePartsUsecase = getIt();
+
+  final GetEnginesUseCase _getEnginesUseCase = getIt();
 
   Future<void> fetchParts({int page = 1}) async {
     emit(state.copyWith(partsStatus: PartsStatus.loading));
-    final response = await _getPartsUsecase.call(page:page);
+    final response = await _getPartsUsecase.call(page: page);
     response.fold(
       (failure) => emit(
         state.copyWith(
@@ -81,9 +84,27 @@ class PartsCubit extends Cubit<PartsState> {
     );
   }
 
-  void deleteSelectedParts() {
+  Future<void> deleteSelectedParts() async {
     emit(state.copyWith(actionStatus: PartsStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
+    final response = await _deletePartsUsecase.call(
+      DeletePartBody(ids: state.selectedPartIds.toList()),
+    );
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: PartsStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(
+          state.copyWith(actionStatus: PartsStatus.loaded, selectedPartIds: {}),
+        );
+        fetchParts(page: state.pagination.currentPage!);
+      },
+    );
     emit(state.copyWith(actionStatus: PartsStatus.loaded));
   }
 

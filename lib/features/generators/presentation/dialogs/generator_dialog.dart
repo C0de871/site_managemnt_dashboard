@@ -7,6 +7,7 @@ import 'package:site_managemnt_dashboard/features/generators/domain/entities/gen
 import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_entity.dart';
 
 import '../cubit/generators_cubit.dart';
+import '../widgets/sites_drop_down.dart';
 
 class GeneratorDialog extends StatelessWidget {
   GeneratorDialog({
@@ -77,112 +78,10 @@ class GeneratorDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     // Modified DropdownSearch widget with pagination
-                    DropdownSearch<SiteEntity>(
-                      // key: cubit.dropdownKey,
-                      // selectedItems: site?.generators ?? [],
-                      decoratorProps: DropDownDecoratorProps(
-                        decoration: InputDecoration(
-                          labelText: 'generator site',
-                          hintText: 'select site',
-                        ),
-                      ),
-                      compareFn: (a, b) {
-                        return a == b;
-                      },
-                      itemAsString: (site) {
-                        return "${site.name} ${site.code}";
-                      },
-                      popupProps: PopupPropsMultiSelection.menu(
-                        menuProps: MenuProps(align: MenuAlign.topCenter),
-                        // showSearchBox: true,
-                        disableFilter: true,
-                        onItemsLoaded: (sites) {
-                          log('onItemsLoaded: ${sites.length}');
-                        },
-                        // Enable infinite scroll for pagination
-                        infiniteScrollProps: InfiniteScrollProps(
-                          loadProps: LoadProps(skip: 0, take: 20),
-                          loadingMoreBuilder:
-                              (context, index) => Container(
-                                padding: EdgeInsets.all(16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(width: 16),
-                                    Text('Loading more...'),
-                                  ],
-                                ),
-                              ),
-                        ),
-                        title: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          ),
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Text(
-                            'Sites:',
-                            style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer,
-                            ),
-                          ),
-                        ),
-                        loadingBuilder: (context, message) {
-                          return Container(
-                            padding: EdgeInsets.all(16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(width: 16),
-                                Text(message),
-                              ],
-                            ),
-                          );
-                        },
-                        // Add search delay to prevent too many API calls
-                        searchDelay: Duration(milliseconds: 500),
-                      ),
-
-                      // This is where the magic happens - async items with pagination
-                      items: (filter, loadProps) async {
-                        // final searchQuery = filter;
-                        log(loadProps?.skip.toString() ?? "no skip");
-                        log(loadProps?.take.toString() ?? "no take");
-                        final int page =
-                            (((loadProps?.skip ?? 0) / (loadProps?.take ?? 1)) +
-                                    1)
-                                .ceil();
-                        log("page is $page");
-                        // Fetch sites from API
-                        final sites = await cubit.loadSites(
-                          // : searchQuery,
-                          page: page,
-                        );
-                        log(
-                          'sites length after the call in the dialog is: ${sites.length}',
-                        );
-                        return sites;
-                      },
-
-                      onChanged: (site) {
+                    SitesDropList(
+                      onChanged: (SiteEntity? site) {
                         setState(() => selectedSiteId = site?.id);
                       },
-
-                      // Optional: Add validator
-                      // validator: (value) {
-                      //   if (value == null) {
-                      //     return 'Please select a site';
-                      //   }
-                      //   return null;
-                      // },
                     ),
 
                     const SizedBox(height: 16),

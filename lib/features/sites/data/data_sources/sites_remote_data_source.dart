@@ -18,6 +18,17 @@ class SitesRemoteDataSource {
     return SitesResponseModel.fromJson(response);
   }
 
+  Future<SitesResponseModel> searchSites({
+    required SearchSitesWithPagination body,
+  }) async {
+    final response = await api.post(
+      EndPoints.searchSitesByCode,
+      data: body.searchQueryToMap(),
+      queryParameters: body.pageToMap(),
+    );
+    return SitesResponseModel.fromJson(response);
+  }
+
   Future<ApiResponse<SitesModel>> addSite(AddSiteBody body) async {
     final response = await api.post(
       EndPoints.addSite,
@@ -34,7 +45,10 @@ class SitesRemoteDataSource {
   }
 
   Future<ApiResponse<SitesModel>> editSite(EditSiteBody body) async {
-    final response = await api.put(EndPoints.editSite, data: body.toMap());
+    final response = await api.put(
+      "${EndPoints.editSite}/${body.id}",
+      data: body.toMap(),
+    );
     return ApiResponse<SitesModel>.fromJson(
       response,
       (json) => SitesModel.fromJson(json),

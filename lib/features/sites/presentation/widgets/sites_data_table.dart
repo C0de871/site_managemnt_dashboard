@@ -68,18 +68,18 @@ class _SitesDataTableState extends State<SitesDataTable> {
                         .setCurrentSiteGeneratorsId(site.id),
                 color: colorScheme.onSurface,
               ),
-              // ActionButton<SiteEntity>(
-              //   icon: Icons.edit,
-              //   tooltip: 'Edit',
-              //   onPressed: (site) {
-              //     log(site.toString());
-              //     context.read<SitesCubit>().showAddEditSiteDialog(
-              //       context,
-              //       state.sitesResponseEntity?.sites.indexOf(site),
-              //     );
-              //   },
-              //   color: colorScheme.primary,
-              // ),
+              ActionButton<SiteEntity>(
+                icon: Icons.edit,
+                tooltip: 'Edit',
+                onPressed: (site) {
+                  log(site.toString());
+                  context.read<SitesCubit>().showAddEditSiteDialog(
+                    context,
+                    state.sitesResponseEntity?.sites.indexOf(site),
+                  );
+                },
+                color: colorScheme.primary,
+              ),
               // ActionButton<SiteEntity>(
               //   icon: Icons.delete,
               //   tooltip: 'Delete',
@@ -101,20 +101,23 @@ class _SitesDataTableState extends State<SitesDataTable> {
 
         // Calculate total pages
         log("${state.sitesResponseEntity?.pagination.totalItemsCount}");
-        final int totalPages =
+        int totalPages =
             ((state.sitesResponseEntity?.pagination.totalItemsCount ?? 1) /
                     _rowsPerPage)
                 .ceil();
+        totalPages = totalPages == 0 ? 1 : totalPages;
 
         // Ensure current page is valid
         if (_currentPage >= totalPages && totalPages > 0) {
           _currentPage = totalPages - 1;
         }
 
+        log("sitestatus is: ${state.sitesStatus.isLoading}");
+        log("site action status is: ${state.actionStatus.isLoading}");
+
         return Stack(
           children: [
-            if ((state.sitesResponseEntity?.sites.isEmpty ?? false) &&
-                !state.sitesStatus.isLoading)
+            if ((state.sitesResponseEntity?.sites.isEmpty ?? false))
               NotFoundWidget(message: "No sites found"),
 
             if (state.sitesStatus.isLoading || state.actionStatus.isLoading)
@@ -124,6 +127,8 @@ class _SitesDataTableState extends State<SitesDataTable> {
                 color: Colors.grey.withValues(alpha: 200),
                 child: Center(child: CircularProgressIndicator()),
               ),
+
+            // if (state.sitesResponseEntity?.sites.isNotEmpty ?? false)
             IgnorePointer(
               ignoring:
                   state.sitesStatus.isLoading || state.actionStatus.isLoading,
@@ -160,7 +165,7 @@ class _SitesDataTableState extends State<SitesDataTable> {
                       onPageNavigationStart: (pageNumber) {},
                       onPageNavigationEnd: (pageNumber) {
                         log("page number: $pageNumber");
-                        sitesCubit.fetchSites(page: pageNumber + 1);
+                        sitesCubit.searchSites(page: pageNumber + 1);
                       },
                     ),
                   ),

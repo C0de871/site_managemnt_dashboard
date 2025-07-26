@@ -36,6 +36,25 @@ class SitesRepositoryImpl extends SitesRepository {
   }
 
   @override
+  Future<Either<Failure, SitesResponseEntity>> searchSites({
+    required SearchSitesWithPagination body,
+  }) async {
+    if (await networkInfo.isConnected!) {
+      try {
+        final remoteData = await remoteDataSource.searchSites(body: body);
+        log(remoteData.toString());
+        return Right(remoteData);
+      } on ServerException catch (e) {
+        log("exception");
+        log(e.errorModel.errorMessage);
+        return Left(Failure(errMessage: e.errorModel.errorMessage));
+      }
+    } else {
+      return Left(Failure(errMessage: "There is no internet connnect"));
+    }
+  }
+
+  @override
   Future<Either<Failure, SiteEntity>> addSite(AddSiteBody body) async {
     if (await networkInfo.isConnected!) {
       try {

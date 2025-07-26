@@ -98,10 +98,10 @@ class AddEditSiteDialog extends StatelessWidget {
                     decoration: InputDecoration(labelText: 'Site Code'),
                   ),
                   const SizedBox(height: 16),
-                  if (state.generatorStatus.isLoading)
-                    Center(child: CircularProgressIndicator()),
-                  if (state.generatorStatus.isLoaded && site != null)
-                    generatorsDropDown,
+                  // if (state.generatorStatus.isLoading)
+                  //   Center(child: CircularProgressIndicator()),
+                  // if (state.generatorStatus.isLoaded && site != null)
+                  //   generatorsDropDown,
                 ],
               ),
             ),
@@ -112,12 +112,17 @@ class AddEditSiteDialog extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await cubit.addEditSite();
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              },
+              onPressed:
+                  state.actionStatus.isLoading
+                      ? null
+                      : () async {
+                        site == null
+                            ? await cubit.addEditSite()
+                            : await cubit.addEditSite(siteId: site.id);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
               child:
                   state.actionStatus.isLoading
                       ? CircularProgressIndicator(

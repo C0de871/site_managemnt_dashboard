@@ -4,19 +4,21 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 import 'package:site_managemnt_dashboard/core/databases/params/body.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_by_site_id.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/cubit/generators_cubit.dart';
 import 'package:site_managemnt_dashboard/features/sites/domain/entities/sites_response_entity.dart';
 import 'package:site_managemnt_dashboard/features/sites/domain/usecases/add_site_usecase.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/delete_site_usecase.dart';
 import 'package:site_managemnt_dashboard/features/sites/domain/usecases/edit_site_usecase.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/search_site_usecase.dart';
 
 import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
 import '../../../generators/domain/entities/generator_entity.dart';
-import '../../domain/entities/sites_entity.dart';
 import '../../domain/usecases/get_all_sites_usecase.dart';
 import '../dialogs/add_edit_site_dialog.dart';
 
@@ -26,11 +28,14 @@ class SitesCubit extends Cubit<SitesState> {
   SitesCubit() : super(const SitesState());
 
   final GetAllSitesUseCase _getAllSitesUseCase = getIt<GetAllSitesUseCase>();
+  final SearchSitesUseCase _searchSitesUseCase = getIt<SearchSitesUseCase>();
+
   final GetGeneratorsBySiteIDUsecase _getAllSiteGeneratorsUseCase =
       getIt<GetGeneratorsBySiteIDUsecase>();
 
   final EditSiteUseCase _editSiteUseCase = getIt<EditSiteUseCase>();
   final AddSiteUseCase _addSiteUseCase = getIt<AddSiteUseCase>();
+  final DeleteSiteUseCase _deleteSitesUseCase = getIt<DeleteSiteUseCase>();
 
   final TextEditingController siteNameController = TextEditingController();
   final TextEditingController siteCodeController = TextEditingController();
@@ -39,10 +44,16 @@ class SitesCubit extends Cubit<SitesState> {
   final GlobalKey<DropdownSearchState<GeneratorEntity>> dropdownKey =
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
 
+  final TextEditingController searchController = TextEditingController();
 
-  Future<void> fetchSites({int page = 1}) async {
+  Future<void> searchSites({int page = 1}) async {
     emit(state.copyWith(sitesStatus: SitesStatus.loading));
-    final response = await _getAllSitesUseCase.call(page: page);
+    final response = await _searchSitesUseCase.call(
+      body: SearchSitesWithPagination(
+        page: page,
+        searchQuery: searchController.text,
+      ),
+    );
     response.fold(
       (l) => emit(
         SitesState(
@@ -141,16 +152,39 @@ class SitesCubit extends Cubit<SitesState> {
     return freeGenerators;
   }
 
-  void deleteSelectedSites() {
+  Future<void> deleteSelectedSites() async {
     emit(state.copyWith(actionStatus: SitesStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
-    emit(state.copyWith(actionStatus: SitesStatus.loaded));
+    final response = await _deleteSitesUseCase.call(
+      DeleteSiteBody(ids: state.selectedSiteIds.toList()),
+    );
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: SitesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(
+          state.copyWith(actionStatus: SitesStatus.loaded, selectedSiteIds: {}),
+        );
+        searchSites(page: state.sitesResponseEntity!.pagination.currentPage!);
+      },
+    );
   }
 
   void showAddEditSiteDialog(BuildContext parentContext, [int? index]) {
-    if (index != null) {
-      fetchFreeGenerators();
-    }
+    // if (index != null) {
+    //   fetchFreeGenerators();
+    // }
+    siteNameController.setText(
+      state.sitesResponseEntity?.sites[index!].name ?? "",
+    );
+    siteCodeController.setText(
+      state.sitesResponseEntity?.sites[index!].code ?? "",
+    );
     showDialog(
       context: parentContext,
       builder:
@@ -209,6 +243,7 @@ class SitesCubit extends Cubit<SitesState> {
 
   Future<void> addEditSite({int? siteId}) async {
     if (siteId != null) {
+      _editSite(siteId);
     } else {
       _addSite();
     }
@@ -232,6 +267,45 @@ class SitesCubit extends Cubit<SitesState> {
       },
       (site) {
         emit(state.copyWith(actionStatus: SitesStatus.loaded));
+      },
+    );
+  }
+
+  Future<void> _editSite(int siteId) async {
+    final EditSiteBody body = EditSiteBody(
+      name: siteNameController.text,
+      code: siteCodeController.text,
+      id: siteId.toString(),
+    );
+    emit(state.copyWith(actionStatus: SitesStatus.loading));
+    final response = await _editSiteUseCase.call(body);
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: SitesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (site) {
+        final sitesResponseEntity = state.sitesResponseEntity;
+        final newSitesResponse = sitesResponseEntity?.copyWith(
+          sites:
+              sitesResponseEntity.sites.map((site) {
+                if (site.id == siteId) {
+                  return site.copyWith(name: body.name, code: body.code);
+                }
+                return site;
+              }).toList(),
+        );
+        emit(
+          state.copyWith(
+            actionStatus: SitesStatus.loaded,
+            sitesResponseEntity: newSitesResponse,
+          ),
+        );
       },
     );
   }

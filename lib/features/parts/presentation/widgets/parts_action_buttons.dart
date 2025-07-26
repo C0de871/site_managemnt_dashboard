@@ -33,30 +33,31 @@ class PartsActionButtons extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(width: 16),
 
-              // Delete Button
-              // ElevatedButton.icon(
-              //   onPressed:
-              //       hasSelectedParts
-              //           ? () {
-              //             context.read<PartsCubit>().deleteSelectedParts();
-              //           }
-              //           : null,
-              //   icon: const Icon(Icons.delete),
-              //   label: Text('Delete (${state.selectedPartIds.length})'),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: colorScheme.errorContainer,
-              //     foregroundColor: colorScheme.onErrorContainer,
-              //     disabledBackgroundColor: colorScheme.errorContainer
-              //         .withValues(alpha: 0.3),
-              //     disabledForegroundColor: colorScheme.onErrorContainer
-              //         .withValues(alpha: 0.5),
-              //     padding: const EdgeInsets.symmetric(
-              //       horizontal: 16,
-              //       vertical: 10,
-              //     ),
-              //   ),
-              // ),
+              //! Delete Button
+              ElevatedButton.icon(
+                onPressed:
+                    hasSelectedParts
+                        ? () {
+                          context.read<PartsCubit>().deleteSelectedParts();
+                        }
+                        : null,
+                icon: const Icon(Icons.delete),
+                label: Text('Delete (${state.selectedPartIds.length})'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.errorContainer,
+                  foregroundColor: colorScheme.onErrorContainer,
+                  disabledBackgroundColor: colorScheme.errorContainer
+                      .withValues(alpha: 0.3),
+                  disabledForegroundColor: colorScheme.onErrorContainer
+                      .withValues(alpha: 0.5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                ),
+              ),
             ],
           );
         }

@@ -25,9 +25,6 @@ class ReportsFilterBar extends StatelessWidget {
       child: Row(
         children: [
           // // Search Field
-          // const Expanded(flex: 3, child: ReportsSearchField()),
-
-          // const SizedBox(width: 16),
 
           // // Visit Type Filter
           // BlocBuilder<ReportsCubit, ReportsState>(

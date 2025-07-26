@@ -36,28 +36,30 @@ class SitesActionButtons extends StatelessWidget {
                 ),
               ),
             ),
-            // ElevatedButton.icon(
-            //   onPressed:
-            //       hasSelectedSites
-            //           ? () {
-            //             context.read<SitesCubit>().deleteSelectedSites();
-            //           }
-            //           : null,
-            //   icon: const Icon(Icons.delete),
-            //   label: Text('Delete (${state.selectedSiteIds.length})'),
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: colorScheme.errorContainer,
-            //     foregroundColor: colorScheme.onErrorContainer,
-            //     disabledBackgroundColor: colorScheme.errorContainer
-            //         .withValues(alpha: 0.3),
-            //     disabledForegroundColor: colorScheme.onErrorContainer
-            //         .withValues(alpha: 0.5),
-            //     padding: const EdgeInsets.symmetric(
-            //       horizontal: 16,
-            //       vertical: 10,
-            //     ),
-            //   ),
-            // ),
+            SizedBox(width: 16),
+            ElevatedButton.icon(
+              onPressed:
+                  hasSelectedSites
+                      ? () {
+                        context.read<SitesCubit>().deleteSelectedSites();
+                      }
+                      : null,
+              icon: const Icon(Icons.delete),
+              label: Text('Delete (${state.selectedSiteIds.length})'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.errorContainer,
+                foregroundColor: colorScheme.onErrorContainer,
+                disabledBackgroundColor: colorScheme.errorContainer.withValues(
+                  alpha: 0.3,
+                ),
+                disabledForegroundColor: colorScheme.onErrorContainer
+                    .withValues(alpha: 0.5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+              ),
+            ),
           ],
         );
 

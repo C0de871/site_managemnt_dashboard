@@ -18,9 +18,13 @@ class SitesScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return BlocListener<SitesCubit, SitesState>(
-      listenWhen: (old, current) => old.actionStatus != current.actionStatus,
+      listenWhen:
+          (old, current) =>
+              old.actionStatus != current.actionStatus ||
+              old.error != old.error,
       listener: (context, state) {
         if (state.actionStatus.isError) {
+          log("error");
           //snackbar:
           ScaffoldMessenger.of(
             context,
@@ -60,7 +64,7 @@ class SitesScreen extends StatelessWidget {
                         colorScheme: colorScheme,
                         message: state.error,
                         onPressed:
-                            () => context.read<SitesCubit>().fetchSites(
+                            () => context.read<SitesCubit>().searchSites(
                               page: state.lastPageNumber,
                             ),
                         title: 'Error loading sites',

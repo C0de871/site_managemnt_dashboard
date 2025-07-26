@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:site_managemnt_dashboard/features/reports/domain/entities/report_entity.dart';
 import 'package:site_managemnt_dashboard/features/reports_details/domain/entities/report_details_entity.dart';
@@ -38,6 +40,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
     required super.technicalStatus,
     required super.completedWorks,
     required super.parts,
+    required super.username,
   });
 
   static const String kId = 'id';
@@ -69,8 +72,11 @@ class ReportDetailsModel extends ReportDetailsEntity {
   static const String kTechnicalStatus = 'technical_status';
   static const String kCompletedWorks = 'completed_works';
   static const String kParts = 'parts';
+  static const String usernameKey = 'username';
 
   factory ReportDetailsModel.fromJson(Map<String, dynamic> json) {
+    log("visited date: ${json[kVisitDate]}");
+    log("visited time: ${json[kVisitTime]}");
     final DateTime visitDateAndTime = DateTime.parse(
       "${json[kVisitDate]} ${json[kVisitTime]}",
     );
@@ -120,6 +126,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
               .map((e) => CompletedWorkModel.fromJson(e))
               .toList(),
       parts: (json[kParts] as List).map((e) => PartModel.fromJson(e)).toList(),
+      username: json[usernameKey] as String?,
     );
   }
 
@@ -166,6 +173,7 @@ class ReportDetailsModel extends ReportDetailsEntity {
               .map((e) => (e as CompletedWorkModel).toJson())
               .toList(),
       kParts: parts.map((e) => (e as PartModel).toJson()).toList(),
+      usernameKey: username,
     };
   }
 }

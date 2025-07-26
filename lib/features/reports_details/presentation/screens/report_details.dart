@@ -40,6 +40,13 @@ class ReportDetailsScreen extends StatelessWidget {
                       subtitle: 'View the details of a report',
                       icon: Icons.edit_document,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                      child: Text(
+                        'Created by: ${(state.reportDetails?.username == null || state.reportDetails!.username!.isEmpty) ? 'Unknown' : state.reportDetails!.username}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(bottom: 8),

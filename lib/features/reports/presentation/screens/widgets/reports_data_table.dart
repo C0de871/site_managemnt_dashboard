@@ -58,6 +58,15 @@ class _ReportsDataTableState extends State<ReportsDataTable> {
                 (report) =>
                     '${report.visitDate.day}/${report.visitDate.month}/${report.visitDate.year}',
           ),
+          ColumnConfig<ReportEntity>(
+            columnName: 'username',
+            displayName: 'Username',
+            valueExtractor:
+                (report) =>
+                    (report.username == null || report.username!.isEmpty)
+                        ? 'Unknown'
+                        : report.username!,
+          ),
           ActionsColumnConfig<ReportEntity>(
             actions: [
               ActionButton<ReportEntity>(
@@ -84,8 +93,10 @@ class _ReportsDataTableState extends State<ReportsDataTable> {
         );
 
         // Calculate total pages
-        final int totalPages =
+        int totalPages =
             ((state.pagination?.totalItemsCount ?? 1) / _rowsPerPage).ceil();
+
+        totalPages = totalPages == 0 ? 1 : totalPages;
 
         // Ensure current page is valid
         if (_currentPage >= totalPages && totalPages > 0) {

@@ -12,6 +12,15 @@ class PartEntity extends Equatable {
   final int? faultyQuantity;
   final bool? isFaulty;
   final String? note;
+  final DateTime? lastReplacementDate;
+  final int? generatorHoursAtLastReplacement;
+
+  String get fomattedLastReplacementDate {
+    if (lastReplacementDate == null) {
+      return "No previous replacement";
+    }
+    return '${lastReplacementDate!.day}/${lastReplacementDate!.month}/${lastReplacementDate!.year}';
+  }
 
   const PartEntity({
     required this.id,
@@ -23,6 +32,8 @@ class PartEntity extends Equatable {
     required this.faultyQuantity,
     required this.isFaulty,
     required this.note,
+    required this.lastReplacementDate,
+    required this.generatorHoursAtLastReplacement,
   });
 
   @override
@@ -36,5 +47,7 @@ class PartEntity extends Equatable {
     faultyQuantity,
     isFaulty,
     note,
+    lastReplacementDate,
+    generatorHoursAtLastReplacement,
   ];
 }

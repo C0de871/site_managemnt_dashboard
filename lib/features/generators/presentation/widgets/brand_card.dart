@@ -73,14 +73,14 @@ class DefaultItemCard extends StatelessWidget {
           //   onPressed: onEdit,
           //   tooltip: 'Edit',
           // ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.delete,
-          //     color: Theme.of(context).colorScheme.error,
-          //   ),
-          //   onPressed: onDelete,
-          //   tooltip: 'Delete',
-          // ),
+          IconButton(
+            icon: Icon(
+              Icons.delete,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: onDelete,
+            tooltip: 'Delete',
+          ),
         ],
       ),
     );

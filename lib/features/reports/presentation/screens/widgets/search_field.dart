@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubits/reports_cubit.dart';
+class SearchField extends StatelessWidget {
+  const SearchField({
+    super.key,
+    required this.hintText,
+    required this.controller,
+    required this.onPressed,
+  });
 
-class ReportsSearchField extends StatelessWidget {
-  const ReportsSearchField({super.key});
+  final String hintText;
+  final TextEditingController controller;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final cubit = context.read<ReportsCubit>();
 
     return TextField(
-      controller: cubit.searchController,
+      controller: controller,
+      onSubmitted: (value) {
+        onPressed();
+      },
       decoration: InputDecoration(
-        hintText: 'Search reports...',
+        hintText: hintText,
         prefixIcon: Icon(Icons.search, color: colorScheme.onSurfaceVariant),
-        suffixIcon:
-            cubit.searchController.text.isNotEmpty
-                ? IconButton(
-                  icon: Icon(Icons.clear, color: colorScheme.onSurfaceVariant),
-                  onPressed: cubit.clearSearch,
-                )
-                : null,
         filled: true,
         fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         border: OutlineInputBorder(
@@ -30,6 +31,7 @@ class ReportsSearchField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
+        isDense: true,
       ),
     );
   }

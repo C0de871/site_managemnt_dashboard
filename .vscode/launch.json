@@ -1,29 +1,34 @@
-// {
-//     "version": "0.2.0",
-//     "configurations": [
-        
-//         {
-//             "name": "site_managemnt_dashboard",
-//             "request": "launch",
-//             "type": "dart",
-//             "deviceId": "chrome",
-//             "toolArgs": ["--web-experimental-hot-reload"]
-//         },
-//         {
-//             "name": "site_managemnt_dashboard (profile mode)",
-//             "request": "launch",
-//             "type": "dart",
-//             "flutterMode": "profile",
-//             "deviceId": "chrome",
-//             "toolArgs": ["--web-experimental-hot-reload"]
-//         },
-//         {
-//             "name": "site_managemnt_dashboard (release mode)",
-//             "request": "launch",
-//             "type": "dart",
-//             "flutterMode": "release",
-//             "deviceId": "chrome"
-//             // Don't add hot reload in release mode
-//         }
-//     ]
-// }
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter for web (hot reloadable)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-experimental-hot-reload",
+            ]
+        },
+        {
+            "name": "site_managemnt_dashboard (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "deviceId": "chrome",
+            "toolArgs": [
+                "--web-experimental-hot-reload"
+            ]
+        },
+        {
+            "name": "site_managemnt_dashboard (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "deviceId": "chrome"
+            // Don't add hot reload in release mode
+        }
+    ]
+}

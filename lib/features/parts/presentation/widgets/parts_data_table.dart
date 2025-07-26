@@ -87,8 +87,9 @@ class _PartsDataTableState extends State<PartsDataTable> {
         );
 
         // Calculate total pages
-        final int totalPages =
+        int totalPages =
             ((state.pagination.totalItemsCount ?? 1) / _rowsPerPage).ceil();
+        totalPages = totalPages == 0 ? 1 : totalPages;
         // Ensure current page is valid
         if (_currentPage >= totalPages && totalPages > 0) {
           _currentPage = totalPages - 1;
@@ -106,6 +107,7 @@ class _PartsDataTableState extends State<PartsDataTable> {
                 color: Colors.grey.withValues(alpha: 200),
                 child: Center(child: CircularProgressIndicator()),
               ),
+
             IgnorePointer(
               ignoring:
                   state.partsStatus.isLoading || state.actionStatus.isLoading,

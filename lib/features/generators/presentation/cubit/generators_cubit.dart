@@ -6,14 +6,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/databases/params/body.dart';
 import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
 import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/add_engine_brand_usecase.dart';
+import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/delete_engines_brands_usecase.dart';
 import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/get_engines_brands_usecase.dart';
 import 'package:site_managemnt_dashboard/features/engine_capacities/domain/usecases/add_engine_capacity_usecase.dart';
+import 'package:site_managemnt_dashboard/features/engine_capacities/domain/usecases/delete_engine_capacity_usecase.dart';
 import 'package:site_managemnt_dashboard/features/engines/domain/usecases/add_engine_usecase.dart';
+import 'package:site_managemnt_dashboard/features/engines/domain/usecases/delete_engine_usecase.dart';
 import 'package:site_managemnt_dashboard/features/engines/domain/usecases/get_engines_usecase.dart';
+import 'package:site_managemnt_dashboard/features/generator_brand/domain/usecases/delete_generator_brand_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/usecases/create_generators_usecase.dart';
+import 'package:site_managemnt_dashboard/features/generators/domain/usecases/delete_generators_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/presentation/dialogs/generator_dialog.dart';
 import 'package:site_managemnt_dashboard/features/sites/domain/usecases/get_all_sites_usecase.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/search_site_usecase.dart';
 
 import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
@@ -36,23 +42,37 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
   final TextEditingController capacityController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
 
+  //!Generators use case
   final GetGeneratorsUseCase _getGeneratorsUseCase = getIt();
-  final GetEngineBrandsUsecase _getEngineBrandsUsecase = getIt();
-  final GetGeneratorBrandsUsecase _getGeneratorBrandsUsecase = getIt();
-
-  final GetEngineCapacitiesUsecase _getEngineCapacitiesUsecase = getIt();
-  final GetAllSitesUseCase _getAllSitesUseCase = getIt();
-
-  final AddEngineBrandUsecase _addEngineBrandUsecase = getIt();
-  final AddGeneratorBrandUsecase _addGeneratorBrandUsecase = getIt();
-  final AddEngineCapacityUsecase _addEngineCapacityUsecase = getIt();
-  final CreateEngineUseCase _createEngineUseCase = getIt();
   final CreateGeneratorUsecase _createGeneratorUsecase = getIt();
+  final DeleteGeneratorsUsecase _deleteGeneratorsUsecase = getIt();
 
+  //!Engine brand use case
+  final GetEngineBrandsUsecase _getEngineBrandsUsecase = getIt();
+  final AddEngineBrandUsecase _addEngineBrandUsecase = getIt();
+  final DeleteEngineBrandsUsecase _deleteEngineBrandsUsecase = getIt();
+
+  //!Generator brand use case
+  final GetGeneratorBrandsUsecase _getGeneratorBrandsUsecase = getIt();
+  final AddGeneratorBrandUsecase _addGeneratorBrandUsecase = getIt();
+  final DeleteGeneratorBrandsUsecase _deleteGeneratorBrandsUsecase = getIt();
+
+  //!Engine capacity use case
+  final GetEngineCapacitiesUsecase _getEngineCapacitiesUsecase = getIt();
+  final AddEngineCapacityUsecase _addEngineCapacityUsecase = getIt();
+  final DeleteEngineCapacitiesUsecase _deleteEngineCapacitiesUsecase = getIt();
+
+  //!Sites use case
+  final SearchSitesUseCase _searchSitesUseCase = getIt();
+
+  //!Engines use case
   final GetEnginesUseCase _getEnginesUsecase = getIt();
+  final CreateEngineUseCase _createEngineUseCase = getIt();
+  final DeleteEnginesUseCase _deleteEnginesUseCase = getIt();
+
   Future<void> fetchGenerators({int page = 1}) async {
     emit(state.copyWith(generatorsStatus: GeneratorsEnginesStatus.loading));
-    final response = await _getGeneratorsUseCase.call(page:page);
+    final response = await _getGeneratorsUseCase.call(page: page);
     response.fold(
       (failure) {
         emit(
@@ -192,23 +212,25 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
 
   Future<void> deleteEngineBrand(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedBrands =
-          state.engineBrands.where((brand) => brand.id != id).toList();
-      emit(
-        state.copyWith(
-          engineBrands: updatedBrands,
-          actionStatus: GeneratorsEnginesStatus.loaded,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+
+    final response = await _deleteEngineBrandsUsecase.call(
+      DeleteEngineBrandBody(ids: [id.toString()]),
+    );
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loaded));
+        loadEngineBrands();
+      },
+    );
   }
 
   // Generator Brands Management
@@ -294,23 +316,25 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
 
   Future<void> deleteGeneratorBrand(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedBrands =
-          state.generatorBrands.where((brand) => brand.id != id).toList();
-      emit(
-        state.copyWith(
-          generatorBrands: updatedBrands,
-          actionStatus: GeneratorsEnginesStatus.loaded,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+
+    final response = await _deleteGeneratorBrandsUsecase.call(
+      DeleteGeneratorBrandBody(ids: [id.toString()]),
+    );
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loaded));
+        loadGeneratorBrands();
+      },
+    );
   }
 
   // Engine Capacities Management
@@ -396,23 +420,25 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
 
   Future<void> deleteEngineCapacity(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedCapacities =
-          state.engineCapacities.where((cap) => cap.id != id).toList();
-      emit(
-        state.copyWith(
-          engineCapacities: updatedCapacities,
-          actionStatus: GeneratorsEnginesStatus.loaded,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+
+    final response = await _deleteEngineCapacitiesUsecase.call(
+      DeleteEngineCapacityBody(ids: [id.toString()]),
+    );
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loaded));
+        loadEngineCapacities();
+      },
+    );
   }
 
   // Engines Management
@@ -441,11 +467,16 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     );
   }
 
-  Future<List<SiteEntity>> loadSites({int page = 1}) async {
+  Future<List<SiteEntity>> loadSites({
+    int page = 1,
+    String searchQuery = "",
+  }) async {
     emit(state.copyWith(sitesStatus: GeneratorsEnginesStatus.loading));
-    // await Future.delayed(Duration(seconds: 2));
-
-    final response = await _getAllSitesUseCase.call(page: page);
+    final body = SearchSitesWithPagination(
+      page: page,
+      searchQuery: searchQuery,
+    );
+    final response = await _searchSitesUseCase.call(body: body);
 
     List<SiteEntity> sites = [];
     response.fold(
@@ -670,23 +701,25 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
 
   Future<void> deleteEngine(int id) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedEngines =
-          state.engines.where((engine) => engine.id != id).toList();
-      emit(
-        state.copyWith(
-          engines: updatedEngines,
-          actionStatus: GeneratorsEnginesStatus.loaded,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+
+    final response = await _deleteEnginesUseCase.call(
+      DeleteEngineBody(ids: [id.toString()]),
+    );
+
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loaded));
+        loadEngines();
+      },
+    );
   }
 
   void showBrandDialog(

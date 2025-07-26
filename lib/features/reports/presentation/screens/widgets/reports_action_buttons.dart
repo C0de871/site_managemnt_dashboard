@@ -1,10 +1,28 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/reports_cubit.dart';
+import '../../dialogs/choose_date.dart';
 
 class ReportsActionButtons extends StatelessWidget {
   const ReportsActionButtons({super.key});
+
+  void _showExportDialog(BuildContext context) {
+    final cubit = context.read<ReportsCubit>();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => ExportDateRangeDialog(
+            onExport: (startDate, endDate) async {
+              log('Exporting from $startDate to $endDate');
+              await cubit.exportReportsToExcel(startDate, endDate);
+            },
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +36,7 @@ class ReportsActionButtons extends StatelessWidget {
           children: [
             // Export Button
             ElevatedButton.icon(
-              onPressed: () {
-                context.read<ReportsCubit>().exportReportsToExcel();
-              },
+              onPressed: () => _showExportDialog(context),
               icon: const Icon(Icons.download),
               label: const Text('Export All'),
               style: ElevatedButton.styleFrom(

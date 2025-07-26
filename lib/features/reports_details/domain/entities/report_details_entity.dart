@@ -14,29 +14,30 @@ class ReportDetailsEntity extends Equatable {
   final String reportNumber;
   final DateTime visitDateAndTime;
   // final String visitTime;
-  final String oilPressure;
-  final String temperature;
-  final String batteryVoltage;
-  final String oilQuantity;
-  final String burnedOilQuantity;
-  final String frequency;
+  final String? oilPressure;
+  final String? temperature;
+  final String? batteryVoltage;
+  final String? oilQuantity;
+  final String? burnedOilQuantity;
+  final String? frequency;
   final String currentMeter;
   final String? atsStatus;
-  final String voltL1;
-  final String voltL2;
-  final String voltL3;
-  final String loadL1;
-  final String loadL2;
-  final String loadL3;
-  final String visitReason;
-  final String longitude;
-  final String latitude;
+  final String? voltL1;
+  final String? voltL2;
+  final String? voltL3;
+  final String? loadL1;
+  final String? loadL2;
+  final String? loadL3;
+  final String? visitReason;
+  final String? longitude;
+  final String? latitude;
   final String? lastMeter;
   final DateTime? lastRoutineVisitDate;
   final List<TechnicianNoteEntity> technicianNotes;
-  final String technicalStatus;
+  final String? technicalStatus;
   final List<CompletedWorkEntity> completedWorks;
   final List<PartEntity> parts;
+  final String? username;
 
   const ReportDetailsEntity({
     required this.id,
@@ -68,6 +69,7 @@ class ReportDetailsEntity extends Equatable {
     required this.technicalStatus,
     required this.completedWorks,
     required this.parts,
+    required this.username,
   });
 
   ReportDetailsEntity copyWith({
@@ -100,6 +102,7 @@ class ReportDetailsEntity extends Equatable {
     String? technicalStatus,
     List<CompletedWorkEntity>? completedWorks,
     List<PartEntity>? parts,
+    String? username,
   }) {
     return ReportDetailsEntity(
       id: id ?? this.id,
@@ -131,6 +134,7 @@ class ReportDetailsEntity extends Equatable {
       technicalStatus: technicalStatus ?? this.technicalStatus,
       completedWorks: completedWorks ?? this.completedWorks,
       parts: parts ?? this.parts,
+      username: username ?? this.username,
     );
   }
 
@@ -165,5 +169,6 @@ class ReportDetailsEntity extends Equatable {
     technicalStatus,
     completedWorks,
     parts,
+    username,
   ];
 }

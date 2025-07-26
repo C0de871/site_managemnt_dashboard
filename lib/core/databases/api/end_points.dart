@@ -29,11 +29,11 @@ class EndPoints {
   //!edits
   static const String editSite = "$baseUrl/mtn-sites";
   static const String editGenerator = "$baseUrl/generators";
-  static const String editEngine = "$baseUrl/editEngine";
-  static const String editPart = "$baseUrl/editPart";
-  static const String editEngineBrand = "$baseUrl/editEngineBrand";
-  static const String editEngineCapacity = "$baseUrl/editEngineCapacity";
-  static const String editGeneratorBrand = "$baseUrl/editGeneratorBrand";
+  static const String editEngine = "$baseUrl/engines";
+  static const String editPart = "$baseUrl/parts";
+  static const String editEngineBrand = "$baseUrl/brands";
+  static const String editEngineCapacity = "$baseUrl/capacities";
+  static const String editGeneratorBrand = "$baseUrl/brands";
 
   //!delete
   static const String deleteSite = "$baseUrl/mtn-sites";

@@ -6,9 +6,10 @@ import 'package:site_managemnt_dashboard/features/generators/presentation/cubit/
 import '../../../sites/domain/entities/sites_entity.dart';
 
 class SitesDropList extends StatelessWidget {
-  const SitesDropList({super.key, required this.onChanged});
+  const SitesDropList({super.key, required this.onChanged, this.selectedItem});
 
   final void Function(SiteEntity?)? onChanged;
+  final SiteEntity? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class SitesDropList extends StatelessWidget {
           hintText: 'اختر موقع',
         ),
       ),
+      selectedItem: selectedItem,
       compareFn: (a, b) {
         return a == b;
       },

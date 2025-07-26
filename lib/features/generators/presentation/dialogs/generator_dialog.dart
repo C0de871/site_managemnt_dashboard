@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
@@ -43,45 +40,54 @@ class GeneratorDialog extends StatelessWidget {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    DropdownButtonFormField<int>(
-                      value: selectedBrandId,
-                      decoration: InputDecoration(labelText: 'Generator Brand'),
-                      items:
-                          state.generatorBrands
-                              .map(
-                                (brand) => DropdownMenuItem(
-                                  value: brand.id,
-                                  child: Text(brand.brand),
-                                ),
-                              )
-                              .toList(),
-                      onChanged:
-                          (value) => setState(() => selectedBrandId = value),
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<int>(
-                      value: selectedEngineId,
-                      decoration: InputDecoration(labelText: 'Engine'),
-                      items:
-                          state.engines
-                              .map(
-                                (engine) => DropdownMenuItem(
-                                  value: engine.id,
-                                  child: Text(
-                                    '${engine.engineBrand.brand} ${engine.engineCapacity.capacity} kW',
+                    // Only show generator brand dropdown when adding new generator
+                    if (generator == null) ...[
+                      DropdownButtonFormField<int>(
+                        value: selectedBrandId,
+                        decoration: InputDecoration(
+                          labelText: 'Generator Brand',
+                        ),
+                        items:
+                            state.generatorBrands
+                                .map(
+                                  (brand) => DropdownMenuItem(
+                                    value: brand.id,
+                                    child: Text(brand.brand),
                                   ),
-                                ),
-                              )
-                              .toList(),
-                      onChanged:
-                          (value) => setState(() => selectedEngineId = value),
-                    ),
-                    const SizedBox(height: 16),
+                                )
+                                .toList(),
+                        onChanged:
+                            (value) => setState(() => selectedBrandId = value),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    // Only show engine dropdown when adding new generator
+                    if (generator == null) ...[
+                      DropdownButtonFormField<int>(
+                        value: selectedEngineId,
+                        decoration: InputDecoration(labelText: 'Engine'),
+                        items:
+                            state.engines
+                                .map(
+                                  (engine) => DropdownMenuItem(
+                                    value: engine.id,
+                                    child: Text(
+                                      '${engine.engineBrand.brand} ${engine.engineCapacity.capacity} kW',
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged:
+                            (value) => setState(() => selectedEngineId = value),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     // Modified DropdownSearch widget with pagination
                     SitesDropList(
                       onChanged: (SiteEntity? site) {
                         setState(() => selectedSiteId = site?.id);
                       },
+                      selectedItem: generator?.site,
                     ),
 
                     const SizedBox(height: 16),
@@ -98,9 +104,18 @@ class GeneratorDialog extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (selectedBrandId != null &&
+                      // Updated validation logic for conditional fields
+                      bool isValidForAdd =
+                          generator == null &&
+                          selectedBrandId != null &&
                           selectedEngineId != null &&
-                          initalMeterController.text.isNotEmpty) {
+                          initalMeterController.text.isNotEmpty;
+
+                      bool isValidForUpdate =
+                          generator != null &&
+                          initalMeterController.text.isNotEmpty;
+
+                      if (isValidForAdd || isValidForUpdate) {
                         if (generator == null) {
                           cubit.addGenerator(
                             brandId: selectedBrandId!,
@@ -111,8 +126,8 @@ class GeneratorDialog extends StatelessWidget {
                         } else {
                           cubit.updateGenerator(
                             id: generator!.id,
-                            brandId: selectedBrandId!,
-                            engineId: selectedEngineId!,
+                            // brandId: selectedBrandId!,
+                            // engineId: selectedEngineId!,
                             initialMeter: initalMeterController.text,
                             siteId: selectedSiteId,
                           );

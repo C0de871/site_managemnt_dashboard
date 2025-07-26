@@ -206,32 +206,31 @@ class EditSiteBody {
 
 class EditGeneratorBody {
   final String id;
-  final String generatorBrandId;
-  final String engineId;
-  final String initalMeter;
-  final String siteId;
+  final String? generatorBrandId;
+  final String? engineId;
+  final String? initalMeter;
+  final String? siteId;
 
   static const String idKey = 'id';
   static const String generatorBrandIdKey = 'generator_brand_id';
   static const String engineIdKey = 'engine_id';
-  static const String initalMeterKey = 'inital_meter';
-  static const String siteIdKey = 'site_id';
+  static const String initalMeterKey = 'initial_meter';
+  static const String siteIdKey = 'mtn_site_id';
 
   EditGeneratorBody({
     required this.id,
-    required this.generatorBrandId,
-    required this.engineId,
-    required this.initalMeter,
-    required this.siteId,
+    this.generatorBrandId,
+    this.engineId,
+    this.initalMeter,
+    this.siteId,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      idKey: id,
-      generatorBrandIdKey: generatorBrandId,
-      engineIdKey: engineId,
-      initalMeterKey: initalMeter,
-      siteIdKey: siteId,
+      if (generatorBrandId != null) generatorBrandIdKey: generatorBrandId,
+      if (engineId != null) engineIdKey: engineId,
+      if (initalMeter != null) initalMeterKey: initalMeter,
+      if (siteId != null) siteIdKey: siteId,
     };
   }
 }

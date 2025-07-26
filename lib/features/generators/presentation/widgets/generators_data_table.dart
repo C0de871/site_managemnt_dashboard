@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:site_managemnt_dashboard/core/shared/widgets/my_data_source.dart';
@@ -40,9 +38,8 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final cubit = context.read<GeneratorsEnginesCubit>();
-
+    final colorScheme = Theme.of(context).colorScheme;
     final generatorColumns = [
       SelectionColumnConfig<GeneratorEntity>(
         idExtractor: (generator) => generator.id.toString(),
@@ -77,24 +74,24 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
         visible: widget.showSiteColumn,
         valueExtractor: (generator) => generator.site?.name ?? 'No site',
       ),
-      // ActionsColumnConfig(
-      //   actions: [
-      //     ActionButton<GeneratorEntity>(
-      //       icon: Icons.edit,
-      //       tooltip: 'Edit',
-      //       onPressed: (generator) {
-      //         cubit.showGeneratorDialog(context, generator: generator);
-      //       },
-      //       color: colorScheme.primary,
-      //     ),
-      //     ActionButton<GeneratorEntity>(
-      //       icon: Icons.delete,
-      //       tooltip: 'Delete',
-      //       onPressed: (generator) {},
-      //       color: colorScheme.error,
-      //     ),
-      //   ],
-      // ),
+      ActionsColumnConfig(
+        actions: [
+          ActionButton<GeneratorEntity>(
+            icon: Icons.edit,
+            tooltip: 'Edit',
+            onPressed: (generator) {
+              cubit.showGeneratorDialog(context, generator: generator);
+            },
+            color: colorScheme.primary,
+          ),
+          // ActionButton<GeneratorEntity>(
+          //   icon: Icons.delete,
+          //   tooltip: 'Delete',
+          //   onPressed: (generator) {},
+          //   color: colorScheme.error,
+          // ),
+        ],
+      ),
     ];
 
     // Then create your data source
@@ -120,7 +117,7 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
             if (widget.generators.isEmpty && !state.generatorsStatus.isLoading)
               NotFoundWidget(message: widget.emptyMessage),
 
-            if (state.generatorsStatus.isLoading)
+            if (state.generatorsStatus.isLoading || state.actionStatus.isLoading)
               Container(
                 height: 600,
                 width: double.infinity,

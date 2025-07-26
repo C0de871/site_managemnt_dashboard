@@ -28,7 +28,7 @@ class EndPoints {
 
   //!edits
   static const String editSite = "$baseUrl/mtn-sites";
-  static const String editGenerator = "$baseUrl/editGenerator";
+  static const String editGenerator = "$baseUrl/generators";
   static const String editEngine = "$baseUrl/editEngine";
   static const String editPart = "$baseUrl/editPart";
   static const String editEngineBrand = "$baseUrl/editEngineBrand";

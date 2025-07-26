@@ -45,7 +45,11 @@ class GeneratorsRemoteDataSource {
   Future<ApiResponse<GeneratorModel>> editGenerator(
     EditGeneratorBody body,
   ) async {
-    final response = await api.put(EndPoints.editGenerator, data: body.toMap());
+    
+    final response = await api.put(
+      "${EndPoints.editGenerator}/${body.id}",
+      data: body.toMap(),
+    );
     return ApiResponse<GeneratorModel>.fromJson(
       response,
       (json) => GeneratorModel.fromJson(json),

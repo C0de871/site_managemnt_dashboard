@@ -7,6 +7,7 @@ import 'package:site_managemnt_dashboard/features/engines/data/data%20sources/en
 import 'package:site_managemnt_dashboard/features/generator_brand/data/data%20sources/generator_brands_remote_data_source.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/usecases/get_generators_by_site_id.dart';
 import 'package:site_managemnt_dashboard/features/reports/data/data_sources/reports_remote_data_source.dart';
+import 'package:site_managemnt_dashboard/features/sites/domain/usecases/search_site_usecase.dart';
 import '../../../features/auth/data/data_sources/user_local_data_source.dart';
 import '../../../features/auth/data/data_sources/user_remote_data_source.dart';
 import '../../../features/auth/data/repository/repository_impl.dart';
@@ -234,6 +235,9 @@ void setupServicesLocator() {
   );
   getIt.registerLazySingleton<GetAllSitesUseCase>(
     () => GetAllSitesUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton<SearchSitesUseCase>(
+    () => SearchSitesUseCase(repository: getIt()),
   );
 
   //! ENGINES USE CASES

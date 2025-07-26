@@ -1,22 +1,16 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../engines/domain/entities/engine_entity.dart';
+import '../../domain/entities/part_entity.dart';
 import '../cubit/parts_cubit.dart';
-import 'package:web/web.dart' as web;
-import 'dart:js_interop';
-import 'dart:typed_data';
-import 'dart:convert';
 
 class AddEditPartDialog extends StatelessWidget {
-  const AddEditPartDialog({super.key, this.partIndex});
+  const AddEditPartDialog({super.key, this.part});
 
-  final int? partIndex;
+  final PartEntity? part;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +19,6 @@ class AddEditPartDialog extends StatelessWidget {
     List<EngineEntity> selectedEngines = [];
     return BlocBuilder<PartsCubit, PartsState>(
       builder: (context, state) {
-        final part = partIndex != null ? state.parts[partIndex!] : null;
         Widget partsDropDown = DropdownSearch<EngineEntity>.multiSelection(
           key: cubit.dropdownKey,
           // selectedItems: part?.engines ?? [],
@@ -97,7 +90,7 @@ class AddEditPartDialog extends StatelessWidget {
                     decoration: InputDecoration(labelText: 'Part Code'),
                   ),
                   const SizedBox(height: 16),
-                  if (partIndex == null) partsDropDown,
+                  // if (partIndex == null) partsDropDown,
                 ],
               ),
             ),
@@ -109,7 +102,11 @@ class AddEditPartDialog extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                log("selected engines is $selectedEngines");
+                if (!cubit.formKey.currentState!.validate()) return;
+                final part = this.part;
+                if (part != null) {
+                  cubit.editPart(part.id);
+                }
                 cubit.addPart(selectedEngines);
               },
               child:

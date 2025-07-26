@@ -54,19 +54,20 @@ class _PartsDataTableState extends State<PartsDataTable> {
                 tooltip: 'View ',
                 color: colorScheme.onSurface,
                 onPressed:
-                    (report) => context
+                    (part) => context
                         .read<PartsCubit>()
-                        .setCurrentPartEnginesId(report.id),
+                        .setCurrentPartEnginesId(part.id),
               ),
-              // ActionButton<PartEntity>(
-              //   icon: Icons.edit,
-              //   tooltip: 'edit ',
-              //   color: colorScheme.primary,
-              //   onPressed:
-              //       (report) => context
-              //           .read<PartsCubit>()
-              //           .setCurrentPartEnginesId(report.id),
-              // ),
+              ActionButton<PartEntity>(
+                icon: Icons.edit,
+                tooltip: 'edit ',
+                color: colorScheme.primary,
+                onPressed:
+                    (part) => context.read<PartsCubit>().showAddEditPartDialog(
+                      context,
+                      part,
+                    ),
+              ),
               // ActionButton<PartEntity>(
               //   icon: Icons.delete,
               //   tooltip: 'delete ',

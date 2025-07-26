@@ -50,4 +50,33 @@ class PartEntity extends Equatable {
     lastReplacementDate,
     generatorHoursAtLastReplacement,
   ];
+
+  PartEntity copyWith({
+    int? id,
+    String? code,
+    String? name,
+    bool? isGeneral,
+    List<EngineEntity>? engines,
+    int? quantity,
+    int? faultyQuantity,
+    bool? isFaulty,
+    String? note,
+    DateTime? lastReplacementDate,
+    int? generatorHoursAtLastReplacement,
+  }) {
+    return PartEntity(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      isGeneral: isGeneral ?? this.isGeneral,
+      engines: engines ?? this.engines,
+      quantity: quantity ?? this.quantity,
+      faultyQuantity: faultyQuantity ?? this.faultyQuantity,
+      isFaulty: isFaulty ?? this.isFaulty,
+      note: note ?? this.note,
+      lastReplacementDate: lastReplacementDate ?? this.lastReplacementDate,
+      generatorHoursAtLastReplacement:
+          generatorHoursAtLastReplacement ?? this.generatorHoursAtLastReplacement,
+    );
+  }
 }

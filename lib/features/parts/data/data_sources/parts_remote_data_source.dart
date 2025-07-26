@@ -29,7 +29,10 @@ class PartsRemoteDataSource {
   }
 
   Future<ApiResponse<PartModel>> editPart(EditPartBody body) async {
-    final response = await api.put(EndPoints.editPart, data: body.toMap());
+    final response = await api.put(
+      "${EndPoints.editPart}/${body.id}",
+      data: body.toMap(),
+    );
     return ApiResponse<PartModel>.fromJson(
       response,
       (json) => PartModel.fromJson(json),

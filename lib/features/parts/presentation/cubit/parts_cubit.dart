@@ -5,6 +5,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
 import 'package:site_managemnt_dashboard/features/engines/domain/usecases/get_engines_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
@@ -16,9 +17,8 @@ import 'package:site_managemnt_dashboard/features/parts/presentation/dialog/add_
 
 import '../../../../core/databases/params/body.dart';
 import '../../../../core/utils/services/service_locator.dart';
-import '../../../engine_brands/domain/entities/brand_entity.dart';
-import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
+import '../../domain/usecases/edit_part_usecase.dart';
 
 part 'parts_state.dart';
 
@@ -35,6 +35,7 @@ class PartsCubit extends Cubit<PartsState> {
   final GetPartsUsecase _getPartsUsecase = getIt();
   final AddPartUsecase _addPartUsecase = getIt();
   final DeletePartsUsecase _deletePartsUsecase = getIt();
+  final EditPartUsecase _editPartUsecase = getIt();
 
   final GetEnginesUseCase _getEnginesUseCase = getIt();
 
@@ -80,6 +81,37 @@ class PartsCubit extends Cubit<PartsState> {
           actionStatus: PartsStatus.loaded,
           parts: [...state.parts, data],
         ),
+      ),
+    );
+  }
+
+  Future<void> editPart(int partId) async {
+    emit(state.copyWith(actionStatus: PartsStatus.loading));
+    final body = EditPartBody(
+      id: partId.toString(),
+      name: partNameController.text,
+      code: partCodeController.text,
+    );
+
+    final updatedParts =
+        state.parts.map((part) {
+          if (part.id == partId) {
+            return part.copyWith(name: body.name, code: body.code);
+          }
+          return part;
+        }).toList();
+
+    final response = await _editPartUsecase.call(body);
+
+    response.fold(
+      (failure) => emit(
+        state.copyWith(
+          actionStatus: PartsStatus.error,
+          error: failure.errMessage,
+        ),
+      ),
+      (data) => emit(
+        state.copyWith(actionStatus: PartsStatus.loaded, parts: updatedParts),
       ),
     );
   }
@@ -170,16 +202,21 @@ class PartsCubit extends Cubit<PartsState> {
     }
   }
 
-  void showAddEditPartDialog(BuildContext parentContext, [int? index]) {
+  void showAddEditPartDialog(BuildContext parentContext, [PartEntity? part]) {
     // if (index != null) {
     //   fetchFreeGenerators();
     // }
+    if (part != null) {
+      partNameController.setText(part.name);
+      partCodeController.setText(part.code ?? "");
+    }
+
     showDialog(
       context: parentContext,
       builder:
           (context) => BlocProvider.value(
             value: this,
-            child: AddEditPartDialog(partIndex: index),
+            child: AddEditPartDialog(part: part),
           ),
     );
   }

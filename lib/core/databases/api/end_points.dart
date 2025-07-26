@@ -1,5 +1,5 @@
 class EndPoints {
-  static const String baseUrl = "https://www.trueonline.org/api";
+  static const String baseUrl = "http://127.0.0.1:8000/api";
 
   //!auth
   static const String login = "$baseUrl/login";
@@ -10,6 +10,7 @@ class EndPoints {
   static const String getReports = "$baseUrl/reports";
   static const String getReportDetailsById = "$baseUrl/reports";
   static const String getSites = "$baseUrl/mtn-sites";
+  static String searchSitesByCode = "/mtn-sites/search";
   static const String getGeneratorsBrands = "$baseUrl/brands?type=generator";
   static const String getParts = "$baseUrl/parts";
   static const String getEnginesBrands = "$baseUrl/brands?type=engine";
@@ -26,7 +27,7 @@ class EndPoints {
   static const String createGenerator = "$baseUrl/generators";
 
   //!edits
-  static const String editSite = "$baseUrl/editSite";
+  static const String editSite = "$baseUrl/mtn-sites";
   static const String editGenerator = "$baseUrl/editGenerator";
   static const String editEngine = "$baseUrl/editEngine";
   static const String editPart = "$baseUrl/editPart";
@@ -35,13 +36,13 @@ class EndPoints {
   static const String editGeneratorBrand = "$baseUrl/editGeneratorBrand";
 
   //!delete
-  static const String deleteSite = "$baseUrl/deleteSite";
+  static const String deleteSite = "$baseUrl/mtn-sites";
   static const String deleteGenerator = "$baseUrl/deleteGenerator";
-  static const String deleteEngine = "$baseUrl/deleteEngine";
-  static const String deletePart = "$baseUrl/deletePart";
-  static const String deleteEngineBrand = "$baseUrl/deleteEngineBrand";
-  static const String deleteEngineCapacity = "$baseUrl/deleteEngineCapacity";
-  static const String deleteGeneratorBrand = "$baseUrl/deleteGeneratorBrand";
+  static const String deleteEngine = "$baseUrl/engines";
+  static const String deletePart = "$baseUrl/parts";
+  static const String deleteEngineBrand = "$baseUrl/brands";
+  static const String deleteEngineCapacity = "$baseUrl/capacities";
+  static const String deleteGeneratorBrand = "$baseUrl/brands";
 
   static const String addReport = "$baseUrl/addReport";
   static const String editReport = "$baseUrl/editReport";

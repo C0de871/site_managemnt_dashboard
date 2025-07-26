@@ -10,7 +10,7 @@ class EditEngineBrandUsecase {
 
   EditEngineBrandUsecase({required this.repository});
 
-  Future<Either<Failure, BrandEntity>> call(EditEngineBrandBody body) {
+  Future<Either<Failure, BrandEntity>> call(EditBrandBody body) {
     return repository.editEngineBrand(body);
   }
 }

@@ -40,7 +40,7 @@ class EngineCapacitiesRemoteDataSource {
     EditEngineCapacityBody body,
   ) async {
     final response = await api.put(
-      EndPoints.editEngineCapacity,
+      "${EndPoints.editEngineCapacity}/${body.id}",
       data: body.toMap(),
     );
     return ApiResponse<EngineCapacityModel>.fromJson(

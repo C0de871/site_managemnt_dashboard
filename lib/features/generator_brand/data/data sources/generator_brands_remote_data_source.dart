@@ -39,10 +39,10 @@ class GeneratorBrandsRemoteDataSource {
   }
 
   Future<ApiResponse<GeneratorBrandModel>> editGeneratorBrand(
-    EditGeneratorBrandBody body,
+    EditBrandBody body,
   ) async {
     final response = await api.put(
-      EndPoints.editGeneratorBrand,
+      '${EndPoints.editGeneratorBrand}/${body.id}',
       data: body.toMap(),
     );
     return ApiResponse<GeneratorBrandModel>.fromJson(

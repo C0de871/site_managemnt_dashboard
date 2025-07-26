@@ -32,11 +32,9 @@ class EngineBrandsRemoteDataSource {
     );
   }
 
-  Future<ApiResponse<BrandModel>> editEngineBrand(
-    EditEngineBrandBody body,
-  ) async {
+  Future<ApiResponse<BrandModel>> editEngineBrand(EditBrandBody body) async {
     final response = await api.put(
-      EndPoints.editEngineBrand,
+      '${EndPoints.editEngineBrand}/${body.id}',
       data: body.toMap(),
     );
     return ApiResponse<BrandModel>.fromJson(

@@ -1,4 +1,3 @@
-
 import '../../../../core/databases/api/api_consumer.dart';
 import '../../../../core/databases/api/end_points.dart';
 import '../../../../core/databases/params/body.dart';
@@ -27,7 +26,10 @@ class EngineRemoteDataSource {
   }
 
   Future<ApiResponse<EngineModel>> editEngine(EditEngineBody body) async {
-    final response = await api.put(EndPoints.editEngine, data: body.toMap());
+    final response = await api.put(
+      "${EndPoints.editEngine}/${body.id}",
+      data: body.toMap(),
+    );
     return ApiResponse<EngineModel>.fromJson(
       response,
       (json) => EngineModel.fromJson(json),

@@ -50,7 +50,7 @@ class GeneratorBrandsRepositoryImpl extends GeneratorBrandsRepository {
 
   @override
   Future<Either<Failure, GeneratorBrandEntity>> editGeneratorBrand(
-    EditGeneratorBrandBody body,
+    EditBrandBody body,
   ) async {
     if (await networkInfo.isConnected!) {
       try {

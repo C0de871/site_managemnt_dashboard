@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 import 'package:site_managemnt_dashboard/core/databases/params/body.dart';
 import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
 import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/add_engine_brand_usecase.dart';
@@ -23,10 +24,14 @@ import 'package:site_managemnt_dashboard/features/sites/domain/usecases/search_s
 
 import '../../../../core/utils/services/service_locator.dart';
 import '../../../engine_brands/domain/entities/brand_entity.dart';
+import '../../../engine_brands/domain/usecases/edit_engine_brand_usecase.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
+import '../../../engine_capacities/domain/usecases/edit_engine_capacity_usecase.dart';
 import '../../../engine_capacities/domain/usecases/get_engine_capacities_usecase.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
+import '../../../engines/domain/usecases/edit_engine_usecase.dart';
 import '../../../generator_brand/domain/usecases/add_generator_brand_usecase.dart';
+import '../../../generator_brand/domain/usecases/edit_generator_brand_usecase.dart';
 import '../../../generator_brand/domain/usecases/get_generator_brands_usecase.dart';
 import '../../../sites/domain/entities/sites_entity.dart';
 import '../../domain/entities/generator_entity.dart';
@@ -52,16 +57,19 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
   final GetEngineBrandsUsecase _getEngineBrandsUsecase = getIt();
   final AddEngineBrandUsecase _addEngineBrandUsecase = getIt();
   final DeleteEngineBrandsUsecase _deleteEngineBrandsUsecase = getIt();
+  final EditEngineBrandUsecase _editEngineBrandUsecase = getIt();
 
   //!Generator brand use case
   final GetGeneratorBrandsUsecase _getGeneratorBrandsUsecase = getIt();
   final AddGeneratorBrandUsecase _addGeneratorBrandUsecase = getIt();
   final DeleteGeneratorBrandsUsecase _deleteGeneratorBrandsUsecase = getIt();
+  final EditGeneratorBrandUsecase _editGeneratorBrandUsecase = getIt();
 
   //!Engine capacity use case
   final GetEngineCapacitiesUsecase _getEngineCapacitiesUsecase = getIt();
   final AddEngineCapacityUsecase _addEngineCapacityUsecase = getIt();
   final DeleteEngineCapacitiesUsecase _deleteEngineCapacitiesUsecase = getIt();
+  final EditEngineCapacityUsecase _editEngineCapacityUsecase = getIt();
 
   //!Sites use case
   final SearchSitesUseCase _searchSitesUseCase = getIt();
@@ -70,6 +78,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
   final GetEnginesUseCase _getEnginesUsecase = getIt();
   final CreateEngineUseCase _createEngineUseCase = getIt();
   final DeleteEnginesUseCase _deleteEnginesUseCase = getIt();
+  final EditEngineUseCase _editEngineUseCase = getIt();
 
   Future<void> fetchGenerators({int page = 1}) async {
     emit(state.copyWith(generatorsStatus: GeneratorsEnginesStatus.loading));
@@ -188,27 +197,39 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     );
   }
 
-  void updateEngineBrand(int id, String brandName) {
+  Future<void> updateEngineBrand(int id, String brandName) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedBrands =
-          state.engineBrands.map((brand) {
-            return brand.id == id ? brand.copyWith(brand: brandName) : brand;
-          }).toList();
-      emit(
-        state.copyWith(
-          engineBrands: updatedBrands,
-          actionStatus: GeneratorsEnginesStatus.loaded,
+
+    final updatedBrands =
+        state.engineBrands.map((brand) {
+          return brand.id == id ? brand.copyWith(brand: brandName) : brand;
+        }).toList();
+
+    final EditBrandBody body = EditBrandBody(
+      id: id.toString(),
+      brand: brandName,
+    );
+    final response = await _editEngineBrandUsecase.call(body);
+    response.fold(
+      (failure) => {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
         ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+      },
+      (brand) {
+        return {
+          emit(
+            state.copyWith(
+              engineBrands: updatedBrands,
+              actionStatus: GeneratorsEnginesStatus.loaded,
+            ),
+          ),
+        };
+      },
+    );
   }
 
   Future<void> deleteEngineBrand(int id) async {
@@ -292,27 +313,39 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     );
   }
 
-  void updateGeneratorBrand(int id, String brandName) {
+  Future<void> updateGeneratorBrand(int id, String brandName) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedBrands =
-          state.generatorBrands.map((brand) {
-            return brand.id == id ? brand.copyWith(brand: brandName) : brand;
-          }).toList();
-      emit(
-        state.copyWith(
-          generatorBrands: updatedBrands,
-          actionStatus: GeneratorsEnginesStatus.loaded,
+
+    final updatedBrands =
+        state.generatorBrands.map((brand) {
+          return brand.id == id ? brand.copyWith(brand: brandName) : brand;
+        }).toList();
+
+    final EditBrandBody body = EditBrandBody(
+      id: id.toString(),
+      brand: brandName,
+    );
+    final response = await _editGeneratorBrandUsecase.call(body);
+    response.fold(
+      (failure) => {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
         ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+      },
+      (brand) {
+        return {
+          emit(
+            state.copyWith(
+              generatorBrands: updatedBrands,
+              actionStatus: GeneratorsEnginesStatus.loaded,
+            ),
+          ),
+        };
+      },
+    );
   }
 
   Future<void> deleteGeneratorBrand(int id) async {
@@ -396,27 +429,50 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     );
   }
 
-  void updateEngineCapacity(int id, int capacity) {
+  Future<void> updateEngineCapacity(int id, int capacity) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final updatedCapacities =
-          state.engineCapacities.map((cap) {
-            return cap.id == id ? cap.copyWith(capacity: capacity) : cap;
-          }).toList();
-      emit(
-        state.copyWith(
-          engineCapacities: updatedCapacities,
-          actionStatus: GeneratorsEnginesStatus.loaded,
+    final updatedCapacities =
+        state.engineCapacities.map((cap) {
+          return cap.id == id ? cap.copyWith(capacity: capacity) : cap;
+        }).toList();
+
+    final body = EditEngineCapacityBody(
+      id: id.toString(),
+      capacity: capacity.toString(),
+    );
+    final response = await _editEngineCapacityUsecase.call(body);
+    response.fold(
+      (failure) => {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
         ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+      },
+      (capacity) {
+        return {
+          emit(
+            state.copyWith(
+              engineCapacities: updatedCapacities,
+              actionStatus: GeneratorsEnginesStatus.loaded,
+            ),
+          ),
+        };
+      },
+    );
+    // emit(
+    //   state.copyWith(
+    //     engineCapacities: updatedCapacities,
+    //     actionStatus: GeneratorsEnginesStatus.loaded,
+    //   ),
+    // );
+    // emit(
+    //   state.copyWith(
+    //     actionStatus: GeneratorsEnginesStatus.error,
+    //     error: e.toString(),
+    //   ),
+    // );
   }
 
   Future<void> deleteEngineCapacity(int id) async {
@@ -535,63 +591,49 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
         );
       },
     );
-
-    // try {
-    //   final brand = state.engineBrands.firstWhere((b) => b.id == brandId);
-    //   final capacity = state.engineCapacities.firstWhere(
-    //     (c) => c.id == capacityId,
-    //   );
-
-    //   final newEngine = EngineEntity(
-    //     id: state.engines.length + 1,
-    //     engineBrand: brand,
-    //     engineCapacity: capacity,
-    //   );
-    //   final updatedEngines = [...state.engines, newEngine];
-    //   emit(
-    //     state.copyWith(
-    //       engines: updatedEngines,
-    //       actionStatus: GeneratorsEnginesStatus.loaded,
-    //     ),
-    //   );
-    // } catch (e) {
-    //   emit(
-    //     state.copyWith(
-    //       actionStatus: GeneratorsEnginesStatus.error,
-    //       error: e.toString(),
-    //     ),
-    //   );
-    // }
   }
 
-  void updateEngine(int id, int brandId, int capacityId) {
+  Future<void> updateEngine(int id, int brandId, int capacityId) async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    try {
-      final brand = state.engineBrands.firstWhere((b) => b.id == brandId);
-      final capacity = state.engineCapacities.firstWhere(
-        (c) => c.id == capacityId,
-      );
 
-      final updatedEngines =
-          state.engines.map((engine) {
-            return engine.id == id
-                ? engine.copyWith(engineBrand: brand, engineCapacity: capacity)
-                : engine;
-          }).toList();
-      emit(
-        state.copyWith(
-          engines: updatedEngines,
-          actionStatus: GeneratorsEnginesStatus.loaded,
+    final brand = state.engineBrands.firstWhere((b) => b.id == brandId);
+    final capacity = state.engineCapacities.firstWhere(
+      (c) => c.id == capacityId,
+    );
+
+    final updatedEngines =
+        state.engines.map((engine) {
+          return engine.id == id
+              ? engine.copyWith(engineBrand: brand, engineCapacity: capacity)
+              : engine;
+        }).toList();
+
+    final body = EditEngineBody(
+      id: id.toString(),
+      engineBrandId: brandId.toString(),
+      engineCapacityId: capacityId.toString(),
+    );
+
+    final response = await _editEngineUseCase.call(body);
+
+    response.fold(
+      (failure) => {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
         ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          actionStatus: GeneratorsEnginesStatus.error,
-          error: e.toString(),
-        ),
-      );
-    }
+      },
+      (engine) {
+        emit(
+          state.copyWith(
+            engines: updatedEngines,
+            actionStatus: GeneratorsEnginesStatus.loaded,
+          ),
+        );
+      },
+    );
   }
 
   Future<void> addGenerator({
@@ -739,6 +781,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     required bool isEngine,
     BrandEntity? brand,
   }) {
+    brandController.setText(brand?.brand ?? '');
     showDialog(
       context: context,
       builder:
@@ -769,6 +812,7 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     BuildContext context, {
     EngineCapacityEntity? capacity,
   }) {
+    capacityController.setText(capacity?.capacity.toString() ?? '');
     showDialog(
       context: context,
       builder:

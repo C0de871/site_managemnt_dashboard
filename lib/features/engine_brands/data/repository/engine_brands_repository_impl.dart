@@ -49,7 +49,7 @@ class EngineBrandsRepositoryImpl extends EngineBrandsRepository {
 
   @override
   Future<Either<Failure, BrandEntity>> editEngineBrand(
-    EditEngineBrandBody body,
+    EditBrandBody body,
   ) async {
     if (await networkInfo.isConnected!) {
       try {

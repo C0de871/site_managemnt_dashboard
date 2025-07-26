@@ -14,6 +14,6 @@ abstract class GeneratorBrandsRepository {
     AddGeneratorBrandBody body,
   );
   Future<Either<Failure, GeneratorBrandEntity>> editGeneratorBrand(
-    EditGeneratorBrandBody body,
+    EditBrandBody body,
   );
 }

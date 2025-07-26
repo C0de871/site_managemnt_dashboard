@@ -11,7 +11,7 @@ class EditGeneratorBrandUsecase {
   EditGeneratorBrandUsecase({required this.repository});
 
   Future<Either<Failure, GeneratorBrandEntity>> call(
-    EditGeneratorBrandBody params,
+    EditBrandBody params,
   ) async {
     return await repository.editGeneratorBrand(params);
   }

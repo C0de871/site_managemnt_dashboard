@@ -65,14 +65,14 @@ class DefaultItemCard extends StatelessWidget {
       child: Row(
         children: [
           buildBody(context),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.edit,
-          //     color: Theme.of(context).colorScheme.primary,
-          //   ),
-          //   onPressed: onEdit,
-          //   tooltip: 'Edit',
-          // ),
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            onPressed: onEdit,
+            tooltip: 'Edit',
+          ),
           IconButton(
             icon: Icon(
               Icons.delete,

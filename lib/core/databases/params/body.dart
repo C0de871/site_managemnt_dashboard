@@ -241,8 +241,8 @@ class EditEngineBody {
   final String engineCapacityId;
 
   static const String idKey = 'id';
-  static const String engineBrandIdKey = 'engine_brand_id';
-  static const String engineCapacityIdKey = 'engine_capacity_id';
+  static const String engineBrandIdKey = 'brand_id';
+  static const String engineCapacityIdKey = 'capacity_id';
 
   EditEngineBody({
     required this.id,
@@ -252,7 +252,6 @@ class EditEngineBody {
 
   Map<String, dynamic> toMap() {
     return {
-      idKey: id,
       engineBrandIdKey: engineBrandId,
       engineCapacityIdKey: engineCapacityId,
     };
@@ -263,59 +262,58 @@ class EditPartBody {
   final String id;
   final String name;
   final String code;
-  final String isGeneral;
-  final String engineId;
+  // final bool isGeneral;
+  // final String engineId;
 
   static const String idKey = 'id';
   static const String nameKey = 'name';
   static const String codeKey = 'code';
   static const String isGeneralKey = 'is_general';
-  static const String engineIdKey = 'engine_id';
+  // static const String engineIdKey = 'engine_id';
 
   EditPartBody({
     required this.id,
     required this.name,
     required this.code,
-    required this.isGeneral,
-    required this.engineId,
+    // required this.isGeneral,
+    // required this.engineId,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      idKey: id,
       nameKey: name,
       codeKey: code,
-      isGeneralKey: isGeneral,
-      engineIdKey: engineId,
+      // isGeneralKey: isGeneral,
+      // engineIdKey: engineId,
     };
   }
 }
 
-class EditGeneratorBrandBody {
+// class EditGeneratorBrandBody {
+//   final String id;
+//   final String brand;
+
+//   static const String idKey = 'id';
+//   static const String brandKey = 'brand';
+
+//   EditGeneratorBrandBody({required this.id, required this.brand});
+
+//   Map<String, dynamic> toMap() {
+//     return {idKey: id, brandKey: brand};
+//   }
+// }
+
+class EditBrandBody {
   final String id;
-  final String brand;
+  final String? brand;
 
   static const String idKey = 'id';
-  static const String brandKey = 'brand';
+  static const String brandKey = 'name';
 
-  EditGeneratorBrandBody({required this.id, required this.brand});
-
-  Map<String, dynamic> toMap() {
-    return {idKey: id, brandKey: brand};
-  }
-}
-
-class EditEngineBrandBody {
-  final String id;
-  final String brand;
-
-  static const String idKey = 'id';
-  static const String brandKey = 'brand';
-
-  EditEngineBrandBody({required this.id, required this.brand});
+  EditBrandBody({required this.id, this.brand});
 
   Map<String, dynamic> toMap() {
-    return {idKey: id, brandKey: brand};
+    return {if (brand != null) brandKey: brand};
   }
 }
 
@@ -324,12 +322,12 @@ class EditEngineCapacityBody {
   final String capacity;
 
   static const String idKey = 'id';
-  static const String capacityKey = 'capacity';
+  static const String capacityKey = 'value';
 
   EditEngineCapacityBody({required this.id, required this.capacity});
 
   Map<String, dynamic> toMap() {
-    return {idKey: id, capacityKey: capacity};
+    return {capacityKey: capacity};
   }
 }
 

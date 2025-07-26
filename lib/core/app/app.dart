@@ -123,9 +123,7 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
               builder:
                   (context) => MultiBlocProvider(
                     providers: [
-                      BlocProvider(
-                        create: (context) => SitesCubit()..fetchSites(),
-                      ),
+                      BlocProvider(create: (context) => SitesCubit()),
                       BlocProvider(
                         create: (context) => GeneratorsEnginesCubit(),
                       ),
@@ -141,7 +139,6 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
                     create:
                         (context) =>
                             GeneratorsEnginesCubit()
-                              ..fetchGenerators()
                               ..loadEngineBrands()
                               ..loadGeneratorBrands()
                               ..loadEngineCapacities()
@@ -154,7 +151,7 @@ class BodyNavigator extends StatelessWidget with CubitProviderMixin {
               settings: settings,
               builder:
                   (context) => BlocProvider(
-                    create: (context) => PartsCubit()..fetchParts(),
+                    create: (context) => PartsCubit(),
                     child: PartsScreen(),
                   ),
             );

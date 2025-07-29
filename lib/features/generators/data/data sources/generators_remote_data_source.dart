@@ -1,3 +1,4 @@
+import 'package:site_managemnt_dashboard/core/databases/params/params.dart';
 import 'package:site_managemnt_dashboard/features/generators/data/models/generator_response_model.dart';
 
 import '../../../../core/databases/api/api_consumer.dart';
@@ -12,10 +13,12 @@ class GeneratorsRemoteDataSource {
   final SecureStorageHelper cacheHelper;
   GeneratorsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<GeneratorResponseModel> getGenerators({required int page}) async {
+  Future<GeneratorResponseModel> getGenerators({
+    required SearchGeneratorsWithPagination params,
+  }) async {
     final response = await api.get(
       EndPoints.getGenerators,
-      queryParameters: {"page": page},
+      queryParameters: params.toMap(),
     );
     return GeneratorResponseModel.fromJson(response);
   }
@@ -45,7 +48,6 @@ class GeneratorsRemoteDataSource {
   Future<ApiResponse<GeneratorModel>> editGenerator(
     EditGeneratorBody body,
   ) async {
-    
     final response = await api.put(
       "${EndPoints.editGenerator}/${body.id}",
       data: body.toMap(),

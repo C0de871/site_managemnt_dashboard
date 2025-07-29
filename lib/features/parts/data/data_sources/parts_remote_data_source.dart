@@ -2,6 +2,7 @@ import '../../../../core/databases/api/api_consumer.dart';
 import '../../../../core/databases/api/end_points.dart';
 import '../../../../core/databases/cache/secure_storage_helper.dart';
 import '../../../../core/databases/params/body.dart';
+import '../../../../core/databases/params/params.dart';
 import '../../../../core/shared/data/response_model.dart';
 import '../models/part_model.dart';
 import '../models/part_response_model.dart';
@@ -12,10 +13,12 @@ class PartsRemoteDataSource {
 
   PartsRemoteDataSource({required this.api, required this.cacheHelper});
 
-  Future<PartResponseModel> getParts({required int page}) async {
+  Future<PartResponseModel> getParts({
+    required SearchPartsWithPagination params,
+  }) async {
     final response = await api.get(
       EndPoints.getParts,
-      queryParameters: {"page": page},
+      queryParameters: params.toMap(),
     );
     return PartResponseModel.fromJson(response);
   }

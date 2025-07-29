@@ -43,6 +43,11 @@ class _PartsDataTableState extends State<PartsDataTable> {
           ),
 
           ColumnConfig<PartEntity>(
+            columnName: 'isPrimary',
+            displayName: 'primary ',
+            valueExtractor: (part) => part.isPrimary ? 'Yes' : 'No',
+          ),
+          ColumnConfig<PartEntity>(
             columnName: 'isGeneral',
             displayName: 'Is General',
             valueExtractor: (part) => part.isGeneral! ? 'Yes' : 'No',
@@ -99,7 +104,7 @@ class _PartsDataTableState extends State<PartsDataTable> {
         return Stack(
           children: [
             if (state.parts.isEmpty && !state.partsStatus.isLoading)
-              NotFoundWidget(message: "No parts found"),
+              Positioned.fill(child: NotFoundWidget(message: "No parts found")),
 
             if (state.partsStatus.isLoading || state.actionStatus.isLoading)
               Container(
@@ -142,7 +147,7 @@ class _PartsDataTableState extends State<PartsDataTable> {
                       delegate: dataSource,
                       pageCount: totalPages.toDouble(),
                       onPageNavigationEnd: (page) {
-                        context.read<PartsCubit>().fetchParts(page: page + 1);
+                        context.read<PartsCubit>().searchParts(page: page + 1);
                       },
                     ),
                   ),

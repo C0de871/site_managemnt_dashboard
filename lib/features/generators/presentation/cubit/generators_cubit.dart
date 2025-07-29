@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:site_managemnt_dashboard/core/databases/params/body.dart';
+import 'package:site_managemnt_dashboard/core/databases/params/params.dart';
 import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
 import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/add_engine_brand_usecase.dart';
 import 'package:site_managemnt_dashboard/features/engine_brands/domain/usecases/delete_engines_brands_usecase.dart';
@@ -47,6 +48,9 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
   final TextEditingController capacityController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
 
+  final TextEditingController searchGeneratorsController =
+      TextEditingController();
+
   //!Generators use case
   final GetGeneratorsUseCase _getGeneratorsUseCase = getIt();
   final CreateGeneratorUsecase _createGeneratorUsecase = getIt();
@@ -80,9 +84,14 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
   final DeleteEnginesUseCase _deleteEnginesUseCase = getIt();
   final EditEngineUseCase _editEngineUseCase = getIt();
 
-  Future<void> fetchGenerators({int page = 1}) async {
+  Future<void> searchGenerators({int page = 1}) async {
     emit(state.copyWith(generatorsStatus: GeneratorsEnginesStatus.loading));
-    final response = await _getGeneratorsUseCase.call(page: page);
+    final response = await _getGeneratorsUseCase.call(
+      params: SearchGeneratorsWithPagination(
+        page: page,
+        searchQuery: searchGeneratorsController.text,
+      ),
+    );
     response.fold(
       (failure) {
         emit(
@@ -104,10 +113,30 @@ class GeneratorsEnginesCubit extends Cubit<GeneratorsEnginesState> {
     );
   }
 
-  void deleteSelectedGenerators() {
+  Future<void> deleteSelectedGenerators() async {
     emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loading));
-    Future.delayed(const Duration(seconds: 2));
-    emit(state.copyWith(actionStatus: GeneratorsEnginesStatus.loaded));
+    final response = await _deleteGeneratorsUsecase.call(
+      DeleteGeneratorBody(ids: state.selectedGeneratorIds.toList()),
+    );
+    response.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.error,
+            error: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(
+          state.copyWith(
+            actionStatus: GeneratorsEnginesStatus.loaded,
+            selectedGeneratorIds: {},
+          ),
+        );
+        searchGenerators(page: state.pagination?.currentPage ?? 1);
+      },
+    );
   }
 
   void toggleGeneratorSelection(String partId) {

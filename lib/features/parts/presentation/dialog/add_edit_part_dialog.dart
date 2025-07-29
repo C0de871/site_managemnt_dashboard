@@ -1,4 +1,3 @@
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,16 +6,29 @@ import '../../../engines/domain/entities/engine_entity.dart';
 import '../../domain/entities/part_entity.dart';
 import '../cubit/parts_cubit.dart';
 
-class AddEditPartDialog extends StatelessWidget {
+class AddEditPartDialog extends StatefulWidget {
   const AddEditPartDialog({super.key, this.part});
 
   final PartEntity? part;
+
+  @override
+  State<AddEditPartDialog> createState() => _AddEditPartDialogState();
+}
+
+class _AddEditPartDialogState extends State<AddEditPartDialog> {
+  bool isPrimary = false;
+  @override
+  void initState() {
+    super.initState();
+    isPrimary = widget.part?.isPrimary ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<PartsCubit>();
     final colors = Theme.of(context).colorScheme;
     List<EngineEntity> selectedEngines = [];
+
     return BlocBuilder<PartsCubit, PartsState>(
       builder: (context, state) {
         Widget partsDropDown = DropdownSearch<EngineEntity>.multiSelection(
@@ -71,7 +83,7 @@ class AddEditPartDialog extends StatelessWidget {
         );
 
         return AlertDialog(
-          title: Text(part == null ? 'Add part' : 'Edit part'),
+          title: Text(widget.part == null ? 'Add part' : 'Edit part'),
           content: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 400),
             child: Form(
@@ -90,6 +102,19 @@ class AddEditPartDialog extends StatelessWidget {
                     decoration: InputDecoration(labelText: 'Part Code'),
                   ),
                   const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Text("is it a primary part"),
+                      SwitchExample(
+                        value: isPrimary,
+                        onChanged: (value) {
+                          setState(() {
+                            isPrimary = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                   // if (partIndex == null) partsDropDown,
                 ],
               ),
@@ -103,11 +128,12 @@ class AddEditPartDialog extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 if (!cubit.formKey.currentState!.validate()) return;
-                final part = this.part;
+                final part = widget.part;
                 if (part != null) {
-                  cubit.editPart(part.id);
+                  cubit.editPart(part.id, isPrimary);
+                } else {
+                  cubit.addPart(selectedEngines, isPrimary);
                 }
-                cubit.addPart(selectedEngines);
               },
               child:
                   state.actionStatus.isLoading
@@ -115,11 +141,41 @@ class AddEditPartDialog extends StatelessWidget {
                         padding: EdgeInsets.all(8),
                         color: colors.onPrimary,
                       )
-                      : Text(part == null ? 'Add' : 'Update'),
+                      : Text(widget.part == null ? 'Add' : 'Update'),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class SwitchExample extends StatefulWidget {
+  const SwitchExample({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final bool value;
+  final Function(bool) onChanged;
+
+  @override
+  State<SwitchExample> createState() => _SwitchExampleState();
+}
+
+class _SwitchExampleState extends State<SwitchExample> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Switch(
+        value: widget.value,
+        onChanged: (bool value) {
+          widget.onChanged(value);
+        },
+        activeColor: Colors.green,
+        inactiveThumbColor: Colors.grey,
+      ),
     );
   }
 }

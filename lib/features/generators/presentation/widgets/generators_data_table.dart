@@ -115,9 +115,12 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
         return Stack(
           children: [
             if (widget.generators.isEmpty && !state.generatorsStatus.isLoading)
-              NotFoundWidget(message: widget.emptyMessage),
+              Positioned.fill(
+                child: NotFoundWidget(message: widget.emptyMessage),
+              ),
 
-            if (state.generatorsStatus.isLoading || state.actionStatus.isLoading)
+            if (state.generatorsStatus.isLoading ||
+                state.actionStatus.isLoading)
               Container(
                 height: 600,
                 width: double.infinity,
@@ -160,7 +163,7 @@ class _GeneratorsDataTableState extends State<GeneratorsDataTable> {
                       pageCount: totalPages.toDouble(),
                       onPageNavigationEnd: (page) {
                         int newPage = page + 1;
-                        cubit.fetchGenerators(page: newPage);
+                        cubit.searchGenerators(page: newPage);
                       },
                     ),
                 ],

@@ -14,6 +14,7 @@ class PartEntity extends Equatable {
   final String? note;
   final DateTime? lastReplacementDate;
   final int? generatorHoursAtLastReplacement;
+  final bool isPrimary;
 
   String get fomattedLastReplacementDate {
     if (lastReplacementDate == null) {
@@ -34,6 +35,7 @@ class PartEntity extends Equatable {
     required this.note,
     required this.lastReplacementDate,
     required this.generatorHoursAtLastReplacement,
+    required this.isPrimary,
   });
 
   @override
@@ -49,6 +51,7 @@ class PartEntity extends Equatable {
     note,
     lastReplacementDate,
     generatorHoursAtLastReplacement,
+    isPrimary,
   ];
 
   PartEntity copyWith({
@@ -63,6 +66,7 @@ class PartEntity extends Equatable {
     String? note,
     DateTime? lastReplacementDate,
     int? generatorHoursAtLastReplacement,
+    bool? isPrimary,
   }) {
     return PartEntity(
       id: id ?? this.id,
@@ -76,7 +80,9 @@ class PartEntity extends Equatable {
       note: note ?? this.note,
       lastReplacementDate: lastReplacementDate ?? this.lastReplacementDate,
       generatorHoursAtLastReplacement:
-          generatorHoursAtLastReplacement ?? this.generatorHoursAtLastReplacement,
+          generatorHoursAtLastReplacement ??
+          this.generatorHoursAtLastReplacement,
+      isPrimary: isPrimary ?? this.isPrimary,
     );
   }
 }

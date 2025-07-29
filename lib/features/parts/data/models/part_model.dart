@@ -14,6 +14,7 @@ class PartModel extends PartEntity {
   static const String lastReplacementDateKey = 'last_replacement_date';
   static const String generatorHoursAtLastReplacementKey =
       'generator_hours_at_last_replacement';
+  static const String isPrimaryKey = 'is_primary';
 
   const PartModel({
     required super.id,
@@ -27,6 +28,7 @@ class PartModel extends PartEntity {
     super.note,
     required super.generatorHoursAtLastReplacement,
     required super.lastReplacementDate,
+    required super.isPrimary,
   });
 
   factory PartModel.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,8 @@ class PartModel extends PartEntity {
           json[generatorHoursAtLastReplacementKey] == null
               ? null
               : json[generatorHoursAtLastReplacementKey] as int,
+
+      isPrimary: json[isPrimaryKey],
     );
   }
 
@@ -73,6 +77,7 @@ class PartModel extends PartEntity {
       noteKey: note,
       lastReplacementDateKey: lastReplacementDate?.toIso8601String(),
       generatorHoursAtLastReplacementKey: generatorHoursAtLastReplacement,
+      isPrimaryKey: isPrimary,
     };
   }
 }

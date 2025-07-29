@@ -19,7 +19,6 @@ import '../../../engine_brands/domain/entities/brand_entity.dart';
 import '../../../engine_capacities/domain/entities/engine_capacity_entity.dart';
 import '../../../engines/domain/entities/engine_entity.dart';
 import '../../../generators/domain/entities/generator_entity.dart';
-import '../../domain/usecases/get_all_sites_usecase.dart';
 import '../dialogs/add_edit_site_dialog.dart';
 
 part 'sites_state.dart';
@@ -27,7 +26,6 @@ part 'sites_state.dart';
 class SitesCubit extends Cubit<SitesState> {
   SitesCubit() : super(const SitesState());
 
-  final GetAllSitesUseCase _getAllSitesUseCase = getIt<GetAllSitesUseCase>();
   final SearchSitesUseCase _searchSitesUseCase = getIt<SearchSitesUseCase>();
 
   final GetGeneratorsBySiteIDUsecase _getAllSiteGeneratorsUseCase =

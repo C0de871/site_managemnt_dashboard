@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/core/databases/params/params.dart';
 
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
@@ -19,10 +20,10 @@ class PartsRepositoryImpl extends PartsRepository {
   });
 
   @override
-  Future<Either<Failure, PartResponseEntity>> getParts({required int page}) async {
+  Future<Either<Failure, PartResponseEntity>> getParts({required SearchPartsWithPagination params}) async {
     if (await networkInfo.isConnected!) {
       try {
-        final remoteData = await remoteDataSource.getParts(page:page);
+        final remoteData = await remoteDataSource.getParts(params:params);
         return Right(remoteData);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));

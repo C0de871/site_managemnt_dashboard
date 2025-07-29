@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:site_managemnt_dashboard/core/databases/params/params.dart';
 
 import '../../../../core/databases/connection/network_info.dart';
 import '../../../../core/databases/errors/expentions.dart';
@@ -17,10 +18,14 @@ class GeneratorsRepositoryImple extends GeneratorsRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, GeneratorResponseModel>> getGenerators({required int page}) async {
+  Future<Either<Failure, GeneratorResponseModel>> getGenerators({
+    required SearchGeneratorsWithPagination params,
+  }) async {
     if (await networkInfo.isConnected!) {
       try {
-        final remoteTempleT = await remoteDataSource.getGenerators(page:page);
+        final remoteTempleT = await remoteDataSource.getGenerators(
+          params: params,
+        );
 
         return Right(remoteTempleT);
       } on ServerException catch (e) {

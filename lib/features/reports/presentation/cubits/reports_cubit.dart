@@ -272,8 +272,10 @@ class ReportsCubit extends Cubit<ReportsState> {
     final currentState = state;
 
     emit(state.copyWith(exportReportsStatus: ExportReportsStatus.loading));
-    final body = ExportReportsBody(ids: []);
-    final response = await _exportReportsUsecase.call(body: body);
+
+    final response = await _exportReportsUsecase.call(
+      body: ExportReportsBody(startDate: startDate, endDate: endDate),
+    );
     response.fold(
       (l) => emit(
         state.copyWith(

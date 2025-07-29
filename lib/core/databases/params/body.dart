@@ -65,17 +65,20 @@ class AddPartBody {
   final String name;
   final String code;
   final String isGeneral;
+  final bool isPrimary;
   final List<String> enginesId;
 
   static const String nameKey = 'name';
   static const String codeKey = 'code';
   static const String isGeneralKey = 'is_general';
+  static const String isPrimaryKey = 'is_primary';
   static const String engineIdKey = 'engine_ids';
 
   AddPartBody({
     required this.name,
     required this.code,
     required this.isGeneral,
+    required this.isPrimary,
     required this.enginesId,
   });
 
@@ -84,6 +87,7 @@ class AddPartBody {
       nameKey: name,
       codeKey: code,
       isGeneralKey: isGeneral,
+      isPrimaryKey: isPrimary,
       engineIdKey: enginesId,
     };
   }
@@ -262,6 +266,7 @@ class EditPartBody {
   final String id;
   final String name;
   final String code;
+  final bool isPrimary;
   // final bool isGeneral;
   // final String engineId;
 
@@ -269,12 +274,14 @@ class EditPartBody {
   static const String nameKey = 'name';
   static const String codeKey = 'code';
   static const String isGeneralKey = 'is_general';
+  static const String isPrimaryKey = 'is_primary';
   // static const String engineIdKey = 'engine_id';
 
   EditPartBody({
     required this.id,
     required this.name,
     required this.code,
+    required this.isPrimary,
     // required this.isGeneral,
     // required this.engineId,
   });
@@ -283,6 +290,7 @@ class EditPartBody {
     return {
       nameKey: name,
       codeKey: code,
+      isPrimaryKey: isPrimary,
       // isGeneralKey: isGeneral,
       // engineIdKey: engineId,
     };
@@ -416,9 +424,16 @@ class DeleteEngineCapacityBody {
 }
 
 class ExportReportsBody {
-  final List<int> ids;
-  static const String idsKey = "report_ids";
-  ExportReportsBody({required this.ids});
+  final String startDate;
+  final String endDate;
 
-  Map<String, dynamic> toMap() => {idsKey: ids};
+  static const String startDateKey = 'start_date';
+  static const String endDateKey = 'end_date';
+
+  ExportReportsBody({required this.startDate, required this.endDate});
+
+  Map<String, dynamic> toMap() => {
+    startDateKey: startDate,
+    endDateKey: endDate,
+  };
 }

@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:site_managemnt_dashboard/core/databases/params/params.dart';
 import 'package:site_managemnt_dashboard/core/shared/domain/entities/pagination_entity.dart';
 import 'package:site_managemnt_dashboard/features/engines/domain/usecases/get_engines_usecase.dart';
 import 'package:site_managemnt_dashboard/features/generators/domain/entities/generator_entity.dart';
@@ -28,6 +29,8 @@ class PartsCubit extends Cubit<PartsState> {
   final TextEditingController partNameController = TextEditingController();
   final TextEditingController partCodeController = TextEditingController();
 
+  final TextEditingController searchController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
   final GlobalKey<DropdownSearchState<GeneratorEntity>> dropdownKey =
       GlobalKey<DropdownSearchState<GeneratorEntity>>();
@@ -39,9 +42,14 @@ class PartsCubit extends Cubit<PartsState> {
 
   final GetEnginesUseCase _getEnginesUseCase = getIt();
 
-  Future<void> fetchParts({int page = 1}) async {
+  Future<void> searchParts({int page = 1}) async {
     emit(state.copyWith(partsStatus: PartsStatus.loading));
-    final response = await _getPartsUsecase.call(page: page);
+    final response = await _getPartsUsecase.call(
+      params: SearchPartsWithPagination(
+        page: page,
+        searchQuery: searchController.text,
+      ),
+    );
     response.fold(
       (failure) => emit(
         state.copyWith(
@@ -59,7 +67,7 @@ class PartsCubit extends Cubit<PartsState> {
     );
   }
 
-  Future<void> addPart(List<EngineEntity> engines) async {
+  Future<void> addPart(List<EngineEntity> engines, bool isPrimary) async {
     log("engines in the add part method is ${engines.length}");
     emit(state.copyWith(actionStatus: PartsStatus.loading));
     final body = AddPartBody(
@@ -67,6 +75,7 @@ class PartsCubit extends Cubit<PartsState> {
       code: partCodeController.text,
       isGeneral: engines.isEmpty ? "1" : "0",
       enginesId: engines.map((e) => e.id.toString()).toList(),
+      isPrimary: isPrimary,
     );
     final response = await _addPartUsecase.call(body);
     response.fold(
@@ -85,18 +94,23 @@ class PartsCubit extends Cubit<PartsState> {
     );
   }
 
-  Future<void> editPart(int partId) async {
+  Future<void> editPart(int partId, bool isPrimary) async {
     emit(state.copyWith(actionStatus: PartsStatus.loading));
     final body = EditPartBody(
       id: partId.toString(),
       name: partNameController.text,
       code: partCodeController.text,
+      isPrimary: isPrimary,
     );
 
     final updatedParts =
         state.parts.map((part) {
           if (part.id == partId) {
-            return part.copyWith(name: body.name, code: body.code);
+            return part.copyWith(
+              name: body.name,
+              code: body.code,
+              isPrimary: body.isPrimary,
+            );
           }
           return part;
         }).toList();
@@ -134,7 +148,7 @@ class PartsCubit extends Cubit<PartsState> {
         emit(
           state.copyWith(actionStatus: PartsStatus.loaded, selectedPartIds: {}),
         );
-        fetchParts(page: state.pagination.currentPage!);
+        searchParts(page: state.pagination.currentPage!);
       },
     );
     emit(state.copyWith(actionStatus: PartsStatus.loaded));

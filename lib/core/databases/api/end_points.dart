@@ -6,13 +6,13 @@ class EndPoints {
   static const String logout = "$baseUrl/logout";
 
   //!get
-  static const String getGenerators = "$baseUrl/generators";
+  static const String getGenerators = "$baseUrl/generators/search";
   static const String getReports = "$baseUrl/reports";
   static const String getReportDetailsById = "$baseUrl/reports";
   static const String getSites = "$baseUrl/mtn-sites";
   static String searchSitesByCode = "/mtn-sites/search";
   static const String getGeneratorsBrands = "$baseUrl/brands?type=generator";
-  static const String getParts = "$baseUrl/parts";
+  static const String getParts = "$baseUrl/parts/search";
   static const String getEnginesBrands = "$baseUrl/brands?type=engine";
   static const String getEnginesCapacities = "$baseUrl/capacities";
   static const String getEngines = "$baseUrl/engines";
@@ -37,7 +37,7 @@ class EndPoints {
 
   //!delete
   static const String deleteSite = "$baseUrl/mtn-sites";
-  static const String deleteGenerator = "$baseUrl/deleteGenerator";
+  static const String deleteGenerator = "$baseUrl/generators";
   static const String deleteEngine = "$baseUrl/engines";
   static const String deletePart = "$baseUrl/parts";
   static const String deleteEngineBrand = "$baseUrl/brands";
